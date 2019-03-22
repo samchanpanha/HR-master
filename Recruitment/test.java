@@ -29,6 +29,11 @@ public class test extends javax.swing.JFrame {
         Testing = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         Testing.setText("Testings");
 
@@ -51,6 +56,11 @@ public class test extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        System.out.println("test.formWindowOpened()");
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
