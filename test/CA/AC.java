@@ -11,8 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import javaapplication21.AutoComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,7 +28,7 @@ public PreparedStatement pst;
 public Connection con = ConAccess.getDBConnection();
     public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
-                try {
+               try {
                     
                    st = con.createStatement();
                     rs = st.executeQuery(q);    
@@ -60,5 +62,33 @@ public Connection con = ConAccess.getDBConnection();
                    JOptionPane.showMessageDialog(null,"ERROR");
                }
 }
+    
+    public void DisplayName(AutoComboBox cb, String sql){
+        try {
+            cb.removeAllItems();
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+                 while (rs.next()) {                
+                String st =rs.getString(1).toString();
+     
+                cb.addItem(st);
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+     public void DisplayId(String sql,JTextField txtid){
+        try {
+           
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();  
+                  while (rs.next()) {  
+                   txtid.setText(rs.getString(1)+"");
+                  } 
+        } catch (Exception e) {
+        }
+    }
+    
+   
     
 }
