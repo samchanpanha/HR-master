@@ -11,7 +11,7 @@
  Target Server Version : 50723
  File Encoding         : 65001
 
- Date: 25/03/2019 13:15:19
+ Date: 28/03/2019 14:57:56
 */
 
 SET NAMES utf8mb4;
@@ -68,7 +68,13 @@ CREATE TABLE `categorys`  (
   `CatID` int(11) NOT NULL AUTO_INCREMENT,
   `CatName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`CatID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of categorys
+-- ----------------------------
+INSERT INTO `categorys` VALUES (1, 'IT');
+INSERT INTO `categorys` VALUES (2, 'Network');
 
 -- ----------------------------
 -- Table structure for customers
@@ -121,6 +127,7 @@ CREATE TABLE `employees`  (
   `PositionID` int(11) NULL DEFAULT NULL,
   `ManagerId` int(11) NULL DEFAULT NULL,
   `IntervieweeId` int(11) NULL DEFAULT NULL,
+  `Id_Card` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`EmpId`) USING BTREE,
   INDEX `EmpTypeId`(`EmpTypeId`) USING BTREE,
   INDEX `PositionID`(`PositionID`) USING BTREE,
@@ -131,9 +138,9 @@ CREATE TABLE `employees`  (
   CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`ManagerId`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `employees_ibfk_2` FOREIGN KEY (`DepartmentId`) REFERENCES `departments` (`DepartmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `employees_ibfk_3` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `employees_ibfk_4` FOREIGN KEY (`IntervieweeId`) REFERENCES `interviewees` (`IntervieweeId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `p` FOREIGN KEY (`PositionID`) REFERENCES `positions` (`PositionID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `s` FOREIGN KEY (`EmpTypeId`) REFERENCES `emptype` (`EmpTypeId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `employees_ibfk_4` FOREIGN KEY (`IntervieweeId`) REFERENCES `interviewees` (`IntervieweeId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `s` FOREIGN KEY (`EmpTypeId`) REFERENCES `emptype` (`EmpTypeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -144,7 +151,12 @@ CREATE TABLE `emptype`  (
   `EmpTypeId` int(11) NOT NULL AUTO_INCREMENT,
   `EmpType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`EmpTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of emptype
+-- ----------------------------
+INSERT INTO `emptype` VALUES (1, 'Intern');
 
 -- ----------------------------
 -- Table structure for events
@@ -205,14 +217,15 @@ CREATE TABLE `interviewees`  (
   PRIMARY KEY (`IntervieweeId`) USING BTREE,
   INDEX `SkillId`(`SkillId`) USING BTREE,
   CONSTRAINT `interviewees_ibfk_1` FOREIGN KEY (`SkillId`) REFERENCES `skills` (`SkillId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of interviewees
 -- ----------------------------
-INSERT INTO `interviewees` VALUES (1, 'roth', 'female', 'pp', '099887788', NULL, NULL, NULL, 'k', 'khmer , english', NULL, NULL, NULL);
-INSERT INTO `interviewees` VALUES (2, 'sokthea', 'male', 'tk', '077889933', NULL, NULL, NULL, 'e', 'khmer,english,chinese', NULL, NULL, NULL);
-INSERT INTO `interviewees` VALUES (3, 'vireak', 'male', 'ck', '010223399', NULL, NULL, NULL, 'k', 'chinese,khmer', NULL, NULL, NULL);
+INSERT INTO `interviewees` VALUES (1, 'roth', 'female', 'pp', '099887788', NULL, NULL, NULL, 'k', 'khmer , english', 2, NULL, NULL);
+INSERT INTO `interviewees` VALUES (2, 'sokthea', 'male', 'tk', '077889933', NULL, NULL, NULL, 'e', 'khmer,english,chinese', 3, NULL, NULL);
+INSERT INTO `interviewees` VALUES (3, 'vireak', 'male', 'ck', '010223399', NULL, NULL, NULL, 'k', 'chinese,khmer', 2, NULL, NULL);
+INSERT INTO `interviewees` VALUES (4, 'roth', 'male', 'tke', '93276387', NULL, NULL, NULL, 'd', 'chinese,khmer,france', 2, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for interviews
@@ -237,7 +250,14 @@ CREATE TABLE `majors`  (
   `MajorId` int(10) NOT NULL AUTO_INCREMENT,
   `Major` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`MajorId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of majors
+-- ----------------------------
+INSERT INTO `majors` VALUES (1, 'MIS');
+INSERT INTO `majors` VALUES (2, 'MS');
+INSERT INTO `majors` VALUES (3, 'Cshap');
 
 -- ----------------------------
 -- Table structure for opportunitydetails
@@ -564,7 +584,15 @@ CREATE TABLE `studyrecordtypes`  (
   `StudyRecordTypeId` int(10) NOT NULL AUTO_INCREMENT,
   `StudyRecordType` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`StudyRecordTypeId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of studyrecordtypes
+-- ----------------------------
+INSERT INTO `studyrecordtypes` VALUES (1, 'A');
+INSERT INTO `studyrecordtypes` VALUES (2, 'B');
+INSERT INTO `studyrecordtypes` VALUES (3, 'C');
+INSERT INTO `studyrecordtypes` VALUES (4, 'D');
 
 -- ----------------------------
 -- Table structure for takeleavedetails
@@ -747,6 +775,7 @@ CREATE TABLE `workexperiences`  (
   `DateStart` date NULL DEFAULT NULL,
   `DateEnd` date NULL DEFAULT NULL,
   `IntervieweeId` int(11) NULL DEFAULT NULL,
+  `ExperienceOfYear` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`WorkExperienceId`) USING BTREE,
   INDEX `PositionId`(`PositionId`) USING BTREE,
   INDEX `IntervieweeId`(`IntervieweeId`) USING BTREE,
@@ -757,7 +786,13 @@ CREATE TABLE `workexperiences`  (
 -- ----------------------------
 -- Records of workexperiences
 -- ----------------------------
-INSERT INTO `workexperiences` VALUES (1, 1, 'something', NULL, '2019-03-01', '2019-03-31', 1);
-INSERT INTO `workexperiences` VALUES (2, 3, 'saysomething', NULL, '2019-02-01', '2019-07-31', 3);
+INSERT INTO `workexperiences` VALUES (1, 1, 'something', NULL, '2019-03-01', '2019-03-31', 1, 2);
+INSERT INTO `workexperiences` VALUES (2, 3, 'saysomething', NULL, '2019-02-01', '2019-07-31', 3, 3);
+
+-- ----------------------------
+-- View structure for vu_interviewee
+-- ----------------------------
+DROP VIEW IF EXISTS `vu_interviewee`;
+CREATE ALGORITHM = UNDEFINED DEFINER = `skip-grants user`@`skip-grants host` SQL SECURITY DEFINER VIEW `vu_interviewee` AS select `interviewees`.`IntervieweeId` AS `IntervieweeId`,`interviewees`.`Name` AS `Name`,`interviewees`.`Gender` AS `Gender`,`interviewees`.`Address` AS `Address`,`interviewees`.`Tel` AS `Tel`,`interviewees`.`Image` AS `Image`,`interviewees`.`Status` AS `Status`,`interviewees`.`Blocked` AS `Blocked`,`interviewees`.`Degree` AS `Degree`,`interviewees`.`Language` AS `Language`,`interviewees`.`Dob` AS `Dob`,`interviewees`.`Email` AS `Email`,`studyrecords`.`StudyRecordId` AS `StudyRecordId`,`studyrecords`.`StudyRecordTypeId` AS `StudyRecordTypeId`,`studyrecords`.`CatID` AS `CatID`,`studyrecords`.`Description` AS `Description`,`studyrecords`.`EndYear` AS `EndYear`,`studyrecordtypes`.`StudyRecordType` AS `StudyRecordType`,`majors`.`Major` AS `Major`,`categorys`.`CatName` AS `CatName`,`workexperiences`.`WorkExperienceId` AS `WorkExperienceId`,`workexperiences`.`Description` AS `DESCR`,`workexperiences`.`DateStart` AS `DateStart`,`workexperiences`.`DateEnd` AS `DateEnd`,`positions`.`Position` AS `Position`,`skills`.`Skill` AS `Skill` from (((((((`interviewees` join `studyrecords` on((`studyrecords`.`IntervieweeId` = `interviewees`.`IntervieweeId`))) join `studyrecordtypes` on((`studyrecords`.`StudyRecordTypeId` = `studyrecordtypes`.`StudyRecordTypeId`))) join `majors` on((`studyrecords`.`MajorId` = `majors`.`MajorId`))) join `categorys` on((`studyrecords`.`CatID` = `categorys`.`CatID`))) join `workexperiences` on((`workexperiences`.`IntervieweeId` = `interviewees`.`IntervieweeId`))) join `positions` on((`workexperiences`.`PositionId` = `positions`.`PositionID`))) join `skills` on(((`interviewees`.`SkillId` = `skills`.`SkillId`) and (`studyrecords`.`SkillId` = `skills`.`SkillId`) and (`studyrecords`.`SkillId` = `skills`.`SkillId`) and (`workexperiences`.`SkillId` = `skills`.`SkillId`))))  WITH CASCADED CHECK OPTION;
 
 SET FOREIGN_KEY_CHECKS = 1;
