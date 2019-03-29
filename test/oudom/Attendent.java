@@ -6,6 +6,9 @@
 package oudom;
 
 import java.awt.Paint;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +21,9 @@ public class Attendent extends javax.swing.JFrame {
      */
     public Attendent() {
         initComponents();
+        ArrayList<String> Data=new ArrayList<>();
+        Data.add("Goto Detail");
+        addcontrol.popupmenu(JPAttendent,Data );
        
     }
 
@@ -30,6 +36,7 @@ public class Attendent extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        JPAttendent = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         lbltitle = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -38,6 +45,12 @@ public class Attendent extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+
+        JPAttendent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JPAttendentMouseClicked(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -137,6 +150,12 @@ public class Attendent extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void JPAttendentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JPAttendentMouseClicked
+        if(evt.getButton()==MouseEvent.BUTTON3){
+            JPAttendent.show(jScrollPane1, 100, 200);
+        }
+    }//GEN-LAST:event_JPAttendentMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -173,6 +192,7 @@ public class Attendent extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPopupMenu JPAttendent;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
