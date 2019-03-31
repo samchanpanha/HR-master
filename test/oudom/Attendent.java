@@ -5,10 +5,8 @@
  */
 package oudom;
 
-import java.awt.Paint;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -23,7 +21,8 @@ public class Attendent extends javax.swing.JFrame {
         initComponents();
         ArrayList<String> Data=new ArrayList<>();
         Data.add("Goto Detail");
-        addcontrol.popupmenu(JPAttendent,Data );
+        addcontrol.popupmenu(JPAttendent, Data);
+        addcontrol.changefontHeader(Tattnden, "Century Schoolbook", "plain", 14);
        
     }
 
@@ -42,9 +41,10 @@ public class Attendent extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Tattnden = new javax.swing.JTable();
 
         JPAttendent.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -54,7 +54,10 @@ public class Attendent extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+
         lbltitle.setFont(new java.awt.Font("Century Schoolbook", 0, 24)); // NOI18N
+        lbltitle.setForeground(new java.awt.Color(255, 255, 255));
         lbltitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbltitle.setText("Attendent List");
 
@@ -73,6 +76,7 @@ public class Attendent extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         jLabel2.setFont(new java.awt.Font("Century Schoolbook", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -82,6 +86,9 @@ public class Attendent extends javax.swing.JFrame {
         jTextField1.setFont(new java.awt.Font("Century Schoolbook", 0, 18)); // NOI18N
         jTextField1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1)));
 
+        jButton1.setFont(new java.awt.Font("Century Schoolbook", 0, 14)); // NOI18N
+        jButton1.setText("Refresh");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -90,33 +97,57 @@ public class Attendent extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(153, 153, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
+
+        Tattnden.setFont(new java.awt.Font("Century Schoolbook", 0, 12)); // NOI18N
+        Tattnden.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {"1", "a", "1"},
+                {"2", "f", "sadf"},
+                {"asf", "f", "as"},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8"
+                "ID", "Date Created", "Create By"
             }
-        ));
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Tattnden.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        Tattnden.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TattndenMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Tattnden);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -151,10 +182,20 @@ public class Attendent extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void JPAttendentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JPAttendentMouseClicked
-        if(evt.getButton()==MouseEvent.BUTTON3){
-            JPAttendent.show(jScrollPane1, 100, 200);
-        }
+
     }//GEN-LAST:event_JPAttendentMouseClicked
+
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+        if(evt.getButton()==MouseEvent.BUTTON3){
+            JPAttendent.show(jScrollPane1, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
+    private void TattndenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TattndenMouseClicked
+                   if(evt.getButton()==MouseEvent.BUTTON3){
+            JPAttendent.show(jScrollPane1, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_TattndenMouseClicked
 
     /**
      * @param args the command line arguments
@@ -193,12 +234,13 @@ public class Attendent extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu JPAttendent;
+    private javax.swing.JTable Tattnden;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbltitle;
     // End of variables declaration//GEN-END:variables

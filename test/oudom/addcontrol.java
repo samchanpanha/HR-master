@@ -5,9 +5,10 @@
  */
 package oudom;
 
+import java.awt.Font;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 
 /**
  *
@@ -19,6 +20,17 @@ public class addcontrol {
         Data.forEach((tm) -> {
             JP.add(tm);
         });
+    }
+    public static void changefontHeader(JTable table,String FontName ,String FontWieght ,int FontSize){
+        Font f=null;
+        if(FontWieght.equalsIgnoreCase("BOLD")){
+            f=new Font(FontName, Font.BOLD, FontSize);
+        }else if (FontWieght.equalsIgnoreCase("ITALIC")){
+            f=new Font(FontName, Font.ITALIC, FontSize);
+        }else{
+            f=new Font(FontName, Font.PLAIN, FontSize);
+        }
+        table.getTableHeader().setFont(f);
     }
     
 }
