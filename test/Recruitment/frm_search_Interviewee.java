@@ -8,6 +8,7 @@ package Recruitment;
 import CMS.DB;
 import javaapplication21.AutoComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -40,7 +41,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
    }
    void ShowName(){
        String sql="SELECT Name From Interviewees GROUP BY Name";
-       
+       c.DisplayTextName(sql, txtname);
        //c.DisplayName(cbname, sql);
    }
    void ShowCategory(){
@@ -70,7 +71,6 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cbname = new javaapplication21.AutoComboBox();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jpskill = new javax.swing.JPanel();
@@ -81,7 +81,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jpcate = new javax.swing.JPanel();
         btnsearch = new javax.swing.JButton();
-        pname = new javax.swing.JPanel();
+        txtname = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -98,17 +98,9 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         jLabel1.setText("FROM SEARCH");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(533, 0, 198, 33));
 
-        cbname.setAutocomplete(true);
-        cbname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbnameActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cbname, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 360, 30));
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Name : ");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 80, 20));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, 80, 20));
 
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Skill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
@@ -150,24 +142,22 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
                 btnsearchActionPerformed(evt);
             }
         });
-        jPanel1.add(btnsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 70, 110, 30));
-        jPanel1.add(pname, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 450, 40));
+        jPanel1.add(btnsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 70, 110, 30));
+
+        txtname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jPanel1.add(txtname, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 450, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1440, 770));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbnameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbnameActionPerformed
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         ShowSkill();
         ShowCategory();
         ShowMajor();
-       // ShowName();
+        ShowName();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchActionPerformed
@@ -196,7 +186,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
                     "	wp.DateEnd,\n" +
                     "	wp.ExperienceOfYear ";
        
-        st = cbname.getSelectedItem().toString()+" "+txtskill.getText()+" "+txtcate.getText()+" "+txtmajor.getText();
+        st = txtname.getText().toString()+" "+txtskill.getText()+" "+txtcate.getText()+" "+txtmajor.getText();
     
         String sql="SELECT \n" +
                     "  "+q+"  \n" +
@@ -224,13 +214,18 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
                     + "MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
                     + "MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
                     + "MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE);";
-               
+               if (!(st==null)) {
                     c.showDataInTable(tbdata, sql, dm);
                     Changetablename();
                     DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
                     tableRenderer.setHorizontalAlignment(JLabel.CENTER); //Aligning the table data centrally.
                     tbdata.setDefaultRenderer(Object.class, tableRenderer);
                     tbdata.setRowHeight(35);
+               }
+               else{
+                   JOptionPane.showMessageDialog(this, "no");
+               }
+                   
                
            
         
@@ -276,7 +271,6 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnsearch;
-    private javaapplication21.AutoComboBox cbname;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -287,7 +281,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
     private javax.swing.JPanel jpcate;
     private javax.swing.JPanel jpmajor;
     private javax.swing.JPanel jpskill;
-    private javax.swing.JPanel pname;
     private javax.swing.JTable tbdata;
+    private javax.swing.JTextField txtname;
     // End of variables declaration//GEN-END:variables
 }

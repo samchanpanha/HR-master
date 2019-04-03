@@ -39,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -384,15 +385,25 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
            hideC = tb.getColumnModel().getColumn(i);
            tb.getColumnModel().removeColumn(hideC);
       }
-    public void DisplayTextName(String sql ,Java2sAutoTextField1 textfield){
+    public void DisplayTextName(String sql ,JTextField txt){
         try {
-           
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
+            String COMMIT_ACTION = "commit";
+            txt.setFocusTraversalKeysEnabled(false);
+            List<String>  keywords = new ArrayList<String>();
+             st = con.createStatement();
+             rs = st.executeQuery(sql);
                  while (rs.next()) {                
                 String st =rs.getString(1).toString();
+                keywords.add(st);
                
-            }
+          }
+                Autocompletes au = new Autocompletes(txt, keywords);
+                txt.getDocument().addDocumentListener(au);
+
+        // Maps the tab key to the commit action, which finishes the autocomplete
+        // when given a suggestion
+                txt.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+                txt.getActionMap().put(COMMIT_ACTION, au.new CommitAction());
            
         } catch (Exception e) {
         }
