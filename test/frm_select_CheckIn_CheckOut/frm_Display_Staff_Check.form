@@ -27,10 +27,9 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" min="-2" pref="1190" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
                       <Component id="jLabel2" min="-2" pref="86" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="cbstaff" min="-2" pref="202" max="-2" attributes="0"/>
@@ -48,9 +47,11 @@
                       <Component id="btnDisplay" min="-2" pref="97" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnSent" min="-2" pref="97" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -59,21 +60,26 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel2" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="cbstaff" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="ckEnable" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="dstart" pref="37" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                      <Component id="jLabel1" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="jLabel3" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="dstart" alignment="3" pref="36" max="32767" attributes="0"/>
-                      <Component id="dend" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="btnDisplay" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                      <Component id="btnSent" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="jLabel2" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                              <Component id="cbstaff" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="ckEnable" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jLabel1" alignment="0" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="dend" alignment="0" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="btnDisplay" alignment="0" min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="btnSent" alignment="0" min="-2" pref="36" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="492" max="-2" attributes="0"/>
           </Group>
       </Group>
