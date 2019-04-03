@@ -34,12 +34,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -61,14 +63,12 @@ public void Query(String tb) {
     
      try{
         
-           
-             String sql = tb ;
+           con.setAutoCommit(false);
+            String sql = tb ;
             st = con.createStatement();
            st.executeUpdate(sql);
-           JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");
-            
-          
-        
+           JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
+           con.setAutoCommit(true);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, e);
         }finally{
@@ -85,9 +85,9 @@ public void Query(String tb) {
 public  void Add_Pic(String p,JTextField txt,String sqls){    
     try {
        
-        String querySetLimit = "SET GLOBAL max_allowed_packet=104857600;";  // 10 MB
+      //  String querySetLimit = "SET GLOBAL max_allowed_packet=104857600;";  // 10 MB
         Statement stSetLimit = con.createStatement();
-        stSetLimit.execute(querySetLimit);
+      //  stSetLimit.execute(querySetLimit);
         
         String sql = sqls;
         PreparedStatement statement = con.prepareStatement(sql);
@@ -100,16 +100,36 @@ public  void Add_Pic(String p,JTextField txt,String sqls){
         int row = statement.executeUpdate();
         if (row > 0) {
 //            System.out.println("A contact was inserted with photo image.");
-JOptionPane.showMessageDialog(null,"EXECUTE SUCCESS");     
-        }
-        con.close();
-        inputStreams.close();
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } catch (IOException ex) {
-        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null,"EXECUTE SUCCESS");     
+            }
+            con.close();
+            inputStreams.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }         
+}
+public ImageIcon ResizeImage(String imgPath ,JLabel lb){
+        ImageIcon MyImage = new ImageIcon(imgPath);
+        Image img = MyImage.getImage();
+        Image newImage = img.getScaledInstance(lb.getWidth(), lb.getHeight(),Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImage);
+        return image;
     }
-           
+public void browes(JLabel lb){
+//     b.addActionListener((ActionEvent e) -> {
+         JFileChooser fileChooser = new JFileChooser();
+         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.IMAGE", "jpg","gif","png");
+         fileChooser.addChoosableFileFilter(filter);
+         int result = fileChooser.showSaveDialog(null);
+         if(result == JFileChooser.APPROVE_OPTION){
+             File selectedFile = fileChooser.getSelectedFile();
+              path = selectedFile.getAbsolutePath();
+             lb.setIcon(ResizeImage(path,lb));
+            
+         }
 }
 public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
