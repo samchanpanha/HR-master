@@ -24,7 +24,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
      JTextField txtcate = new JTextField();
      JTextField txtmajor = new JTextField();
      DefaultTableModel dm;
-     String st ="";
+    
      AutoComboBox ac = new AutoComboBox();
      DB c = new DB();
     /**
@@ -60,6 +60,75 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         c.ChangeName(tbdata,14,"StudySkill");
         c.ChangeName(tbdata,19,"WorkSkill");
    }
+   void ShowData(){
+          String q = "i.IntervieweeId AS ID,\n" +
+                    "	i.`Name`,\n" +
+                    "	i.Gender,\n" +
+                    "	i.Address,\n" +
+                    "	i.Tel,\n" +
+                    "	i.Blocked,\n" +
+                    "	i.Degree,\n" +
+                    "	i.`Language`,\n" +
+                    "	i.Skill,\n" +
+                    "	i.Dob ,\n" +
+                    "	i.Email,\n" +
+                    "	sp.StudyRecordType as StudyRecord,\n" +
+                    "	c.CatName as Category,\n" +
+                    "	m.Major,\n" +
+                    "	s.Skill as StudySkill,\n" +
+                    "	s.Description,\n" +
+                    "	s.EndYear,\n" +
+                    "	wp.WorkExperienceId,\n" +
+                    "	p.Position,\n" +
+                    "	wp.Skill as WorkSkill,\n" +
+                    "	wp.DateStart,\n" +
+                    "	wp.DateEnd,\n" +
+                    "	wp.ExperienceOfYear ";
+       
+        String st = txtname.getText().toString()+" "+txtskill.getText()+" "+txtcate.getText()+" "+txtmajor.getText();
+    
+        String sql="SELECT \n" +
+                    "  "+q+"  \n" +
+                    "FROM\n" +
+                    "    interviewees i\n" +
+                    "        LEFT JOIN\n" +
+                    "    studyrecords s ON i.IntervieweeId = s.IntervieweeId\n" +
+                    "        LEFT JOIN\n" +
+                    "    studyrecordtypes sp ON s.StudyRecordId = sp.StudyRecordTypeId\n" +
+                    "        LEFT JOIN\n" +
+                    "    categorys c ON s.CatID = c.CatID\n" +
+                    "        LEFT JOIN\n" +
+                    "    majors m ON s.MajorId = m.MajorId\n" +
+                    "        LEFT JOIN\n" +
+                    "    workexperiences wp ON i.IntervieweeId = wp.IntervieweeId\n" +
+                    "        LEFT JOIN\n" +
+                    "    positions p ON wp.PositionId = p.PositionID\n" +
+                    "WHERE\n" +
+                    "    MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
+                    "        OR MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
+                    "        OR MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
+                    "        OR MATCH (c.CatName) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
+                    "        OR MATCH (m.Major) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
+                    "ORDER BY "
+                    + "MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
+                    + "MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
+                    + "MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE);";
+               if (!(st==null) && st!=" ") {
+                    c.showDataInTable(tbdata, sql, dm);
+                    Changetablename();
+                    DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
+                    tableRenderer.setHorizontalAlignment(JLabel.CENTER); //Aligning the table data centrally.
+                    tbdata.setDefaultRenderer(Object.class, tableRenderer);
+                    tbdata.setRowHeight(35);
+               }
+               else{
+                  
+                   JOptionPane.showMessageDialog(this, "no");
+               }
+              st=null;
+               
+   }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,7 +188,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(tbdata);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 500));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 540));
 
         jScrollPane2.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Major", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
@@ -162,72 +231,8 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
     private void btnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchActionPerformed
         // TODO add your handling code here:
-        String q = "i.IntervieweeId AS ID,\n" +
-                    "	i.`Name`,\n" +
-                    "	i.Gender,\n" +
-                    "	i.Address,\n" +
-                    "	i.Tel,\n" +
-                    "	i.Blocked,\n" +
-                    "	i.Degree,\n" +
-                    "	i.`Language`,\n" +
-                    "	i.Skill,\n" +
-                    "	i.Dob ,\n" +
-                    "	i.Email,\n" +
-                    "	sp.StudyRecordType as StudyRecord,\n" +
-                    "	c.CatName as Category,\n" +
-                    "	m.Major,\n" +
-                    "	s.Skill as StudySkill,\n" +
-                    "	s.Description,\n" +
-                    "	s.EndYear,\n" +
-                    "	wp.WorkExperienceId,\n" +
-                    "	p.Position,\n" +
-                    "	wp.Skill as WorkSkill,\n" +
-                    "	wp.DateStart,\n" +
-                    "	wp.DateEnd,\n" +
-                    "	wp.ExperienceOfYear ";
-       
-        st = txtname.getText().toString()+" "+txtskill.getText()+" "+txtcate.getText()+" "+txtmajor.getText();
-    
-        String sql="SELECT \n" +
-                    "  "+q+"  \n" +
-                    "FROM\n" +
-                    "    interviewees i\n" +
-                    "        LEFT JOIN\n" +
-                    "    studyrecords s ON i.IntervieweeId = s.IntervieweeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    studyrecordtypes sp ON s.StudyRecordId = sp.StudyRecordTypeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    categorys c ON s.CatID = c.CatID\n" +
-                    "        LEFT JOIN\n" +
-                    "    majors m ON s.MajorId = m.MajorId\n" +
-                    "        LEFT JOIN\n" +
-                    "    workexperiences wp ON i.IntervieweeId = wp.IntervieweeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    positions p ON wp.PositionId = p.PositionID\n" +
-                    "WHERE\n" +
-                    "    MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (c.CatName) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (m.Major) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "ORDER BY "
-                    + "MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
-                    + "MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
-                    + "MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE);";
-               if (!(st==null)) {
-                    c.showDataInTable(tbdata, sql, dm);
-                    Changetablename();
-                    DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
-                    tableRenderer.setHorizontalAlignment(JLabel.CENTER); //Aligning the table data centrally.
-                    tbdata.setDefaultRenderer(Object.class, tableRenderer);
-                    tbdata.setRowHeight(35);
-               }
-               else{
-                   JOptionPane.showMessageDialog(this, "no");
-               }
-                   
-               
-           
+     
+           ShowData();
         
     }//GEN-LAST:event_btnsearchActionPerformed
         

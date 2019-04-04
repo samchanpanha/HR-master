@@ -12,6 +12,8 @@ import java.awt.Image;
 import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaapplication21.AutoComboBox;
 import javafx.embed.swing.JFXPanel;
 import javax.swing.DefaultCellEditor;
@@ -70,6 +74,11 @@ public void Query(String tb) {
            JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
            con.setAutoCommit(true);
         }catch(SQLException e){
+         try {
+             con.rollback();
+         } catch (SQLException ex) {
+             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+         }
             JOptionPane.showMessageDialog(null, e);
         }finally{
             try{
@@ -82,9 +91,34 @@ public void Query(String tb) {
         }
 }
 
+public void Value_ID(String sql,JTextField txt){
+    try {  
+        
+        con.setAutoCommit(false);
+        pst = con.prepareStatement(sql);  
+        rs = pst.executeQuery();  
+        while (rs.next()) {  
+         String id = rs.getString(1);  
+         txt.setText(id);
+         
+       } 
+         con.setAutoCommit(true);
+         pst.close();
+         rs.close();
+    }
+       catch (Exception ex) { 
+        try {
+            con.rollback();
+        } catch (SQLException ex1) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    JOptionPane.showMessageDialog(null,"ERROR");
+}    
+}
+
 public  void Add_Pic(String p,JTextField txt,String sqls){    
     try {
-       
+       con.setAutoCommit(false);
       //  String querySetLimit = "SET GLOBAL max_allowed_packet=104857600;";  // 10 MB
         Statement stSetLimit = con.createStatement();
       //  stSetLimit.execute(querySetLimit);
@@ -102,9 +136,15 @@ public  void Add_Pic(String p,JTextField txt,String sqls){
 //            System.out.println("A contact was inserted with photo image.");
         JOptionPane.showMessageDialog(null,"EXECUTE SUCCESS");     
             }
+         con.setAutoCommit(true);
             con.close();
             inputStreams.close();
         } catch (SQLException ex) {
+        try {
+            con.rollback();
+        } catch (SQLException ex1) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+        }
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -134,7 +174,7 @@ public void browes(JLabel lb){
 public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
         try {
-
+           con.setAutoCommit(false);
            st = con.createStatement();
             rs = st.executeQuery(q);    
            // get columns info
@@ -161,10 +201,16 @@ public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
            dm.fireTableDataChanged();
 
            // Close ResultSet and Statement
+           con.setAutoCommit(true);
            rs.close();
            st.close();
 
        } catch (Exception ex) { 
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+            }
            JOptionPane.showMessageDialog(null,"ERROR");
        }
 }
@@ -195,14 +241,11 @@ public void Value_ID(String sql,JLabel txt){
 
 public void showpic(String sql,JLabel label){
     try{
-               
+               con.setAutoCommit(false);
                 st = con.createStatement();
                rs = st.executeQuery(sql);
                 if(rs.next()){
                     byte[] img = rs.getBytes("Image");
-
-
-
                     //Resize The ImageIcon
                     ImageIcon image = new ImageIcon(img);
                     Image im = image.getImage();
@@ -210,10 +253,10 @@ public void showpic(String sql,JLabel label){
                     ImageIcon newImage = new ImageIcon(myImg);
                     label.setIcon(newImage);
                 }
+                con.setAutoCommit(true);
+                rs.close();
+                st.close();
                 
-                else{
-                    JOptionPane.showMessageDialog(null, "No Data");
-                }
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -397,11 +440,11 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
             System.out.println("Worked!!!!!!!!");
      }
      
-      public void ChangeName(JTable table, int col_index, String col_name){
+    public void ChangeName(JTable table, int col_index, String col_name){
             table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
       }
       
-      public void HideColunmsTable(JTable tb ,TableColumn hideC,int i){
+    public void HideColunmsTable(JTable tb ,TableColumn hideC,int i){
            hideC = tb.getColumnModel().getColumn(i);
            tb.getColumnModel().removeColumn(hideC);
       }
@@ -427,5 +470,48 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
            
         } catch (Exception e) {
         }
+    }
+    
+    public void TextOnlyNumber(JTextField txtnum){
+            txtnum.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+              char c = e.getKeyChar();
+              if (!(Character.isDigit(c) ||
+                 (c == KeyEvent.VK_BACK_SPACE) ||
+                 (c == KeyEvent.VK_DELETE) )) {
+                txtnum.getToolkit().beep();
+                e.consume();
+              }
+                //`~!@#$%^&*()_+=\\|\"':;?/>.<,
+//                String badchars  = "`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
+//                 char c = e.getKeyChar();
+//
+//                 if((Character.isLetter(c) && !e.isAltDown()) 
+//                           || badchars.indexOf(c) > -1) {
+//                            e.consume();
+//                            return;
+//                        }
+//             if(c == '-' && txtnum.getDocument().getLength() > 0) 
+//                e.consume();
+             
+              }
+           
+          });
+    }
+    
+    public void TextOnlyCharacters(JTextField txtchar){
+        txtchar.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+
+//                if(!(Character.isLetter(evt.getKeyChar()))){
+//                       evt.consume();
+//                   }
+                    char c=evt.getKeyChar();
+                    if(!(Character.isAlphabetic(c) ||  (c==KeyEvent.VK_BACK_SPACE)||  c==KeyEvent.VK_DELETE ))
+                        evt.consume();
+           
+            }
+        });
     }
 }
