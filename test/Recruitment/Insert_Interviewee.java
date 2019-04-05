@@ -6,7 +6,13 @@
 package Recruitment;
 
 import CMS.DB;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -20,9 +26,30 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     DB c =new DB();
     JTextField id = new JTextField();
     JTextField interid = new JTextField();
+    DefaultTableModel dm;
     public Insert_Interviewee() {
         initComponents();
-        
+//              tbdata.addMouseListener(new MouseAdapter() {
+//             @Override
+//             public void mouseReleased(MouseEvent e) {
+//                 int r = tbdata.rowAtPoint(e.getPoint());
+//                 if (r >= 0 && r < tbdata.getRowCount()) {
+//                     tbdata.setRowSelectionInterval(r, r);
+//                 } else {
+//                     tbdata.clearSelection();
+//                 }
+//
+//                 int rowindex = tbdata.getSelectedRow();
+//                 if (rowindex < 0)
+//                     return;
+//                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+//                     tbdata.setComponentPopupMenu(jpm);
+//                     jpm.show(e.getComponent(), e.getX(), e.getY());
+//                 }
+//             }
+//         });
+            VIEW();
+            c.HideColunmsTable(tbdata,5);
     }
      void viewid(){
         String que="SELECT MAX(ID)+1 FROM employees";
@@ -42,26 +69,47 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         VIEW();
     }
     void btupdate(){
-        String sql="";
+         int i = tbdata.getSelectedRow();
+         TableModel m = tbdata.getModel();
+        String sql="UPDATE interviewees SET Address='"+m.getValueAt(i, 3).toString()+"' WHERE IntervieweeId="+m.getValueAt(i, 0).toString()+"";
         c.Query(sql);
         VIEW();
     }
     void btdelete(){
-        String sql="";
+        String sql="DELETE FROM interviewees\n" +
+                   "WHERE IntervieweeId=0;";
         c.Query(sql);
         VIEW();
     }
     void SEARCH(){
-        String sql="";
+        String sql="SELECT IntervieweeId, Name, Gender, Address, Tel, Image, Status, Blocked, `Degree`, `Language`, Skill, Dob, Email\n" +
+                    "FROM interviewees i where  MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill)\n" +
+                    "AGAINST ('"+txtsearch.getText().toString()+"' IN BOOLEAN MODE);";
+         c.showDataInTable(tbdata, sql, dm);
     }
     
     void VIEW(){
-        
+         String sql="SELECT IntervieweeId, Name, Gender, Address, Tel,"
+                    + " Image, Status, Blocked, `Degree`, `Language`,"
+                    + " Skill, Dob, Email\n" +
+                    "FROM interviewees;";
+        c.showDataInTable(tbdata, sql, dm);
     }
     void CLEAR(){
         
     }
-    
+    void SELECTEDTABLE(){
+         int i = tbdata.getSelectedRow();
+         TableModel m = tbdata.getModel();
+         txtname.setText(m.getValueAt(i, 1).toString());
+       
+        cbgender.setSelectedItem(m.getValueAt(i, 3).toString());
+        txtaddress.setText(m.getValueAt(i, 4).toString());
+        txttel.setText(m.getValueAt(i, 5).toString());
+        id.setText(m.getValueAt(i, 0).toString());
+        String sle="SELECT Image From employees WHERE ID = "+id.getText()+"";
+        c.showpic(sle, pic);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -72,6 +120,9 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jpm = new javax.swing.JPopupMenu();
+        mUpdate = new javax.swing.JMenuItem();
+        mDelete = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtname = new javax.swing.JTextField();
@@ -97,13 +148,23 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbdata = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
         txtsearch = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         cbstatus = new javaapplication21.AutoComboBox();
+        btnInsert = new javax.swing.JButton();
+
+        mUpdate.setText("UPDATE");
+        mUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mUpdateActionPerformed(evt);
+            }
+        });
+        jpm.add(mUpdate);
+
+        mDelete.setText("DELETE");
+        jpm.add(mDelete);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -174,15 +235,26 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
             }
         ));
+        tbdata.setRowHeight(30);
+        tbdata.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbdataMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbdataMouseReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbdata);
 
-        jButton2.setText("Add");
-
-        jButton3.setText("Update");
-
-        jButton4.setText("Delete");
+        btnNew.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnNew.setText("Add New");
 
         txtsearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtsearchKeyReleased(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel11.setText("Search :");
@@ -192,12 +264,15 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
         cbstatus.setKeyWord(new String[] {"none", "block"});
 
+        btnInsert.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnInsert.setText("Insert");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(666, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(617, 617, 617))
             .addGroup(layout.createSequentialGroup()
@@ -248,15 +323,13 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 108, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(432, 432, 432)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(417, 417, 417)
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -322,9 +395,8 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                         .addComponent(txtsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
                 .addContainerGap())
@@ -338,6 +410,26 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     
     // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
+
+    private void tbdataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbdataMouseClicked
+//              int i = tbdata.getSelectedRow();
+//              TableModel m = tbdata.getModel();
+           
+             
+              // System.out.println(m.getValueAt(i, 0).toString()+" "+m.getValueAt(i, 1).toString());
+    }//GEN-LAST:event_tbdataMouseClicked
+
+    private void tbdataMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbdataMouseReleased
+        c.TableMouseReleased(evt, tbdata, jpm);
+    }//GEN-LAST:event_tbdataMouseReleased
+
+    private void txtsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsearchKeyReleased
+            SEARCH();
+    }//GEN-LAST:event_txtsearchKeyReleased
+
+    private void mUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUpdateActionPerformed
+            btupdate();
+    }//GEN-LAST:event_mUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -375,13 +467,12 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnInsert;
+    private javax.swing.JButton btnNew;
     private javaapplication21.AutoComboBox cbblock;
     private javaapplication21.AutoComboBox cbgender;
     private javaapplication21.AutoComboBox cbstatus;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -396,7 +487,10 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPopupMenu jpm;
     private javax.swing.JPanel jpskill;
+    private javax.swing.JMenuItem mDelete;
+    private javax.swing.JMenuItem mUpdate;
     private javax.swing.JLabel pic;
     private javax.swing.JTable tbdata;
     private javax.swing.JTextField txtaddress;

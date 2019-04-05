@@ -42,6 +42,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -71,7 +72,7 @@ public void Query(String tb) {
             String sql = tb ;
             st = con.createStatement();
            st.executeUpdate(sql);
-           JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
+        //   JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
            con.setAutoCommit(true);
         }catch(SQLException e){
          try {
@@ -444,8 +445,8 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
             table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
       }
       
-    public void HideColunmsTable(JTable tb ,TableColumn hideC,int i){
-           hideC = tb.getColumnModel().getColumn(i);
+    public void HideColunmsTable(JTable tb ,int i){
+           TableColumn    hideC = tb.getColumnModel().getColumn(i);
            tb.getColumnModel().removeColumn(hideC);
       }
     public void DisplayTextName(String sql ,JTextField txt){
@@ -514,4 +515,19 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
             }
         });
     }
+    
+    public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMenu jpm) {                                     
+       if (evt.isPopupTrigger())
+        {
+            JTable source = (JTable)evt.getSource();
+            int row = source.rowAtPoint( evt.getPoint() );
+            int column = source.columnAtPoint( evt.getPoint() );
+ 
+            if (! source.isRowSelected(row))
+                source.changeSelection(row, column, false, false);
+            else
+                tb.setComponentPopupMenu(jpm);
+                     jpm.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }            
 }
