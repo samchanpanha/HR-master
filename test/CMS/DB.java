@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -60,7 +61,7 @@ Connection con = ConMysql.getDBConnection();
 Statement st;
 ResultSet rs;
 PreparedStatement pst;
-
+public static List<JCheckBox> Checkboxall;
 
 public static String path;
 
@@ -302,7 +303,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
             model.setValueAt(d3, i, c3);
         }
    }
-   public void X_Columns(JTable t,int c){
+public void X_Columns(JTable t,int c){
         double sum = 0;
         for(int i = 0; i < t.getRowCount(); i++)
         {
@@ -310,7 +311,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
    }
    
-    public void  clock(Thread ck,JLabel date ,JLabel time){
+public void  clock(Thread ck,JLabel date ,JLabel time){
       ck = new Thread(){
       @Override
       public void run(){
@@ -337,26 +338,26 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
       ck.start();    
   }
     
-     public void clearText(JTextField... txt){
+public void clearText(JTextField... txt){
         for (JTextField txts : txt) {
             txts.setText("");
         }
     }
     
-    public void ClearCombobox(JComboBox... cb){
+public void ClearCombobox(JComboBox... cb){
         for (JComboBox cm : cb) {
             cm.addItem("");
             cm.removeAllItems();
             
         }
     }
-    public void ClearTable(JTable tb,DefaultTableModel m){
+public void ClearTable(JTable tb,DefaultTableModel m){
         m=(DefaultTableModel)tb.getModel();
         tb.setModel(m);
         m.removeRow(0);
     }
     
-      public boolean check(String id,JTable tb,DefaultTableModel m){
+public boolean check(String id,JTable tb,DefaultTableModel m){
         for(int i=0;i<tb.getRowCount();i++){
             if(id==m.getValueAt(i, 0).toString()){     
                 return true;
@@ -364,7 +365,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
         return false;
     }
-        public void DisplayName(AutoComboBox cb, String sql ){
+public void DisplayName(AutoComboBox cb, String sql ){
         try {
             cb.removeAllItems();
             st = con.createStatement();
@@ -378,7 +379,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
     }
     
-     public void DisplayId(String sql,JTextField txtid){
+public void DisplayId(String sql,JTextField txtid){
         try {
            
                 pst = con.prepareStatement(sql);
@@ -390,31 +391,30 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
     }
      
-     public void CreateSkill(JPanel p ,JTextField txt,String sql){
-          //  String[] food = {"Pizza", "Burger", "Pasta", "Hot Dog", "etc","Pizza", "Burger", "Pasta", "Hot Dog", "etc"};
+public void CreateSkill(JPanel p ,JTextArea txt,String sql){
+        
             List<String> SKILL = new ArrayList<>();
-            //p.setLayout(new GridLayout());
-            try {  
-            
+            Checkboxall = new ArrayList<>();
+            try { 
+                
              pst = con.prepareStatement(sql);  
              rs = pst.executeQuery();  
                while (rs.next()) {  
                    String skill =rs.getString(1);
                    SKILL.add(skill);
-//                 String name = rs.getString(1);
-//                 cb.addItem(name);
-
                } 
-                for(int i = 0; i<SKILL.size(); i++){
-            JCheckBox box = new JCheckBox();
-
-            box.setText(SKILL.get(i));
+            for(int i = 0; i<SKILL.size(); i++){
+            JCheckBox box = new JCheckBox(SKILL.get(i),false);
+            box.setName(SKILL.get(i));
             box.setActionCommand(String.valueOf(i));
+            
+            
+            
             box.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     if (e.getStateChange() == ItemEvent.SELECTED) {
                        String b =box.getText();
-                        txt.setText(" "+b+" ");
+                        txt.append(b+" ");
                     }
                     if (e.getStateChange() == ItemEvent.DESELECTED) {
                              String b =box.getText();
@@ -429,9 +429,11 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
                 }
             });
           //  p.setLayout(new FlowLayout((int) TOP_ALIGNMENT));
+            Checkboxall.add(box);
             p.add(box);
             p.revalidate();
             p.repaint();
+          
             } 
             }
                catch (Exception ex) { 
@@ -440,16 +442,18 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
            
             System.out.println("Worked!!!!!!!!");
      }
+
+
      
-    public void ChangeName(JTable table, int col_index, String col_name){
+public void ChangeName(JTable table, int col_index, String col_name){
             table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
       }
       
-    public void HideColunmsTable(JTable tb ,int i){
+public void HideColunmsTable(JTable tb ,int i){
            TableColumn    hideC = tb.getColumnModel().getColumn(i);
            tb.getColumnModel().removeColumn(hideC);
       }
-    public void DisplayTextName(String sql ,JTextField txt){
+public void DisplayTextName(String sql ,JTextField txt){
         try {
             String COMMIT_ACTION = "commit";
             txt.setFocusTraversalKeysEnabled(false);
@@ -473,7 +477,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
     }
     
-    public void TextOnlyNumber(JTextField txtnum){
+public void TextOnlyNumber(JTextField txtnum){
             txtnum.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -501,7 +505,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
           });
     }
     
-    public void TextOnlyCharacters(JTextField txtchar){
+public void TextOnlyCharacters(JTextField txtchar){
         txtchar.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyTyped(java.awt.event.KeyEvent evt) {
 
@@ -516,7 +520,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         });
     }
     
-    public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMenu jpm) {                                     
+public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMenu jpm) {                                     
        if (evt.isPopupTrigger())
         {
             JTable source = (JTable)evt.getSource();

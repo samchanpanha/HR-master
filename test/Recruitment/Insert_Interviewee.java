@@ -8,8 +8,17 @@ package Recruitment;
 import CMS.DB;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -27,29 +36,21 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     JTextField id = new JTextField();
     JTextField interid = new JTextField();
     DefaultTableModel dm;
+    JTextArea txtskill = new JTextArea();
+    List<JCheckBox> call =new ArrayList<>();
+    
     public Insert_Interviewee() {
         initComponents();
-//              tbdata.addMouseListener(new MouseAdapter() {
-//             @Override
-//             public void mouseReleased(MouseEvent e) {
-//                 int r = tbdata.rowAtPoint(e.getPoint());
-//                 if (r >= 0 && r < tbdata.getRowCount()) {
-//                     tbdata.setRowSelectionInterval(r, r);
-//                 } else {
-//                     tbdata.clearSelection();
-//                 }
-//
-//                 int rowindex = tbdata.getSelectedRow();
-//                 if (rowindex < 0)
-//                     return;
-//                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
-//                     tbdata.setComponentPopupMenu(jpm);
-//                     jpm.show(e.getComponent(), e.getX(), e.getY());
-//                 }
-//             }
-//         });
+
             VIEW();
             c.HideColunmsTable(tbdata,5);
+             
+    }
+    
+    void ShowSkill(){
+        String sql ="SELECT Skill FROM skills";
+        c.CreateSkill( jpskill ,txtskill,sql);
+        System.out.println(txtskill.getText()+"");
     }
      void viewid(){
         String que="SELECT MAX(ID)+1 FROM employees";
@@ -71,8 +72,12 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     void btupdate(){
          int i = tbdata.getSelectedRow();
          TableModel m = tbdata.getModel();
-        String sql="UPDATE interviewees SET Address='"+m.getValueAt(i, 3).toString()+"' WHERE IntervieweeId="+m.getValueAt(i, 0).toString()+"";
-        c.Query(sql);
+//        String sql="UPDATE interviewees\n" +
+//                    "SET Name='"++"', Gender='"++"', Address='"++"', Tel='"++"',Status='"++"', "
+//                + "Blocked='"++"', `Degree`='"++"', `Language`='"++"',"
+//                + " Skill='"++"', Dob='"++"', Email='"++"'\n" +
+//                    "WHERE IntervieweeId=0;";
+//        c.Query(sql);
         VIEW();
     }
     void btdelete(){
@@ -110,6 +115,33 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         String sle="SELECT Image From employees WHERE ID = "+id.getText()+"";
         c.showpic(sle, pic);
     }
+    
+    public  List<List<String>> linesToLinesAndWord(String lines) {
+    List<List<String>> wordlists = new ArrayList<>();
+    List<String> lineList = Arrays.asList(lines.split("\n"));
+    
+    for (String line : lineList) {
+      //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));
+        
+    }      
+    DB.Checkboxall.forEach((JCheckBox cb) -> {
+            String name = cb.getName();
+             for (List<String> wordlist : wordlists) {
+                 for (String string : wordlist) {
+                      if(name == null ? string == null : name.equals(string)){
+                        cb.setSelected(isActive());      
+                         }   
+                 }
+    }
+          });  
+    return wordlists;
+}
+   void Uncheck(){
+         for (int i = 0; i < DB.Checkboxall.size(); i++) {
+            DB.Checkboxall.get(i).setSelected(false);
+        }
+   }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -205,6 +237,12 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
         cbgender.setKeyWord(new String[] {"Male", "Female"});
 
+        txtdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtdateMouseReleased(evt);
+            }
+        });
+
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Skill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         jpskill.setBackground(new java.awt.Color(255, 255, 255));
@@ -248,6 +286,11 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
         btnNew.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnNew.setText("Add New");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
         txtsearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -406,15 +449,35 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        
-    
+     ShowSkill();
+     VIEW();
+     txtdate.setDateFormatString("yyyy-MM-dd");
     // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
 
     private void tbdataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbdataMouseClicked
-//              int i = tbdata.getSelectedRow();
-//              TableModel m = tbdata.getModel();
+              int i = tbdata.getSelectedRow();
+              TableModel m = tbdata.getModel();
            
+              try {
+           // txtskill.setText(null);
+//          DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+//          int index = jTable1.getSelectedRow();
+            Uncheck();
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String)m.getValueAt(i, 11));
+            txtdate.setDate(date);
+            txtskill.setText(m.getValueAt(i, 10).toString());
+                    String editorText = txtskill.getText();
+                    editorText = editorText.replaceAll (",", " ");
+                    txtskill.setText(editorText);
+                    System.out.println(txtskill.getText()+"");
+            linesToLinesAndWord(txtskill.getText()+"");
+            
+        } 
+        catch (ParseException ex) 
+        {
+          
+        }
              
               // System.out.println(m.getValueAt(i, 0).toString()+" "+m.getValueAt(i, 1).toString());
     }//GEN-LAST:event_tbdataMouseClicked
@@ -430,6 +493,16 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     private void mUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUpdateActionPerformed
             btupdate();
     }//GEN-LAST:event_mUpdateActionPerformed
+
+    private void txtdateMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateMouseReleased
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_txtdateMouseReleased
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnNewActionPerformed
 
     /**
      * @param args the command line arguments

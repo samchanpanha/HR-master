@@ -6,10 +6,13 @@
 package Recruitment;
 
 import CMS.DB;
+import java.util.List;
 import javaapplication21.AutoComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -20,9 +23,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frm_search_Interviewee extends javax.swing.JFrame {
 
-     JTextField txtskill = new JTextField();
-     JTextField txtcate = new JTextField();
-     JTextField txtmajor = new JTextField();
+     JTextArea txtskill = new JTextArea();
+     JTextArea txtcate = new JTextArea();
+     JTextArea txtmajor = new JTextArea();
+     List<JCheckBox> cgskill ;
+     List<JCheckBox> cgmajor ;
+     List<JCheckBox> cgcate ;
      DefaultTableModel dm;
     
      AutoComboBox ac = new AutoComboBox();
@@ -38,6 +44,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
    void ShowSkill(){
        String sql ="SELECT Skill FROM skills";
          c.CreateSkill( jpskill ,txtskill,sql);
+        
    }
    void ShowName(){
        String sql="SELECT Name From Interviewees GROUP BY Name";
@@ -47,10 +54,12 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
    void ShowCategory(){
        String sql ="SELECT CatName FROM categorys";
          c.CreateSkill( jpcate ,txtcate,sql);
+          
    }
    void ShowMajor(){
        String sql ="SELECT Major FROM Majors";
          c.CreateSkill( jpmajor ,txtmajor,sql);
+          
    }
    void Changetablename(){
         c.ChangeName(tbdata,0,"ID");
@@ -61,58 +70,9 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         c.ChangeName(tbdata,19,"WorkSkill");
    }
    void ShowData(){
-          String q = "i.IntervieweeId AS ID,\n" +
-                    "	i.`Name`,\n" +
-                    "	i.Gender,\n" +
-                    "	i.Address,\n" +
-                    "	i.Tel,\n" +
-                    "	i.Blocked,\n" +
-                    "	i.Degree,\n" +
-                    "	i.`Language`,\n" +
-                    "	i.Skill,\n" +
-                    "	i.Dob ,\n" +
-                    "	i.Email,\n" +
-                    "	sp.StudyRecordType as StudyRecord,\n" +
-                    "	c.CatName as Category,\n" +
-                    "	m.Major,\n" +
-                    "	s.Skill as StudySkill,\n" +
-                    "	s.Description,\n" +
-                    "	s.EndYear,\n" +
-                    "	wp.WorkExperienceId,\n" +
-                    "	p.Position,\n" +
-                    "	wp.Skill as WorkSkill,\n" +
-                    "	wp.DateStart,\n" +
-                    "	wp.DateEnd,\n" +
-                    "	wp.ExperienceOfYear ";
-       
+ 
         String st = txtname.getText().toString()+" "+txtskill.getText()+" "+txtcate.getText()+" "+txtmajor.getText();
-    
-        String sql="SELECT \n" +
-                    "  "+q+"  \n" +
-                    "FROM\n" +
-                    "    interviewees i\n" +
-                    "        LEFT JOIN\n" +
-                    "    studyrecords s ON i.IntervieweeId = s.IntervieweeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    studyrecordtypes sp ON s.StudyRecordId = sp.StudyRecordTypeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    categorys c ON s.CatID = c.CatID\n" +
-                    "        LEFT JOIN\n" +
-                    "    majors m ON s.MajorId = m.MajorId\n" +
-                    "        LEFT JOIN\n" +
-                    "    workexperiences wp ON i.IntervieweeId = wp.IntervieweeId\n" +
-                    "        LEFT JOIN\n" +
-                    "    positions p ON wp.PositionId = p.PositionID\n" +
-                    "WHERE\n" +
-                    "    MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (c.CatName) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "        OR MATCH (m.Major) AGAINST ('"+st+"' IN BOOLEAN MODE)\n" +
-                    "ORDER BY "
-                    + "MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
-                    + "MATCH (s.Description , s.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE) + "
-                    + "MATCH (wp.Description , wp.Skill) AGAINST ('"+st+"' IN BOOLEAN MODE);";
+        String sql="CALL ViewInterWe('"+st+"');";
                if (!(st==null) && st!=" ") {
                     c.showDataInTable(tbdata, sql, dm);
                     Changetablename();
@@ -186,6 +146,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
             }
         ));
+        tbdata.setEnabled(false);
         jScrollPane3.setViewportView(tbdata);
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 540));
