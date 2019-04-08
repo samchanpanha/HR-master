@@ -20,6 +20,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="DELETE"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mDeleteActionPerformed"/>
+          </Events>
         </MenuItem>
       </SubComponents>
     </Container>
@@ -392,6 +395,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Choose Photo"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
       <AuxValues>
@@ -474,6 +480,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Insert"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInsertActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

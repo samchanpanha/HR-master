@@ -6,8 +6,14 @@
 package Recruitment;
 
 import CMS.DB;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.PreparedStatement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +21,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -33,18 +41,17 @@ public class Insert_Interviewee extends javax.swing.JFrame {
      * Creates new form Insert_Interviewee
      */
     DB c =new DB();
+    String InID=null;
     JTextField id = new JTextField();
     JTextField interid = new JTextField();
     DefaultTableModel dm;
     JTextArea txtskill = new JTextArea();
     List<JCheckBox> call =new ArrayList<>();
+
     
     public Insert_Interviewee() {
         initComponents();
-
-            VIEW();
-            c.HideColunmsTable(tbdata,5);
-             
+      
     }
     
     void ShowSkill(){
@@ -53,36 +60,41 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         System.out.println(txtskill.getText()+"");
     }
      void viewid(){
-        String que="SELECT MAX(ID)+1 FROM employees";
-            c.Value_ID(que, id);
-            System.out.println(id.getText()+ "");
+        c.Value_ID(id);
+        JOptionPane.showMessageDialog(this, id.getText()+"");
     }
     void btadd(){
-        viewid();
-        String sql="INSERT INTO interviewees\n" +
-        "(Name, Gender, Address, Tel, Status, Blocked, `Degree`, `Language`, Skill, Dob, Email)\n" +
-        "VALUES('', '', '', '', 'none', 'none', '', '', '', '', '');";
+      
+        String name = txtname.getText();
+        String gen = cbgender.getSelectedItem().toString();
+        String adr = txtaddress.getText();
+        String tel = txttel.getText();
+        String sta = cbstatus.getSelectedItem().toString();
+        String block = cbblock.getSelectedItem().toString();
+        String de = txtdegree.getText();
+        String lan = txtlanguage.getText();
+        String sk = txtskill.getText();
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        String dod =formater.format(txtdate.getDate());
+        String emaill = txtemail.getText();
+        String sql="CALL InsertIW('"+name+"','"+gen+"','"+adr+"','"+tel+"','"+sta+"',"
+                                    + "'"+block+"','"+de+"','"+lan+"','"+sk+"','"+dod+"','"+emaill+"')";
         c.Query(sql);
-        String p=DB.path;
-        String ql="UPDATE  SET Image=? WHERE ID=?";
-        c.Add_Pic(p,id,ql);
         viewid();
+        String query ="UPDATE interviewees SET Image=? WHERE IntervieweeId = ?";
+        c.Add_Pic(id.getText(), query);
+       
         VIEW();
     }
+  
+    
     void btupdate(){
-         int i = tbdata.getSelectedRow();
-         TableModel m = tbdata.getModel();
-//        String sql="UPDATE interviewees\n" +
-//                    "SET Name='"++"', Gender='"++"', Address='"++"', Tel='"++"',Status='"++"', "
-//                + "Blocked='"++"', `Degree`='"++"', `Language`='"++"',"
-//                + " Skill='"++"', Dob='"++"', Email='"++"'\n" +
-//                    "WHERE IntervieweeId=0;";
-//        c.Query(sql);
-        VIEW();
+         String query ="UPDATE interviewees SET Image=? WHERE IntervieweeId = ?";
+         c.Add_Pic(interid.getText(), query);
     }
     void btdelete(){
         String sql="DELETE FROM interviewees\n" +
-                   "WHERE IntervieweeId=0;";
+                   "WHERE IntervieweeId="+interid.getText().toString().trim()+";";
         c.Query(sql);
         VIEW();
     }
@@ -90,31 +102,27 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         String sql="SELECT IntervieweeId, Name, Gender, Address, Tel, Image, Status, Blocked, `Degree`, `Language`, Skill, Dob, Email\n" +
                     "FROM interviewees i where  MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill)\n" +
                     "AGAINST ('"+txtsearch.getText().toString()+"' IN BOOLEAN MODE);";
+        if ("".equals(txtsearch.getText())) {
+            VIEW();
+        }
+        else
          c.showDataInTable(tbdata, sql, dm);
     }
     
     void VIEW(){
-         String sql="SELECT IntervieweeId, Name, Gender, Address, Tel,"
+       
+         String sql="SELECT IntervieweeId AS ID, Name, Gender, Address, Tel,"
                     + " Image, Status, Blocked, `Degree`, `Language`,"
                     + " Skill, Dob, Email\n" +
                     "FROM interviewees;";
-        c.showDataInTable(tbdata, sql, dm);
+       c.showDataInTable(tbdata, sql, dm); 
+     //  c.HideColunmsTable(tbdata, 5);
+       c.ChangeName(tbdata, 0, "ID");
     }
     void CLEAR(){
         
     }
-    void SELECTEDTABLE(){
-         int i = tbdata.getSelectedRow();
-         TableModel m = tbdata.getModel();
-         txtname.setText(m.getValueAt(i, 1).toString());
-       
-        cbgender.setSelectedItem(m.getValueAt(i, 3).toString());
-        txtaddress.setText(m.getValueAt(i, 4).toString());
-        txttel.setText(m.getValueAt(i, 5).toString());
-        id.setText(m.getValueAt(i, 0).toString());
-        String sle="SELECT Image From employees WHERE ID = "+id.getText()+"";
-        c.showpic(sle, pic);
-    }
+   
     
     public  List<List<String>> linesToLinesAndWord(String lines) {
     List<List<String>> wordlists = new ArrayList<>();
@@ -196,6 +204,11 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         jpm.add(mUpdate);
 
         mDelete.setText("DELETE");
+        mDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mDeleteActionPerformed(evt);
+            }
+        });
         jpm.add(mDelete);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -264,6 +277,11 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         cbblock.setKeyWord(new String[] {"none", "block"});
 
         jButton1.setText("Choose Photo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         tbdata.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -309,6 +327,11 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
         btnInsert.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnInsert.setText("Insert");
+        btnInsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -452,6 +475,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
      ShowSkill();
      VIEW();
      txtdate.setDateFormatString("yyyy-MM-dd");
+      
     // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
 
@@ -459,10 +483,20 @@ public class Insert_Interviewee extends javax.swing.JFrame {
               int i = tbdata.getSelectedRow();
               TableModel m = tbdata.getModel();
            
-              try {
-           // txtskill.setText(null);
-//          DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-//          int index = jTable1.getSelectedRow();
+        try {
+            interid.setText(m.getValueAt(i, 0).toString());
+            txtname.setText(m.getValueAt(i,1 ).toString());
+            cbgender.setSelectedItem(m.getValueAt(i,2 ).toString());
+            txtaddress.setText(m.getValueAt(i,3 ).toString());
+            txttel.setText(m.getValueAt(i,4 ).toString());
+            cbstatus.setSelectedItem(m.getValueAt(i,6 ).toString());
+            cbblock.setSelectedItem(m.getValueAt(i,7 ).toString());
+            txtdegree.setText(m.getValueAt(i,8 ).toString());
+            txtlanguage.setText(m.getValueAt(i,9 ).toString());
+            
+            String sle="SELECT Image From interviewees WHERE IntervieweeId = '"+interid.getText().toString()+"'";
+            c.showpic(sle, pic);
+            System.out.println(m.getValueAt(i, 0).toString()+"");
             Uncheck();
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String)m.getValueAt(i, 11));
             txtdate.setDate(date);
@@ -472,11 +506,12 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                     txtskill.setText(editorText);
                     System.out.println(txtskill.getText()+"");
             linesToLinesAndWord(txtskill.getText()+"");
+            txtemail.setText(m.getValueAt(i,12 ).toString());
             
         } 
         catch (ParseException ex) 
         {
-          
+          JOptionPane.showMessageDialog(null, ex.getMessage());
         }
              
               // System.out.println(m.getValueAt(i, 0).toString()+" "+m.getValueAt(i, 1).toString());
@@ -495,14 +530,27 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }//GEN-LAST:event_mUpdateActionPerformed
 
     private void txtdateMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateMouseReleased
-        // TODO add your handling code here:
       
+   
     }//GEN-LAST:event_txtdateMouseReleased
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        // TODO add your handling code here:
-        
+          
     }//GEN-LAST:event_btnNewActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+            c.bro(pic);
+     
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
+        btadd();
+        
+    }//GEN-LAST:event_btnInsertActionPerformed
+
+    private void mDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mDeleteActionPerformed
+        btdelete();
+    }//GEN-LAST:event_mDeleteActionPerformed
 
     /**
      * @param args the command line arguments

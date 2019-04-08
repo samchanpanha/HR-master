@@ -6,6 +6,7 @@
 package CMS;
 
 
+import Recruitment.Insert_Interviewee;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -14,10 +15,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import static java.lang.Thread.sleep;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javaapplication21.AutoComboBox;
 import javafx.embed.swing.JFXPanel;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,13 +63,14 @@ import javax.swing.table.TableColumn;
  * @author panha
  */
 public class DB {
-Connection con = ConMysql.getDBConnection(); 
+public static Connection con = ConMysql.getDBConnection(); 
 Statement st;
 ResultSet rs;
 PreparedStatement pst;
 public static List<JCheckBox> Checkboxall;
 
-public static String path;
+public String filename=null;
+public byte[] pimage=null;
 
 public void Query(String tb) {
     
@@ -93,20 +100,17 @@ public void Query(String tb) {
         }
 }
 
-public void Value_ID(String sql,JTextField txt){
+public void Value_ID(JTextField txt){
     try {  
         
         con.setAutoCommit(false);
-        pst = con.prepareStatement(sql);  
-        rs = pst.executeQuery();  
-        while (rs.next()) {  
-         String id = rs.getString(1);  
-         txt.setText(id);
-         
-       } 
-         con.setAutoCommit(true);
-         pst.close();
-         rs.close();
+        st = con.createStatement();
+        rs = st.executeQuery("SELECT LAST_INSERT_ID() ");  
+        rs.first();
+        txt.setText(rs.getString(1));
+        con.setAutoCommit(true);
+        st.close();
+        rs.close();
     }
        catch (Exception ex) { 
         try {
@@ -117,62 +121,41 @@ public void Value_ID(String sql,JTextField txt){
     JOptionPane.showMessageDialog(null,"ERROR");
 }    
 }
+ public  void Add_Pic(String id ,String sql){    
+     try{
+              InputStream img = new FileInputStream(new File(filename));     
+              String   UpdateQuery = sql;
+              PreparedStatement     ps =DB.con.prepareStatement(UpdateQuery);
+                    ps.setBlob(1, img);
+                    ps.setString(2, id);
+                    ps.executeUpdate();                
+                    JOptionPane.showMessageDialog(null, "SUCCESSFULL");     
+                }catch(Exception ex)
+                {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+}
 
-public  void Add_Pic(String p,JTextField txt,String sqls){    
-    try {
-       con.setAutoCommit(false);
-      //  String querySetLimit = "SET GLOBAL max_allowed_packet=104857600;";  // 10 MB
-        Statement stSetLimit = con.createStatement();
-      //  stSetLimit.execute(querySetLimit);
-        
-        String sql = sqls;
-        PreparedStatement statement = con.prepareStatement(sql);
-        
-      FileInputStream  inputStreams = new FileInputStream(new File(p));
-        
-        statement.setBlob(1, inputStreams);
-        statement.setString(2,txt.getText()+"" );
-        
-        int row = statement.executeUpdate();
-        if (row > 0) {
-//            System.out.println("A contact was inserted with photo image.");
-        JOptionPane.showMessageDialog(null,"EXECUTE SUCCESS");     
-            }
-         con.setAutoCommit(true);
-            con.close();
-            inputStreams.close();
-        } catch (SQLException ex) {
+
+public void bro(JLabel pic){
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        filename = f.getAbsolutePath();
+        ImageIcon icon = new ImageIcon(new ImageIcon(filename).getImage().getScaledInstance(pic.getWidth(), pic.getHeight(),Image.SCALE_SMOOTH));
+        pic.setIcon(icon);
         try {
-            con.rollback();
-        } catch (SQLException ex1) {
-            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+            File image = new File(filename);
+            FileInputStream fis = new FileInputStream(image);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            for(int readnum ; (readnum=fis.read(buf))!=-1;){
+                baos.write(buf, 0, readnum);
+            }
+            pimage=baos.toByteArray();
+        } catch (Exception e) {
         }
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }         
-}
-public ImageIcon ResizeImage(String imgPath ,JLabel lb){
-        ImageIcon MyImage = new ImageIcon(imgPath);
-        Image img = MyImage.getImage();
-        Image newImage = img.getScaledInstance(lb.getWidth(), lb.getHeight(),Image.SCALE_SMOOTH);
-        ImageIcon image = new ImageIcon(newImage);
-        return image;
     }
-public void browes(JLabel lb){
-//     b.addActionListener((ActionEvent e) -> {
-         JFileChooser fileChooser = new JFileChooser();
-         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-         FileNameExtensionFilter filter = new FileNameExtensionFilter("*.IMAGE", "jpg","gif","png");
-         fileChooser.addChoosableFileFilter(filter);
-         int result = fileChooser.showSaveDialog(null);
-         if(result == JFileChooser.APPROVE_OPTION){
-             File selectedFile = fileChooser.getSelectedFile();
-              path = selectedFile.getAbsolutePath();
-             lb.setIcon(ResizeImage(path,lb));
-            
-         }
-}
 public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
         try {
@@ -213,7 +196,7 @@ public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
             } catch (SQLException ex1) {
                 Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           JOptionPane.showMessageDialog(null,"ERROR");
+          JOptionPane.showMessageDialog(null, ex.getMessage());
        }
 }
 public void Value_ID(String sql,JLabel txt){
@@ -237,7 +220,7 @@ public void Value_ID(String sql,JLabel txt){
        } 
     }
        catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+    JOptionPane.showMessageDialog(null, ex.getMessage());
 }    
 }
 
@@ -247,20 +230,26 @@ public void showpic(String sql,JLabel label){
                 st = con.createStatement();
                rs = st.executeQuery(sql);
                 if(rs.next()){
-                    byte[] img = rs.getBytes("Image");
-                    //Resize The ImageIcon
-                    ImageIcon image = new ImageIcon(img);
-                    Image im = image.getImage();
-                    Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
-                    ImageIcon newImage = new ImageIcon(myImg);
-                    label.setIcon(newImage);
+//                    byte[] img = rs.getBytes("Image");
+//                    //Resize The ImageIcon
+//                    ImageIcon image = new ImageIcon(img);
+//                    Image im = image.getImage();
+//                    Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+//                    ImageIcon newImage = new ImageIcon(myImg);
+//                    label.setIcon(newImage);
+                      Blob aBlob = rs.getBlob("Image");
+                      InputStream is = aBlob.getBinaryStream(1, aBlob.length());
+                      BufferedImage imag=ImageIO.read(is);
+                      Image image = imag.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+                      ImageIcon icon =new ImageIcon(image);
+                      label.setIcon(icon); 
                 }
                 con.setAutoCommit(true);
                 rs.close();
                 st.close();
                 
             }catch(Exception ex){
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
 }
 
@@ -290,7 +279,7 @@ public void ShowCombobox_Item_ID(String s,JComboBox cb ,JTextField txtid){
        } 
     }
        catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+    JOptionPane.showMessageDialog(null, ex.getMessage());
 }
 }
 
@@ -437,7 +426,7 @@ public void CreateSkill(JPanel p ,JTextArea txt,String sql){
             } 
             }
                catch (Exception ex) { 
-            JOptionPane.showMessageDialog(null,"ERROR");
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
            
             System.out.println("Worked!!!!!!!!");
@@ -474,6 +463,7 @@ public void DisplayTextName(String sql ,JTextField txt){
                 txt.getActionMap().put(COMMIT_ACTION, au.new CommitAction());
            
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
     
