@@ -37,6 +37,8 @@ public class WorkExpericence extends javax.swing.JFrame {
     JTextField txtinid = new JTextField();
     JTextField txtpid = new JTextField();
     JTextArea txtworkskill = new JTextArea();
+    List<String> tempList= new ArrayList<String>();
+    List<String> duplicates= new ArrayList<String>();
     
     private void ShowNameInterviewee(){
         Sql="SELECT Name FROM interviewees"; 
@@ -59,6 +61,8 @@ public class WorkExpericence extends javax.swing.JFrame {
          Sql="SELECT PositionID \n" +
              "FROM positions WHERE Position = '"+cbPositon.getSelectedItem().toString()+"';";
         c.DisplayId(Sql, txtpid);
+        
+        System.out.println(txtpid.getText());
         
     }
     private void WorkSkill(){
@@ -112,12 +116,19 @@ public class WorkExpericence extends javax.swing.JFrame {
         ShowWork();
     }
     private void UPDATE(){
+        String pid = txtpid.getText();
+        String des = txtdes.getText();
+        String sk = txtworkskill.getText();
         SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
         String dstart =formater.format(txtdatestart.getDate());
         String dend = formater.format(txtdateend.getDate());
-        Sql="CALL updateWEP("+Integer.parseInt(txtpid.getText())+",'"+txtdes.getText()+"','"+txtworkskill.getText()+"',"
-                            + "'"+dstart+"','"+dend+"','"+Integer.parseInt(txtinid.getText())+"',"
-                + ""+Integer.parseInt(txtExYear.getText())+","+Integer.parseInt(workid.getText())+")";
+        String inwe = txtinid.getText();
+        String year = txtExYear.getText();
+        String wid  = workid.getText();
+        Sql="UPDATE `db_hrm`.`workexperiences` SET `PositionId` = "+Integer.parseInt(pid)+", `Description` = '"+des+"', \n" +
+            "`Skill` = '"+sk+"', `DateStart` = '"+dstart+"',\n" +
+            "`DateEnd` = '"+dend+"', `IntervieweeId` = "+Integer.parseInt(inwe)+", `ExperienceOfYear` = "+Integer.parseInt(year)+" \n" +
+            "WHERE `WorkExperienceId` = "+Integer.parseInt(wid)+";";
         c.Query(Sql);
         ShowWork();
     }
@@ -127,6 +138,34 @@ public class WorkExpericence extends javax.swing.JFrame {
         ShowWork();
     }
     
+     public  List<List<String>> RemoveWordTheSame(String lines) {
+    List<List<String>> wordlists = new ArrayList<>();
+    List<String> lineList = Arrays.asList(lines.split("\n"));
+    
+    for (String line : lineList) {
+      //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));    
+    }
+    
+    for (List<String> wordlist : wordlists) {
+          for (String dupWord : wordlist) {
+                    if (!tempList.contains(dupWord)) {
+                        tempList.add(dupWord);
+                    }else{
+                        duplicates.add(dupWord);
+                    }
+                }
+    }
+        int k = 0;
+      while (k < tempList.size())
+      {
+         if (tempList.get(k).equals(""))
+            tempList.remove(k);
+         k++;
+      }
+     
+    return wordlists;
+}
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -476,9 +515,17 @@ public class WorkExpericence extends javax.swing.JFrame {
                     txtworkskill.setText(editorText);
                     System.out.println(txtworkskill.getText()+"");
            linesToLinesAndWord(txtworkskill.getText()+"");
+            RemoveWordTheSame(txtworkskill.getText());
+            txtworkskill.setText(null);
+            for (String string : tempList) {
+                
+                txtworkskill.append(string+" ");
+            }
            c.FormartDateInTable(txtdatestart, tbwork, 5);
            c.FormartDateInTable(txtdateend, tbwork, 6);
            txtExYear.setText(m.getValueAt(i, 7).toString());
+           ShowIdInterviewee();
+           ShowPositonID();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
