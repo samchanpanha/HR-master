@@ -82,7 +82,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     
     void btupdate(){
         try {
-             String name = txtname.getText();
+        String name = txtname.getText();
         String gen = cbgender.getSelectedItem().toString();
         String adr = txtaddress.getText();
         String tel = txttel.getText();
@@ -553,7 +553,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btntranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntranActionPerformed
-     btupdate();
+     
         
     }//GEN-LAST:event_btntranActionPerformed
 
