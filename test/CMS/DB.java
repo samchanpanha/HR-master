@@ -7,7 +7,9 @@ package CMS;
 
 
 import Recruitment.Insert_Interviewee;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
+import com.toedter.calendar.JDateChooser;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextField;
@@ -29,8 +31,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +62,7 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 
 /**
@@ -63,14 +70,19 @@ import javax.swing.table.TableColumn;
  * @author panha
  */
 public class DB {
+
+    /**
+     * @return the id
+     */
+  
 public static Connection con = ConMysql.getDBConnection(); 
 Statement st;
 ResultSet rs;
 PreparedStatement pst;
 public static List<JCheckBox> Checkboxall;
-
 public String filename=null;
 public byte[] pimage=null;
+
 
 public void Query(String tb) {
     
@@ -82,21 +94,14 @@ public void Query(String tb) {
            st.executeUpdate(sql);
         //   JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
            con.setAutoCommit(true);
-        }catch(SQLException e){
+        }catch(Exception e){
          try {
              con.rollback();
          } catch (SQLException ex) {
              Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
          }
-            JOptionPane.showMessageDialog(null, e);
-        }finally{
-            try{
-                
-                st.close();
-             
-            }catch(SQLException e){
-
-            }
+            JOptionPane.showMessageDialog(null, e.getMessage());
+       
         }
 }
 
@@ -129,7 +134,7 @@ public void Value_ID(JTextField txt){
                     ps.setBlob(1, img);
                     ps.setString(2, id);
                     ps.executeUpdate();                
-                    JOptionPane.showMessageDialog(null, "SUCCESSFULL");     
+                //    JOptionPane.showMessageDialog(null, "SUCCESSFULL");     
                 }catch(Exception ex)
                 {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -253,30 +258,39 @@ public void showpic(String sql,JLabel label){
             }
 }
 
-public void ShowCombobox_Item(String s,JComboBox cb ,String Name){
+public void ShowCombobox_Item(String s,JComboBox cb ){
      try {  
-         
-     pst = con.prepareStatement(s);  
-     rs = pst.executeQuery();  
-       while (rs.next()) {  
-         
-         String name = rs.getString(1);
-         cb.addItem(name);
-        
-       } 
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(s);  
+            rs = pst.executeQuery();  
+                if(rs.first()){
+                    do{
+                       String name = rs.getString(1);
+                       cb.addItem(name);
+
+                    }while(rs.next());
+                }
+       
+        con.setAutoCommit(true);
+        rs.close();
+        pst.close();
     }
        catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+    JOptionPane.showMessageDialog(null,ex.getMessage());
 }
 }
 public void ShowCombobox_Item_ID(String s,JComboBox cb ,JTextField txtid){
      try {  
      
         pst = con.prepareStatement(s);
-     rs = pst.executeQuery();  
-       while (rs.next()) {  
-         txtid.setText(rs.getString(1));   
-       } 
+        rs = pst.executeQuery();  
+       
+            while (rs.next()){
+               txtid.setText(rs.getString(1));   
+         }
+         
+     
+     
     }
        catch (Exception ex) { 
     JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -403,7 +417,7 @@ public void CreateSkill(JPanel p ,JTextArea txt,String sql){
                 public void itemStateChanged(ItemEvent e) {
                     if (e.getStateChange() == ItemEvent.SELECTED) {
                        String b =box.getText();
-                        txt.append(b+" ");
+                        txt.append(" "+b+" ");
                     }
                     if (e.getStateChange() == ItemEvent.DESELECTED) {
                              String b =box.getText();
@@ -411,7 +425,7 @@ public void CreateSkill(JPanel p ,JTextArea txt,String sql){
                             // I think I need to write the code to here which will
                             // delete the text
                             String editorText = txt.getText();
-                            editorText = editorText.replaceAll (b, "");
+                            editorText = editorText.replaceAll (b, " ");
                             txt.setText(editorText);
                         }
                     }
@@ -467,35 +481,40 @@ public void DisplayTextName(String sql ,JTextField txt){
         }
     }
     
-public void TextOnlyNumber(JTextField txtnum){
-            txtnum.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-              char c = e.getKeyChar();
-              if (!(Character.isDigit(c) ||
-                 (c == KeyEvent.VK_BACK_SPACE) ||
-                 (c == KeyEvent.VK_DELETE) )) {
-                txtnum.getToolkit().beep();
-                e.consume();
-              }
-                //`~!@#$%^&*()_+=\\|\"':;?/>.<,
-//                String badchars  = "`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
-//                 char c = e.getKeyChar();
-//
-//                 if((Character.isLetter(c) && !e.isAltDown()) 
-//                           || badchars.indexOf(c) > -1) {
-//                            e.consume();
-//                            return;
-//                        }
-//             if(c == '-' && txtnum.getDocument().getLength() > 0) 
-//                e.consume();
+public void TextOnlyNumber(JTextField... txtnums){
+           for (JTextField txtnum : txtnums) {
+                 txtnum.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyTyped(KeyEvent e) {
+                      char c = e.getKeyChar();
+                      if (!(Character.isDigit(c) ||
+                         (c == KeyEvent.VK_BACK_SPACE) ||
+                         (c == KeyEvent.VK_DELETE) )) {
+                        txtnum.getToolkit().beep();
+                        e.consume();
+                      }
+                        //`~!@#$%^&*()_+=\\|\"':;?/>.<,
+        //                String badchars  = "`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
+        //                 char c = e.getKeyChar();
+        //
+        //                 if((Character.isLetter(c) && !e.isAltDown()) 
+        //                           || badchars.indexOf(c) > -1) {
+        //                            e.consume();
+        //                            return;
+        //                        }
+        //             if(c == '-' && txtnum.getDocument().getLength() > 0) 
+        //                e.consume();
              
               }
            
           });
+     }
+           
     }
     
-public void TextOnlyCharacters(JTextField txtchar){
+public void TextOnlyCharacters(JTextField... txtchars){
+     
+    for (JTextField txtchar : txtchars) {
         txtchar.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyTyped(java.awt.event.KeyEvent evt) {
 
@@ -508,6 +527,8 @@ public void TextOnlyCharacters(JTextField txtchar){
            
             }
         });
+    }
+    
     }
     
 public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMenu jpm) {                                     
@@ -523,5 +544,23 @@ public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMe
                 tb.setComponentPopupMenu(jpm);
                      jpm.show(evt.getComponent(), evt.getX(), evt.getY());
         }
-    }            
+    }     
+
+public void FormartDate(JDateChooser dateChooser){
+     dateChooser.setDateFormatString("yyyy-MM-dd");
+}
+
+public void FormartDateInTable(JDateChooser chooser ,JTable tb ,int row){
+    int i = tb.getSelectedRow();
+    TableModel m = tb.getModel();
+    Date date;
+    try {
+        date = new SimpleDateFormat("yyyy-MM-dd").parse(m.getValueAt(i, row).toString());
+        chooser.setDate(date);
+    } catch (ParseException ex) {
+        Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+    }
+   
+}
+
 }

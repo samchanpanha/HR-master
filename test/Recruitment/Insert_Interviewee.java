@@ -6,26 +6,15 @@
 package Recruitment;
 
 import CMS.DB;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.sql.PreparedStatement;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -42,11 +31,14 @@ public class Insert_Interviewee extends javax.swing.JFrame {
      */
     DB c =new DB();
     String InID=null;
+    String stskill =null;
     JTextField id = new JTextField();
     JTextField interid = new JTextField();
     DefaultTableModel dm;
     JTextArea txtskill = new JTextArea();
     List<JCheckBox> call =new ArrayList<>();
+    List<String> tempList= new ArrayList<String>();
+    List<String> duplicates= new ArrayList<String>();
 
     
     public Insert_Interviewee() {
@@ -89,24 +81,71 @@ public class Insert_Interviewee extends javax.swing.JFrame {
   
     
     void btupdate(){
+        try {
+             String name = txtname.getText();
+        String gen = cbgender.getSelectedItem().toString();
+        String adr = txtaddress.getText();
+        String tel = txttel.getText();
+        String sta = cbstatus.getSelectedItem().toString();
+        String block = cbblock.getSelectedItem().toString();
+        String de = txtdegree.getText();
+        String lan = txtlanguage.getText();
+        String sk = txtskill.getText();
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        String dod =formater.format(txtdate.getDate());
+        String emaill = txtemail.getText();
+        String sql="UPDATE\n" +
+                    "	db_hrm.interviewees\n" +
+                    "SET\n" +
+                    "	Name = '"+name+"',\n" +
+                    "	Gender = '"+gen+"',\n" +
+                    "	Address = '"+adr+"',\n" +
+                    "	Tel = '"+tel+"',\n" +
+                    "	Status = '"+sta+"',\n" +
+                    "	Blocked = '"+block+"',\n" +
+                    "	Degree = '"+de+"',\n" +
+                    "	Language = '"+lan+"',\n" +
+                    "	Skill = '"+sk+"',\n" +
+                    "	Dob = '"+dod+"',\n" +
+                    "	Email = '"+emaill+"'\n" +
+                    "WHERE IntervieweeId ="+interid.getText()+";";
+        if("".equals(c.filename)||c.filename==null){
+            c.Query(sql);
+             VIEW();
+        }
+        else{
+             c.Query(sql);
          String query ="UPDATE interviewees SET Image=? WHERE IntervieweeId = ?";
          c.Add_Pic(interid.getText(), query);
+         VIEW();
+        }
+        
+        
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
+       
     }
     void btdelete(){
         String sql="DELETE FROM interviewees\n" +
-                   "WHERE IntervieweeId="+interid.getText().toString().trim()+";";
+                   "WHERE IntervieweeId="+interid.getText()+";";
         c.Query(sql);
         VIEW();
     }
     void SEARCH(){
         String sql="SELECT IntervieweeId, Name, Gender, Address, Tel, Image, Status, Blocked, `Degree`, `Language`, Skill, Dob, Email\n" +
                     "FROM interviewees i where  MATCH (i.Name , i.Language , i.Degree , i.Email , i.Status , i.Skill)\n" +
-                    "AGAINST ('"+txtsearch.getText().toString()+"' IN BOOLEAN MODE);";
+                    "AGAINST ('"+txtsearch.getText()+"' IN BOOLEAN MODE);";
         if ("".equals(txtsearch.getText())) {
             VIEW();
         }
         else
-         c.showDataInTable(tbdata, sql, dm);
+        {
+            c.showDataInTable(tbdata, sql, dm);
+            c.HideColunmsTable(tbdata, 5);
+            c.ChangeName(tbdata, 0, "ID");
+        }    
     }
     
     void VIEW(){
@@ -116,33 +155,59 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                     + " Skill, Dob, Email\n" +
                     "FROM interviewees;";
        c.showDataInTable(tbdata, sql, dm); 
-     //  c.HideColunmsTable(tbdata, 5);
+       c.HideColunmsTable(tbdata, 5);
        c.ChangeName(tbdata, 0, "ID");
     }
     void CLEAR(){
         
     }
-   
-    
     public  List<List<String>> linesToLinesAndWord(String lines) {
     List<List<String>> wordlists = new ArrayList<>();
     List<String> lineList = Arrays.asList(lines.split("\n"));
     
     for (String line : lineList) {
       //   System.out.println(line+"");
-        wordlists.add(Arrays.asList(line.trim().split(" ")));
-        
+        wordlists.add(Arrays.asList(line.trim().split(" ")));    
     }      
     DB.Checkboxall.forEach((JCheckBox cb) -> {
             String name = cb.getName();
              for (List<String> wordlist : wordlists) {
-                 for (String string : wordlist) {
+               for (String string : wordlist) {
                       if(name == null ? string == null : name.equals(string)){
                         cb.setSelected(isActive());      
-                         }   
-                 }
+                     }   
+                }
     }
           });  
+    return wordlists;
+}
+    
+    public  List<List<String>> RemoveWordTheSame(String lines) {
+    List<List<String>> wordlists = new ArrayList<>();
+    List<String> lineList = Arrays.asList(lines.split("\n"));
+    
+    for (String line : lineList) {
+      //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));    
+    }
+    
+    for (List<String> wordlist : wordlists) {
+          for (String dupWord : wordlist) {
+                    if (!tempList.contains(dupWord)) {
+                        tempList.add(dupWord);
+                    }else{
+                        duplicates.add(dupWord);
+                    }
+                }
+    }
+        int k = 0;
+      while (k < tempList.size())
+      {
+         if (tempList.get(k).equals(""))
+            tempList.remove(k);
+         k++;
+      }
+     
     return wordlists;
 }
    void Uncheck(){
@@ -164,21 +229,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         mUpdate = new javax.swing.JMenuItem();
         mDelete = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtname = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtaddress = new javax.swing.JTextField();
-        txttel = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        txtemail = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        cbgender = new javaapplication21.AutoComboBox();
-        txtdate = new com.toedter.calendar.JDateChooser();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jpskill = new javax.swing.JPanel();
-        txtlanguage = new javax.swing.JTextField();
+        jpinterviewee = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         txtdegree = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -188,12 +239,29 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbdata = new javax.swing.JTable();
-        btnNew = new javax.swing.JButton();
+        txttel = new javax.swing.JTextField();
         txtsearch = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        txtemail = new javax.swing.JTextField();
         cbstatus = new javaapplication21.AutoComboBox();
+        jLabel7 = new javax.swing.JLabel();
+        btntran = new javax.swing.JButton();
+        cbgender = new javaapplication21.AutoComboBox();
+        txtdate = new com.toedter.calendar.JDateChooser();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jpskill = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtname = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtaddress = new javax.swing.JTextField();
+        txtlanguage = new javax.swing.JTextField();
         btnInsert = new javax.swing.JButton();
+        btnwork = new javax.swing.JButton();
+        btndtudy = new javax.swing.JButton();
 
         mUpdate.setText("UPDATE");
         mUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -222,59 +290,28 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("INTERVIEWEE");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel2.setText("Name :");
+        jpinterviewee.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Gender :");
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel4.setText("Address :");
-
-        txtaddress.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        txttel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel5.setText("Phone Number :");
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel6.setText("Email :");
-
-        txtemail.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel7.setText("Dob :");
-
-        cbgender.setKeyWord(new String[] {"Male", "Female"});
-
-        txtdate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                txtdateMouseReleased(evt);
-            }
-        });
-
-        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Skill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
-
-        jpskill.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setViewportView(jpskill);
-
-        txtlanguage.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Language :");
+        jpinterviewee.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 80, 28));
 
         txtdegree.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txtdegree, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, 220, 28));
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel9.setText("Degree :");
+        jpinterviewee.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 50, 70, 28));
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel10.setText("Block :");
+        jpinterviewee.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 50, 50, 28));
 
         cbblock.setKeyWord(new String[] {"none", "block"});
+        jpinterviewee.add(cbblock, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 50, 220, 28));
+
+        pic.setBackground(new java.awt.Color(255, 255, 255));
+        jpinterviewee.add(pic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 10, 140, 150));
 
         jButton1.setText("Choose Photo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -282,6 +319,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jpinterviewee.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 170, 121, 31));
 
         tbdata.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -302,13 +340,10 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tbdata);
 
-        btnNew.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnNew.setText("Add New");
-        btnNew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewActionPerformed(evt);
-            }
-        });
+        jpinterviewee.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, 282, 1420, 490));
+
+        txttel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txttel, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 220, 28));
 
         txtsearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -316,22 +351,107 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                 txtsearchKeyReleased(evt);
             }
         });
+        jpinterviewee.add(txtsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 170, 520, 28));
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setText("Tel :");
+        jpinterviewee.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 80, 28));
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setText("Search :");
+        jpinterviewee.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 170, 50, 28));
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setText("Email :");
+        jpinterviewee.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 50, 28));
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setText("Status :");
+        jpinterviewee.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 50, 28));
+
+        txtemail.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txtemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 90, 220, 28));
 
         cbstatus.setKeyWord(new String[] {"none", "block"});
+        jpinterviewee.add(cbstatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 10, 220, 28));
 
-        btnInsert.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setText("Dob :");
+        jpinterviewee.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 130, 60, 28));
+
+        btntran.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btntran.setText("Training");
+        btntran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btntranActionPerformed(evt);
+            }
+        });
+        jpinterviewee.add(btntran, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 220, 100, 36));
+
+        cbgender.setKeyWord(new String[] {"Male", "Female"});
+        jpinterviewee.add(cbgender, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, 220, 31));
+
+        txtdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtdateMouseReleased(evt);
+            }
+        });
+        jpinterviewee.add(txtdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 130, 220, 28));
+
+        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Skill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+
+        jpskill.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setViewportView(jpskill);
+
+        jpinterviewee.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 320, 110));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("Name :");
+        jpinterviewee.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 70, 28));
+
+        txtname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txtname, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, 220, 28));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setText("Gender :");
+        jpinterviewee.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 70, 28));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setText("Address :");
+        jpinterviewee.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 70, 28));
+
+        txtaddress.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txtaddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, 220, 58));
+
+        txtlanguage.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jpinterviewee.add(txtlanguage, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, 220, 28));
+
+        btnInsert.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnInsert.setText("Insert");
         btnInsert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertActionPerformed(evt);
             }
         });
+        jpinterviewee.add(btnInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 220, 100, 36));
+
+        btnwork.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnwork.setText("WorkExperice");
+        btnwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnworkActionPerformed(evt);
+            }
+        });
+        jpinterviewee.add(btnwork, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 220, 100, 36));
+
+        btndtudy.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btndtudy.setText("Study");
+        btndtudy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndtudyActionPerformed(evt);
+            }
+        });
+        jpinterviewee.add(btndtudy, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 220, 100, 36));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -339,133 +459,21 @@ public class Insert_Interviewee extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(617, 617, 617))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(554, 554, 554))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbgender, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
-                                    .addComponent(txtaddress))))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtemail)
-                            .addComponent(cbblock, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtdegree, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtlanguage, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txttel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtsearch)
-                            .addComponent(cbstatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE))
-                        .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 108, Short.MAX_VALUE)))
+                .addComponent(jpinterviewee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(417, 417, 417)
-                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbgender, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(7, 7, 7)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtaddress, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(8, 8, 8)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txttel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtlanguage, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtdegree, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(3, 3, 3)
-                                .addComponent(cbblock, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(12, 12, 12)
-                        .addComponent(txtsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jpinterviewee, javax.swing.GroupLayout.PREFERRED_SIZE, 783, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -474,7 +482,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
      ShowSkill();
      VIEW();
-     txtdate.setDateFormatString("yyyy-MM-dd");
+    c.FormartDate(txtdate);
       
     // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
@@ -494,22 +502,28 @@ public class Insert_Interviewee extends javax.swing.JFrame {
             txtdegree.setText(m.getValueAt(i,8 ).toString());
             txtlanguage.setText(m.getValueAt(i,9 ).toString());
             
-            String sle="SELECT Image From interviewees WHERE IntervieweeId = '"+interid.getText().toString()+"'";
+            String sle="SELECT Image From interviewees WHERE IntervieweeId = '"+interid.getText()+"'";
             c.showpic(sle, pic);
             System.out.println(m.getValueAt(i, 0).toString()+"");
             Uncheck();
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String)m.getValueAt(i, 11));
-            txtdate.setDate(date);
+            c.FormartDateInTable(txtdate, tbdata, 11);        
             txtskill.setText(m.getValueAt(i, 10).toString());
                     String editorText = txtskill.getText();
-                    editorText = editorText.replaceAll (",", " ");
+                    editorText = editorText.replaceAll (","," ");
                     txtskill.setText(editorText);
-                    System.out.println(txtskill.getText()+"");
             linesToLinesAndWord(txtskill.getText()+"");
+
+            RemoveWordTheSame(txtskill.getText());
+            txtskill.setText(null);
+            for (String string : tempList) {
+                
+                txtskill.append(string+" ");
+            }
+           
             txtemail.setText(m.getValueAt(i,12 ).toString());
             
         } 
-        catch (ParseException ex) 
+        catch (Exception ex) 
         {
           JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -526,31 +540,38 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }//GEN-LAST:event_txtsearchKeyReleased
 
     private void mUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUpdateActionPerformed
-            btupdate();
+           btupdate();
     }//GEN-LAST:event_mUpdateActionPerformed
 
     private void txtdateMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateMouseReleased
-      
-   
-    }//GEN-LAST:event_txtdateMouseReleased
 
-    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-          
-    }//GEN-LAST:event_btnNewActionPerformed
+    }//GEN-LAST:event_txtdateMouseReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
             c.bro(pic);
      
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
-        btadd();
+    private void btntranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntranActionPerformed
+     btupdate();
         
-    }//GEN-LAST:event_btnInsertActionPerformed
+    }//GEN-LAST:event_btntranActionPerformed
 
     private void mDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mDeleteActionPerformed
         btdelete();
     }//GEN-LAST:event_mDeleteActionPerformed
+
+    private void btnInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertActionPerformed
+          btadd();
+    }//GEN-LAST:event_btnInsertActionPerformed
+
+    private void btnworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnworkActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnworkActionPerformed
+
+    private void btndtudyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndtudyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btndtudyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -589,7 +610,9 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInsert;
-    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btndtudy;
+    private javax.swing.JButton btntran;
+    private javax.swing.JButton btnwork;
     private javaapplication21.AutoComboBox cbblock;
     private javaapplication21.AutoComboBox cbgender;
     private javaapplication21.AutoComboBox cbstatus;
@@ -608,6 +631,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel jpinterviewee;
     private javax.swing.JPopupMenu jpm;
     private javax.swing.JPanel jpskill;
     private javax.swing.JMenuItem mDelete;
