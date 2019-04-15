@@ -76,9 +76,9 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
                if (!(st==null) && st!=" ") {
                     c.showDataInTable(tbdata, sql, dm);
                     Changetablename();
-                    DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
-                    tableRenderer.setHorizontalAlignment(JLabel.CENTER); //Aligning the table data centrally.
-                    tbdata.setDefaultRenderer(Object.class, tableRenderer);
+//                    DefaultTableCellRenderer tableRenderer = new DefaultTableCellRenderer();
+//                    tableRenderer.setHorizontalAlignment(JLabel.CENTER); //Aligning the table data centrally.
+//                    tbdata.setDefaultRenderer(Object.class, tableRenderer);
                     tbdata.setRowHeight(35);
                }
                else{
@@ -136,8 +136,9 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         jpskill.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(jpskill);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 350, 110));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 430, 110));
 
+        tbdata.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tbdata.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -146,24 +147,25 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
             }
         ));
+        tbdata.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbdata.setEnabled(false);
         jScrollPane3.setViewportView(tbdata);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 540));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 560));
 
         jScrollPane2.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Major", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         jpmajor.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setViewportView(jpmajor);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 130, 350, 110));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 130, 430, 110));
 
         jScrollPane4.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Category", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         jpcate.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane4.setViewportView(jpcate);
 
-        jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 130, 350, 110));
+        jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 130, 430, 110));
 
         btnsearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnsearch.setText("Search");
@@ -177,7 +179,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         txtname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jPanel1.add(txtname, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 450, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1440, 770));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1440, 900));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

@@ -5,19 +5,152 @@
  */
 package Recruitment;
 
+import CMS.DB;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JCheckBox;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author panha
  */
-public class Training extends javax.swing.JFrame {
+public class Trainingcourserecord extends javax.swing.JFrame {
 
     /**
      * Creates new form Training
      */
-    public Training() {
+    public Trainingcourserecord() {
         initComponents();
     }
-
+    DB c = new DB();
+    DefaultTableModel dm;
+    String Sql =null;
+    JTextField txtinid = new JTextField();
+    JTextField tranid = new JTextField();
+    JTextField txttranid = new JTextField();
+    JTextArea  txtTraningSkill = new JTextArea();
+    List<String> tempList= new ArrayList<String>();
+    List<String> duplicates= new ArrayList<String>();
+    SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+    
+    private void ShowIntervieweeName(){
+        Sql="SELECT Name FROM interviewees;";
+        c.DisplayName(cbInterName, Sql);
+        cbInterName.setSelectedItem("");
+    }
+    private void ShowIdInterviewee(){
+        Sql="SELECT IntervieweeId FROM interviewees WHERE Name = '"+cbInterName.getSelectedItem()+"' ;";
+        c.DisplayId(Sql, txtinid);
+    }
+    
+    private void TrainingType(){
+         Sql="SELECT TrainingCourseType\n" +
+                "FROM trainingcoursetypes;";
+         c.DisplayName(cbTrainingtype, Sql);
+         cbTrainingtype.setSelectedItem("");
+    }
+    private void TraningId(){
+         Sql="SELECT TrainingCourseTypeId FROM trainingcoursetypes WHERE TrainingCourseType = '"+cbTrainingtype.getSelectedItem()+"'";
+         c.DisplayId(Sql, txttranid);
+    }
+    private void ShowTraning(){
+         Sql="SELECT * FROM vu_traniningcour";
+         c.showDataInTable(tbtraining, Sql, dm);
+    }
+    
+    private void btnInsert(){
+        String dstart = formater.format(txtdatestart.getDate());
+        String dend = formater.format(txtdateend.getDate());
+         Sql="INSERT INTO trainingcourserecords\n" +
+    "(TrainingCourseTypeId, SkillTraining, Description, DateStart, DateEnd, IntervieweeId)\n" +
+    "VALUES('"+txttranid.getText()+"', '"+txtTraningSkill.getText()+"', '"+txtdes.getText()+"', '"+dstart+"', '"+dend+"', '"+txtinid.getText()+"');";
+         c.Query(Sql);
+         ShowTraning();
+    }
+    private void btnUpdate(){
+        String dstart = formater.format(txtdatestart.getDate());
+        String dend = formater.format(txtdateend.getDate());
+         Sql="UPDATE trainingcourserecords\n" +
+    "SET TrainingCourseTypeId='"+txttranid.getText()+"', SkillTraining='"+txtTraningSkill.getText()+"', Description='"+txtdes.getText()+"', "
+     + "DateStart='"+dstart+"', DateEnd='"+dend+"', IntervieweeId='"+txtinid.getText()+"'\n" +
+    "WHERE TrainingCourseId="+tranid.getText()+";";
+         c.Query(Sql);
+         ShowTraning();
+    }
+    private void btnDelete(){
+         Sql="DELETE FROM trainingcourserecords\n" +
+        "WHERE TrainingCourseId="+tranid.getText()+";";
+         c.Query(Sql);
+         ShowTraning();
+    }
+    private void SEARCH(){
+         Sql="CALL FindTraincour('"+txtsearch.getText()+"')";
+         if ("".equals(txtsearch.getText())) {
+            ShowTraning();
+        }
+         else{
+             c.showDataInTable(tbtraining, Sql, dm);
+         }
+         
+         
+    }
+      public  List<List<String>> linesToLinesAndWord(String lines) {
+    List<List<String>> wordlists = new ArrayList<>();
+    List<String> lineList = Arrays.asList(lines.split("\n")); 
+    for (String line : lineList) {
+        wordlists.add(Arrays.asList(line.trim().split(" ")));    
+    }      
+    DB.Checkboxall.forEach((JCheckBox cb) -> {
+            String name = cb.getName();
+             for (List<String> wordlist : wordlists) {
+                 for (String string : wordlist) {
+                      if(name == null ? string == null : name.equals(string)){
+                        cb.setSelected(isActive());      
+                         }   
+                 }
+    }
+          });  
+    return wordlists;
+    }
+    private void Uncheck(){
+         for (int i = 0; i < DB.Checkboxall.size(); i++) {
+            DB.Checkboxall.get(i).setSelected(false);
+        }
+    }
+      public  List<List<String>> RemoveWordTheSame(String lines) {
+    List<List<String>> wordlists = new ArrayList<>();
+    List<String> lineList = Arrays.asList(lines.split("\n"));
+    
+    for (String line : lineList) {
+      //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));    
+    }
+    
+    for (List<String> wordlist : wordlists) {
+          for (String dupWord : wordlist) {
+                    if (!tempList.contains(dupWord)) {
+                        tempList.add(dupWord);
+                    }else{
+                        duplicates.add(dupWord);
+                    }
+                }
+    }
+        int k = 0;
+      while (k < tempList.size())
+      {
+         if (tempList.get(k).equals(""))
+            tempList.remove(k);
+         k++;
+      }
+     
+    return wordlists;
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,13 +169,13 @@ public class Training extends javax.swing.JFrame {
         cbTrainingtype = new javaapplication21.AutoComboBox();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtdes = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         txtdatestart = new com.toedter.calendar.JDateChooser();
         txtdateend = new com.toedter.calendar.JDateChooser();
         jLabel7 = new javax.swing.JLabel();
         scpwork = new javax.swing.JScrollPane();
-        jpwork = new javax.swing.JPanel();
+        jptrain = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbtraining = new javax.swing.JTable();
         btninsert = new javax.swing.JButton();
@@ -51,6 +184,11 @@ public class Training extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -63,6 +201,11 @@ public class Training extends javax.swing.JFrame {
         cbInterName.setKeyWord(new String[] {"Male", "Female"});
 
         txtsearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtsearchKeyReleased(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -74,9 +217,9 @@ public class Training extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Description :");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtdes.setColumns(20);
+        txtdes.setRows(5);
+        jScrollPane1.setViewportView(txtdes);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -99,19 +242,7 @@ public class Training extends javax.swing.JFrame {
         jLabel7.setText("Date End :");
 
         scpwork.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "TrainingSkill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
-
-        javax.swing.GroupLayout jpworkLayout = new javax.swing.GroupLayout(jpwork);
-        jpwork.setLayout(jpworkLayout);
-        jpworkLayout.setHorizontalGroup(
-            jpworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 366, Short.MAX_VALUE)
-        );
-        jpworkLayout.setVerticalGroup(
-            jpworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 411, Short.MAX_VALUE)
-        );
-
-        scpwork.setViewportView(jpwork);
+        scpwork.setViewportView(jptrain);
 
         tbtraining.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -121,6 +252,11 @@ public class Training extends javax.swing.JFrame {
 
             }
         ));
+        tbtraining.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbtrainingMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbtraining);
 
         btninsert.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -260,8 +396,45 @@ public class Training extends javax.swing.JFrame {
     }//GEN-LAST:event_txtdatestartMouseReleased
 
     private void txtdateendMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateendMouseReleased
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_txtdateendMouseReleased
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        c.FormartDate(txtdateend);
+        c.FormartDate(txtdatestart);
+        ShowTraning();
+        ShowIntervieweeName();
+        TrainingType();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void txtsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsearchKeyReleased
+        SEARCH();
+    }//GEN-LAST:event_txtsearchKeyReleased
+
+    private void tbtrainingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbtrainingMouseClicked
+            int i = tbtraining.getSelectedRow();
+            TableModel m = tbtraining.getModel();
+            tranid.setText(m.getValueAt(i, 0).toString());
+            cbInterName.setSelectedItem(m.getValueAt(i, 1).toString());
+            cbTrainingtype.setSelectedItem(m.getValueAt(i, 2).toString());
+            Uncheck();
+            txtTraningSkill.setText(m.getValueAt(i, 3).toString());
+            String editorText = txtTraningSkill.getText();
+                    editorText = editorText.replaceAll (",", " ");
+                    txtTraningSkill.setText(editorText);
+                    System.out.println(txtTraningSkill.getText()+"");
+           linesToLinesAndWord(txtTraningSkill.getText()+"");
+            RemoveWordTheSame(txtTraningSkill.getText());
+            txtTraningSkill.setText(null);
+            for (String string : tempList) {
+                
+                txtTraningSkill.append(string+" ");
+            }
+            txtdes.setText(m.getValueAt(i, 4).toString());
+            c.FormartDateInTable(txtdatestart, tbtraining, 5);
+            c.FormartDateInTable(txtdateend, tbtraining, 6);
+            
+    }//GEN-LAST:event_tbtrainingMouseClicked
 
     /**
      * @param args the command line arguments
@@ -280,20 +453,21 @@ public class Training extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Training.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Trainingcourserecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Training.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Trainingcourserecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Training.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Trainingcourserecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Training.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Trainingcourserecord.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Training().setVisible(true);
+                new Trainingcourserecord().setVisible(true);
             }
         });
     }
@@ -314,12 +488,12 @@ public class Training extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JPanel jpwork;
+    private javax.swing.JPanel jptrain;
     private javax.swing.JScrollPane scpwork;
     private javax.swing.JTable tbtraining;
     private com.toedter.calendar.JDateChooser txtdateend;
     private com.toedter.calendar.JDateChooser txtdatestart;
+    private javax.swing.JTextArea txtdes;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
 }
