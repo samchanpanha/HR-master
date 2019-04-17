@@ -161,7 +161,7 @@ public class frm_Employee extends javax.swing.JFrame {
 
         jLabel12.setText("HireDate :");
 
-        jLabel13.setText("FiredDate :");
+        jLabel13.setText("FireDate :");
 
         jLabel14.setText("BasicSalary :");
 

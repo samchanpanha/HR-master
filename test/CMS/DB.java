@@ -328,8 +328,8 @@ public void  clock(Thread ck,JLabel date ,JLabel time){
       hour=cal.get(Calendar.HOUR);
       minute=cal.get(Calendar.MINUTE);
       second=cal.get(Calendar.SECOND);
-      date.setText("Date :"+year+"/"+month+"/"+day);
-      time.setText("Time : "+hour+":"+minute+":"+second);
+      date.setText(year+"/"+month+"/"+day+" "+hour+":"+minute+":"+second);
+      time.setText(hour+":"+minute+":"+second);
                   sleep(1000);
               }
               
@@ -546,8 +546,11 @@ public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMe
         }
     }     
 
-public void FormartDate(JDateChooser dateChooser){
-     dateChooser.setDateFormatString("yyyy-MM-dd");
+public void FormartDate(JDateChooser... dateChooser){
+    for (JDateChooser jDateChooser : dateChooser) {
+         jDateChooser.setDateFormatString("yyyy-MM-dd");
+    }
+    
 }
 
 public void FormartDateInTable(JDateChooser chooser ,JTable tb ,int row){
@@ -561,6 +564,17 @@ public void FormartDateInTable(JDateChooser chooser ,JTable tb ,int row){
         Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
     }
    
+}
+
+public void SetCurrentDateNow(JDateChooser... choosers){
+     Date date = new Date();
+     String modifiedDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
+     System.out.println(modifiedDate);
+     for (JDateChooser chooser : choosers) {
+         chooser.setDate(date);
+         FormartDate(chooser);
+    }
+    
 }
 
 
