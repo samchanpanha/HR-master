@@ -349,20 +349,34 @@ public void clearText(JTextField... txt){
     
 public void ClearCombobox(JComboBox... cb){
         for (JComboBox cm : cb) {
-            cm.addItem("");
-            cm.removeAllItems();
+//            cm.addItem("");
+//            cm.removeAllItems();
+            cm.setSelectedIndex(-1);
             
         }
     }
-public void ClearTable(JTable tb,DefaultTableModel m){
-        m=(DefaultTableModel)tb.getModel();
-        tb.setModel(m);
-        m.removeRow(0);
+
+public void ClearJdateChooser(JDateChooser... dc){
+    for (JDateChooser c : dc) {
+        c.setDate(null);
+    }
+}
+
+public void ClearTextArea(JTextArea... area){
+    for (JTextArea a : area) {
+        a.setText(null);
+    }
+}
+
+public void ClearTable(JTable tb){
+        while (tb.getRowCount() > 0) {
+	((DefaultTableModel) tb.getModel()).removeRow(0);
+        }
     }
     
 public boolean check(String id,JTable tb,DefaultTableModel m){
         for(int i=0;i<tb.getRowCount();i++){
-            if(id==m.getValueAt(i, 0).toString()){     
+            if(id == null ? m.getValueAt(i, 0).toString() == null : id.equals(m.getValueAt(i, 0).toString())){     
                 return true;
             }
         }
@@ -452,9 +466,12 @@ public void ChangeName(JTable table, int col_index, String col_name){
             table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
       }
       
-public void HideColunmsTable(JTable tb ,int i){
-           TableColumn    hideC = tb.getColumnModel().getColumn(i);
+public void HideColunmsTable(JTable tb ,int... i){
+    for (int j : i) {
+        TableColumn    hideC = tb.getColumnModel().getColumn(j);
            tb.getColumnModel().removeColumn(hideC);
+    }
+           
       }
 public void DisplayTextName(String sql ,JTextField txt){
         try {

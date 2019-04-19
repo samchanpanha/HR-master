@@ -40,7 +40,7 @@ public class dataCon {
     
     public static void connectToDB()throws Exception{
         Class.forName("com.mysql.jdbc.Driver");  
-        Con=DriverManager.getConnection("jdbc:mysql://localhost/db_crm","root","");     
+        Con=DriverManager.getConnection("jdbc:mysql://localhost/db_hrm","root","");     
     }
 
     /**
