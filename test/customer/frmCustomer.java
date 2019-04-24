@@ -6,7 +6,6 @@
 package customer;
 
 import myClass.clFunction;
-import myClass.dataCon;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -24,11 +23,7 @@ public class frmCustomer extends javax.swing.JFrame {
     public frmCustomer() {
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        
         
         txtId.setText(clFunction.getLastId("customers"));
         

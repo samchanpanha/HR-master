@@ -7,7 +7,6 @@ package workDay;
 
 import myClass.IdAndName;
 import myClass.clFunction;
-import myClass.dataCon;
 import myClass.myTime;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,11 +34,7 @@ public class frmWorkDay extends javax.swing.JFrame {
     public frmWorkDay() {
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        
         
         
         

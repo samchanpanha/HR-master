@@ -24,11 +24,6 @@ public class frmServiceType extends javax.swing.JFrame {
     public frmServiceType() {
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
         
         prepareForm();
         

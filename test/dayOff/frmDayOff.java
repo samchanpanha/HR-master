@@ -31,11 +31,7 @@ public class frmDayOff extends javax.swing.JFrame {
         
         
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+       
         
         clFunction.changeLookTable(jTableDayOff);
         
