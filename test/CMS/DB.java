@@ -6,13 +6,8 @@
 package CMS;
 
 
-import Recruitment.Insert_Interviewee;
-import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import com.toedter.calendar.JDateChooser;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -21,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import static java.lang.Thread.sleep;
@@ -34,20 +30,15 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javaapplication21.AutoComboBox;
-import javafx.embed.swing.JFXPanel;
 import javax.imageio.ImageIO;
-import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -59,7 +50,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -94,7 +84,8 @@ public void Query(String tb) {
            st.executeUpdate(sql);
         //   JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
            con.setAutoCommit(true);
-        }catch(Exception e){
+           st.close();
+        }catch(SQLException e){
          try {
              con.rollback();
          } catch (SQLException ex) {
@@ -114,18 +105,44 @@ public void Value_ID(JTextField txt){
         rs.first();
         txt.setText(rs.getString(1));
         con.setAutoCommit(true);
-        st.close();
-        rs.close();
+//        st.close();
+//        rs.close();
+       // con.close();
     }
-       catch (Exception ex) { 
+       catch (SQLException ex) { 
         try {
             con.rollback();
         } catch (SQLException ex1) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
         }
-    JOptionPane.showMessageDialog(null,"ERROR");
+    JOptionPane.showMessageDialog(null,ex.getMessage());
 }    
 }
+
+
+
+public void Vu_id_Date(String sql ,JTextField pid ,JTextField rid, JLabel cdate , JLabel edate  ){
+    try {
+      
+        st = con.createStatement();
+        rs=st.executeQuery(sql);
+        while(rs.next()) {
+          pid.setText(rs.getString(1));
+          rid.setText(rs.getString(2));
+          cdate.setText(rs.getString(3));
+          edate.setText(rs.getString(4));
+        }
+        
+      
+        st.close();
+        rs.close();
+      
+        
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+}
+
  public  void Add_Pic(String id ,String sql){    
      try{
               InputStream img = new FileInputStream(new File(filename));     
@@ -135,7 +152,7 @@ public void Value_ID(JTextField txt){
                     ps.setString(2, id);
                     ps.executeUpdate();                
                 //    JOptionPane.showMessageDialog(null, "SUCCESSFULL");     
-                }catch(Exception ex)
+                }catch(FileNotFoundException | SQLException ex)
                 {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
@@ -158,7 +175,7 @@ public void bro(JLabel pic){
                 baos.write(buf, 0, readnum);
             }
             pimage=baos.toByteArray();
-        } catch (Exception e) {
+        } catch (IOException e) {
         }
     }
 public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
@@ -195,7 +212,7 @@ public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
            rs.close();
            st.close();
 
-       } catch (Exception ex) { 
+       } catch (SQLException ex) { 
             try {
                 con.rollback();
             } catch (SQLException ex1) {
@@ -213,7 +230,7 @@ public void Value_ID(String sql,JLabel txt){
      rs = pst.executeQuery();  
        while (rs.next()) {  
          String id = rs.getString(1);
-           if (id=="") {
+           if ("".equals(id)) {
               txt.setText("1");
               return;
            }
@@ -224,7 +241,7 @@ public void Value_ID(String sql,JLabel txt){
 
        } 
     }
-       catch (Exception ex) { 
+       catch (NumberFormatException | SQLException ex) { 
     JOptionPane.showMessageDialog(null, ex.getMessage());
 }    
 }
@@ -253,7 +270,7 @@ public void showpic(String sql,JLabel label){
                 rs.close();
                 st.close();
                 
-            }catch(Exception ex){
+            }catch(IOException | SQLException ex){
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
 }
@@ -275,7 +292,7 @@ public void ShowCombobox_Item(String s,JComboBox cb ){
         rs.close();
         pst.close();
     }
-       catch (Exception ex) { 
+       catch (SQLException ex) { 
     JOptionPane.showMessageDialog(null,ex.getMessage());
 }
 }
@@ -292,7 +309,7 @@ public void ShowCombobox_Item_ID(String s,JComboBox cb ,JTextField txtid){
      
      
     }
-       catch (Exception ex) { 
+       catch (SQLException ex) { 
     JOptionPane.showMessageDialog(null, ex.getMessage());
 }
 }
@@ -333,7 +350,7 @@ public void  clock(Thread ck,JLabel date ,JLabel time){
                   sleep(1000);
               }
               
-          } catch (Exception e) {
+          } catch (InterruptedException e) {
           }
       }
       
@@ -388,9 +405,9 @@ public void DisplayName(AutoComboBox cb, String sql ){
             st = con.createStatement();
             rs = st.executeQuery(sql);
                  while (rs.next()) {                
-                String st =rs.getString(1).toString();
+                String s =rs.getString(1);
                
-                cb.addItem(st);
+                cb.addItem(s);
             }
         } catch (Exception e) {
         }
@@ -427,21 +444,19 @@ public void CreateSkill(JPanel p ,JTextArea txt,String sql){
             
             
             
-            box.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    if (e.getStateChange() == ItemEvent.SELECTED) {
-                       String b =box.getText();
-                        txt.append(" "+b+" ");
-                    }
-                    if (e.getStateChange() == ItemEvent.DESELECTED) {
-                             String b =box.getText();
-                        if (txt.getText().contains(b)) {
-                            // I think I need to write the code to here which will
-                            // delete the text
-                            String editorText = txt.getText();
-                            editorText = editorText.replaceAll (b, " ");
-                            txt.setText(editorText);
-                        }
+            box.addItemListener((ItemEvent e) -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String b =box.getText();
+                    txt.append(" "+b+" ");
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    String b =box.getText();
+                    if (txt.getText().contains(b)) {
+                        // I think I need to write the code to here which will
+                        // delete the text
+                        String editorText = txt.getText();
+                        editorText = editorText.replaceAll (b, " ");
+                        txt.setText(editorText);
                     }
                 }
             });
@@ -477,12 +492,12 @@ public void DisplayTextName(String sql ,JTextField txt){
         try {
             String COMMIT_ACTION = "commit";
             txt.setFocusTraversalKeysEnabled(false);
-            List<String>  keywords = new ArrayList<String>();
+            List<String>  keywords = new ArrayList<>();
              st = con.createStatement();
              rs = st.executeQuery(sql);
                  while (rs.next()) {                
-                String st =rs.getString(1).toString();
-                keywords.add(st);
+                String s =rs.getString(1);
+                keywords.add(s);
                
           }
                 Autocompletes au = new Autocompletes(txt, keywords);
@@ -533,6 +548,7 @@ public void TextOnlyCharacters(JTextField... txtchars){
      
     for (JTextField txtchar : txtchars) {
         txtchar.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
         public void keyTyped(java.awt.event.KeyEvent evt) {
 
 //                if(!(Character.isLetter(evt.getKeyChar()))){

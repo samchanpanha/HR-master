@@ -33,7 +33,7 @@ public class clFunction {
         
         return dataCon.one_cell_value("SELECT `AUTO_INCREMENT`\n" +
         "FROM  INFORMATION_SCHEMA.TABLES\n" +
-        "WHERE TABLE_SCHEMA = 'hrm'\n" +
+        "WHERE TABLE_SCHEMA = 'db_hrm'\n" +
         "AND   TABLE_NAME   = '"+tableName+"';")+"";
         
     }

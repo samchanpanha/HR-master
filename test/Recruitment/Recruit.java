@@ -49,6 +49,7 @@ public class Recruit extends javax.swing.JFrame {
         Sql="SELECT  `Position`\n" +
         "FROM positions;";
         c.DisplayName(cbposition, Sql);
+        cbposition.setSelectedIndex(-1);
     }
     void ShowIDPositon(){
         Sql="SELECT PositionID\n" +
@@ -60,7 +61,7 @@ public class Recruit extends javax.swing.JFrame {
         Sql="SELECT  Description\n" +
         "FROM timeshifts;";
         c.DisplayName(cbTimeshift, Sql);
-        
+        cbTimeshift.setSelectedIndex(-1);
         
     }
     void ShowIDTimeshift(){
@@ -84,7 +85,7 @@ public class Recruit extends javax.swing.JFrame {
         String timeshiftID = txtTimeshiftID.getText();
         Object[] row = {id,position,num,timeshift,duties,timeshiftID,positionID,requirement}; 
         mod.addRow(row);
-      
+        ClearAddRecruit();
         
     }
     void UPDATE(){
@@ -103,8 +104,9 @@ public class Recruit extends javax.swing.JFrame {
         mod.setValueAt(timeshift, tbrecruit.getSelectedRow(), 3);
         mod.setValueAt(duties, tbrecruit.getSelectedRow(), 4);
         mod.setValueAt(requirement, tbrecruit.getSelectedRow(), 7);
-         mod.setValueAt(positionID, tbrecruit.getSelectedRow(), 6);
+        mod.setValueAt(positionID, tbrecruit.getSelectedRow(), 6);
         mod.setValueAt(timeshiftID, tbrecruit.getSelectedRow(), 5);
+        ClearAddRecruit();
     }
     void  DELETE(){
         int index[] = tbrecruit.getSelectedRows();
@@ -138,7 +140,12 @@ public class Recruit extends javax.swing.JFrame {
         "VALUES('"+RecruitID+"', '"+n+"', '"+poid+"', '"+tid+"', '"+du+"', '"+re+"');";
           c.Query(Sql);
         }
-       
+      
+       c.ClearJdateChooser(txtCdate,txtEdate);
+       c.clearText(txtNum,txtpid,txtTimeshiftID);
+       c.ClearCombobox(cbTimeshift,cbposition);
+       c.ClearTextArea(txtduties,txtrequitment);
+       c.ClearTable(tbrecruit);
        
     }
     void SELECTEDROW(){
@@ -158,7 +165,9 @@ public class Recruit extends javax.swing.JFrame {
         c.Value_ID(valueID);
     }
     void ClearAddRecruit(){
-        
+        c.clearText(txtNum,txtpid,txtTimeshiftID);
+        c.ClearCombobox(cbTimeshift,cbposition);
+        c.ClearTextArea(txtduties,txtrequitment);
     }
     
 //View RecruitMent 
@@ -271,7 +280,7 @@ public class Recruit extends javax.swing.JFrame {
         
     }
     void ClearAll(){
-         c.ClearTextArea(txtduties1,txtrequirement1,txtdes1);
+        c.ClearTextArea(txtduties1,txtrequirement1,txtdes1);
         c.ClearCombobox(cbposition1,cbTimeshift1);
         c.clearText(txtpid1,txtTimeshiftID1,txtNum1);
         c.ClearJdateChooser(txtCdate1,txtEdate1);
@@ -467,7 +476,7 @@ public class Recruit extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Postion", "NumberNeeded", "Timeshift", "Duties", "shiftid", "PositionID", "Requirement"
+                "ID", "Postion", "NumberNeeded", "Timeshift", "Duties", "shiftid", "PositionID", "Requirement", "Create", "Title 10"
             }
         ));
         tbrecruit.addMouseListener(new java.awt.event.MouseAdapter() {

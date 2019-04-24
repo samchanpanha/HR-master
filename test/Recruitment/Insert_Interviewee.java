@@ -7,11 +7,9 @@ package Recruitment;
 
 import CMS.DB;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -24,7 +22,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class Insert_Interviewee extends javax.swing.JFrame {
+public final class Insert_Interviewee extends javax.swing.JFrame {
 
     /**
      * Creates new form Insert_Interviewee
@@ -37,12 +35,15 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     DefaultTableModel dm;
     JTextArea txtskill = new JTextArea();
     List<JCheckBox> call =new ArrayList<>();
-    List<String> tempList= new ArrayList<String>();
-    List<String> duplicates= new ArrayList<String>();
+    List<String> tempList= new ArrayList<>();
+    List<String> duplicates= new ArrayList<>();
 
     
     public Insert_Interviewee() {
         initComponents();
+     ShowSkill();
+     VIEW();
+    c.FormartDate(txtdate);
       
     }
     
@@ -165,19 +166,17 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     List<List<String>> wordlists = new ArrayList<>();
     List<String> lineList = Arrays.asList(lines.split("\n"));
     
-    for (String line : lineList) {
-      //   System.out.println(line+"");
-        wordlists.add(Arrays.asList(line.trim().split(" ")));    
-    }      
+    lineList.forEach((line) -> {
+        //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));
+        });      
     DB.Checkboxall.forEach((JCheckBox cb) -> {
             String name = cb.getName();
-             for (List<String> wordlist : wordlists) {
-               for (String string : wordlist) {
-                      if(name == null ? string == null : name.equals(string)){
-                        cb.setSelected(isActive());      
-                     }   
-                }
-    }
+            wordlists.forEach((List<String> wordlist) -> {
+                wordlist.stream().filter((string) -> (name == null ? string == null : name.equals(string))).forEachOrdered((String _item) -> {
+                    cb.setSelected(isActive());
+                });
+        });
           });  
     return wordlists;
 }
@@ -186,20 +185,20 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     List<List<String>> wordlists = new ArrayList<>();
     List<String> lineList = Arrays.asList(lines.split("\n"));
     
-    for (String line : lineList) {
-      //   System.out.println(line+"");
-        wordlists.add(Arrays.asList(line.trim().split(" ")));    
-    }
+    lineList.forEach((line) -> {
+        //   System.out.println(line+"");
+        wordlists.add(Arrays.asList(line.trim().split(" ")));
+        });
     
-    for (List<String> wordlist : wordlists) {
-          for (String dupWord : wordlist) {
-                    if (!tempList.contains(dupWord)) {
-                        tempList.add(dupWord);
-                    }else{
-                        duplicates.add(dupWord);
-                    }
-                }
-    }
+    wordlists.forEach((List<String> wordlist) -> {
+        wordlist.forEach((dupWord) -> {
+            if (!tempList.contains(dupWord)) {
+                tempList.add(dupWord);
+            }else{
+                duplicates.add(dupWord);
+            }
+        });
+        });
         int k = 0;
       while (k < tempList.size())
       {
@@ -279,7 +278,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
         });
         jpm.add(mDelete);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -480,9 +479,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-     ShowSkill();
-     VIEW();
-    c.FormartDate(txtdate);
+    
       
     // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
@@ -515,10 +512,9 @@ public class Insert_Interviewee extends javax.swing.JFrame {
 
             RemoveWordTheSame(txtskill.getText());
             txtskill.setText(null);
-            for (String string : tempList) {
-                
+            tempList.forEach((String string) -> {
                 txtskill.append(string+" ");
-            }
+                  });
            
             txtemail.setText(m.getValueAt(i,12 ).toString());
             
@@ -589,22 +585,16 @@ public class Insert_Interviewee extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Insert_Interviewee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Insert_Interviewee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Insert_Interviewee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Insert_Interviewee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Insert_Interviewee().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Insert_Interviewee().setVisible(true);
         });
     }
 
@@ -631,7 +621,7 @@ public class Insert_Interviewee extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JPanel jpinterviewee;
+    public static javax.swing.JPanel jpinterviewee;
     private javax.swing.JPopupMenu jpm;
     private javax.swing.JPanel jpskill;
     private javax.swing.JMenuItem mDelete;
