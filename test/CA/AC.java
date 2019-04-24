@@ -6,11 +6,16 @@
 package CA;
 
 
+import CMS.DB;
+import static CMS.DB.con;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaapplication21.AutoComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -88,6 +93,27 @@ public Connection con = ConAccess.getDBConnection();
         } catch (Exception e) {
         }
     }
+     
+     public void AccessQuery(String tb) {
+    
+     try{
+        
+           con.setAutoCommit(false);
+            String sql = tb ;
+            st = con.createStatement();
+           st.executeUpdate(sql);
+        //   JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
+           con.setAutoCommit(true);
+        }catch(Exception e){
+         try {
+             con.rollback();
+         } catch (SQLException ex) {
+             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+         }
+            JOptionPane.showMessageDialog(null, e.getMessage());
+       
+        }
+}
     
    
     

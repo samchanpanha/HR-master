@@ -90,7 +90,7 @@ public class frm_Interviewee extends javax.swing.JFrame {
     
     private void DisplayData(){
         String sql="SELECT IntervieweeId, Name, Gender, Address, Tel, Image, Status, Blocked, `Degree`, `Language`, SkillId, Dob, Email\n" +
-                    "FROM interviewees WHERE Name LIKE '"+cbName.getSelectedItem().toString().trim()+"%';";
+                    "FROM interviewees WHERE Name LIKE '%"+cbName.getSelectedItem().toString().trim()+"%';";
         c.showDataInTable(tbdata, sql, dm);
     }
     private void Displayall(){

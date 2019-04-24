@@ -6,41 +6,53 @@
 package CMS;
 
 
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
-import java.awt.GridLayout;
+import com.toedter.calendar.JDateChooser;
 import java.awt.Image;
-import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import static java.lang.Thread.sleep;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaapplication21.AutoComboBox;
-import javafx.embed.swing.JFXPanel;
-import javax.swing.DefaultCellEditor;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 
 /**
@@ -48,72 +60,128 @@ import javax.swing.table.TableColumn;
  * @author panha
  */
 public class DB {
-Connection con = ConMysql.getDBConnection(); 
+
+    /**
+     * @return the id
+     */
+  
+public static Connection con = ConMysql.getDBConnection(); 
 Statement st;
 ResultSet rs;
 PreparedStatement pst;
+public static List<JCheckBox> Checkboxall;
+public String filename=null;
+public byte[] pimage=null;
 
-
-public static String path;
 
 public void Query(String tb) {
     
      try{
         
-           
-             String sql = tb ;
+           con.setAutoCommit(false);
+            String sql = tb ;
             st = con.createStatement();
            st.executeUpdate(sql);
-           JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");
-            
-          
-        
+        //   JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
+           con.setAutoCommit(true);
+           st.close();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, e);
-        }finally{
-            try{
-                
-                st.close();
-             
-            }catch(SQLException e){
-
-            }
-        }
-}
-
-public  void Add_Pic(String p,JTextField txt,String sqls){    
-    try {
+         try {
+             con.rollback();
+         } catch (SQLException ex) {
+             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+         }
+            JOptionPane.showMessageDialog(null, e.getMessage());
        
-        String querySetLimit = "SET GLOBAL max_allowed_packet=104857600;";  // 10 MB
-        Statement stSetLimit = con.createStatement();
-        stSetLimit.execute(querySetLimit);
-        
-        String sql = sqls;
-        PreparedStatement statement = con.prepareStatement(sql);
-        
-      FileInputStream  inputStreams = new FileInputStream(new File(p));
-        
-        statement.setBlob(1, inputStreams);
-        statement.setString(2,txt.getText()+"" );
-        
-        int row = statement.executeUpdate();
-        if (row > 0) {
-//            System.out.println("A contact was inserted with photo image.");
-JOptionPane.showMessageDialog(null,"EXECUTE SUCCESS");     
         }
-        con.close();
-        inputStreams.close();
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } catch (IOException ex) {
-        ex.printStackTrace();
-    }
-           
 }
+
+public void Value_ID(JTextField txt){
+    try {  
+        
+        con.setAutoCommit(false);
+        st = con.createStatement();
+        rs = st.executeQuery("SELECT LAST_INSERT_ID() ");  
+        rs.first();
+        txt.setText(rs.getString(1));
+        con.setAutoCommit(true);
+//        st.close();
+//        rs.close();
+       // con.close();
+    }
+       catch (SQLException ex) { 
+        try {
+            con.rollback();
+        } catch (SQLException ex1) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    JOptionPane.showMessageDialog(null,ex.getMessage());
+}    
+}
+
+
+
+public void Vu_id_Date(String sql ,JTextField pid ,JTextField rid, JLabel cdate , JLabel edate  ){
+    try {
+      
+        st = con.createStatement();
+        rs=st.executeQuery(sql);
+        while(rs.next()) {
+          pid.setText(rs.getString(1));
+          rid.setText(rs.getString(2));
+          cdate.setText(rs.getString(3));
+          edate.setText(rs.getString(4));
+        }
+        
+      
+        st.close();
+        rs.close();
+      
+        
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+}
+
+ public  void Add_Pic(String id ,String sql){    
+     try{
+              InputStream img = new FileInputStream(new File(filename));     
+              String   UpdateQuery = sql;
+              PreparedStatement     ps =DB.con.prepareStatement(UpdateQuery);
+                    ps.setBlob(1, img);
+                    ps.setString(2, id);
+                    ps.executeUpdate();                
+                //    JOptionPane.showMessageDialog(null, "SUCCESSFULL");     
+                }catch(FileNotFoundException | SQLException ex)
+                {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+}
+
+
+public void bro(JLabel pic){
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        File f = chooser.getSelectedFile();
+        filename = f.getAbsolutePath();
+        ImageIcon icon = new ImageIcon(new ImageIcon(filename).getImage().getScaledInstance(pic.getWidth(), pic.getHeight(),Image.SCALE_SMOOTH));
+        pic.setIcon(icon);
+        try {
+            File image = new File(filename);
+            FileInputStream fis = new FileInputStream(image);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            for(int readnum ; (readnum=fis.read(buf))!=-1;){
+                baos.write(buf, 0, readnum);
+            }
+            pimage=baos.toByteArray();
+        } catch (IOException e) {
+        }
+    }
 public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
         try {
-
+           con.setAutoCommit(false);
            st = con.createStatement();
             rs = st.executeQuery(q);    
            // get columns info
@@ -140,11 +208,17 @@ public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
            dm.fireTableDataChanged();
 
            // Close ResultSet and Statement
+           con.setAutoCommit(true);
            rs.close();
            st.close();
 
-       } catch (Exception ex) { 
-           JOptionPane.showMessageDialog(null,"ERROR");
+       } catch (SQLException ex) { 
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+          JOptionPane.showMessageDialog(null, ex.getMessage());
        }
 }
 public void Value_ID(String sql,JLabel txt){
@@ -156,7 +230,7 @@ public void Value_ID(String sql,JLabel txt){
      rs = pst.executeQuery();  
        while (rs.next()) {  
          String id = rs.getString(1);
-           if (id=="") {
+           if ("".equals(id)) {
               txt.setText("1");
               return;
            }
@@ -167,64 +241,76 @@ public void Value_ID(String sql,JLabel txt){
 
        } 
     }
-       catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+       catch (NumberFormatException | SQLException ex) { 
+    JOptionPane.showMessageDialog(null, ex.getMessage());
 }    
 }
 
 public void showpic(String sql,JLabel label){
     try{
-               
+               con.setAutoCommit(false);
                 st = con.createStatement();
                rs = st.executeQuery(sql);
                 if(rs.next()){
-                    byte[] img = rs.getBytes("Image");
-
-
-
-                    //Resize The ImageIcon
-                    ImageIcon image = new ImageIcon(img);
-                    Image im = image.getImage();
-                    Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
-                    ImageIcon newImage = new ImageIcon(myImg);
-                    label.setIcon(newImage);
+//                    byte[] img = rs.getBytes("Image");
+//                    //Resize The ImageIcon
+//                    ImageIcon image = new ImageIcon(img);
+//                    Image im = image.getImage();
+//                    Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+//                    ImageIcon newImage = new ImageIcon(myImg);
+//                    label.setIcon(newImage);
+                      Blob aBlob = rs.getBlob("Image");
+                      InputStream is = aBlob.getBinaryStream(1, aBlob.length());
+                      BufferedImage imag=ImageIO.read(is);
+                      Image image = imag.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+                      ImageIcon icon =new ImageIcon(image);
+                      label.setIcon(icon); 
                 }
+                con.setAutoCommit(true);
+                rs.close();
+                st.close();
                 
-                else{
-                    JOptionPane.showMessageDialog(null, "No Data");
-                }
-            }catch(Exception ex){
-                ex.printStackTrace();
+            }catch(IOException | SQLException ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
 }
 
-public void ShowCombobox_Item(String s,JComboBox cb ,String Name){
+public void ShowCombobox_Item(String s,JComboBox cb ){
      try {  
-         
-     pst = con.prepareStatement(s);  
-     rs = pst.executeQuery();  
-       while (rs.next()) {  
-         
-         String name = rs.getString(1);
-         cb.addItem(name);
-        
-       } 
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(s);  
+            rs = pst.executeQuery();  
+                if(rs.first()){
+                    do{
+                       String name = rs.getString(1);
+                       cb.addItem(name);
+
+                    }while(rs.next());
+                }
+       
+        con.setAutoCommit(true);
+        rs.close();
+        pst.close();
     }
-       catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+       catch (SQLException ex) { 
+    JOptionPane.showMessageDialog(null,ex.getMessage());
 }
 }
 public void ShowCombobox_Item_ID(String s,JComboBox cb ,JTextField txtid){
      try {  
      
         pst = con.prepareStatement(s);
-     rs = pst.executeQuery();  
-       while (rs.next()) {  
-         txtid.setText(rs.getString(1));   
-       } 
+        rs = pst.executeQuery();  
+       
+            while (rs.next()){
+               txtid.setText(rs.getString(1));   
+         }
+         
+     
+     
     }
-       catch (Exception ex) { 
-    JOptionPane.showMessageDialog(null,"ERROR");
+       catch (SQLException ex) { 
+    JOptionPane.showMessageDialog(null, ex.getMessage());
 }
 }
 
@@ -237,7 +323,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
             model.setValueAt(d3, i, c3);
         }
    }
-   public void X_Columns(JTable t,int c){
+public void X_Columns(JTable t,int c){
         double sum = 0;
         for(int i = 0; i < t.getRowCount(); i++)
         {
@@ -245,7 +331,7 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
    }
    
-    public void  clock(Thread ck,JLabel date ,JLabel time){
+public void  clock(Thread ck,JLabel date ,JLabel time){
       ck = new Thread(){
       @Override
       public void run(){
@@ -259,12 +345,12 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
       hour=cal.get(Calendar.HOUR);
       minute=cal.get(Calendar.MINUTE);
       second=cal.get(Calendar.SECOND);
-      date.setText("Date :"+year+"/"+month+"/"+day);
-      time.setText("Time : "+hour+":"+minute+":"+second);
+      date.setText(year+"/"+month+"/"+day+" "+hour+":"+minute+":"+second);
+      time.setText(hour+":"+minute+":"+second);
                   sleep(1000);
               }
               
-          } catch (Exception e) {
+          } catch (InterruptedException e) {
           }
       }
       
@@ -272,48 +358,62 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
       ck.start();    
   }
     
-     public void clearText(JTextField... txt){
+public void clearText(JTextField... txt){
         for (JTextField txts : txt) {
             txts.setText("");
         }
     }
     
-    public void ClearCombobox(JComboBox... cb){
+public void ClearCombobox(JComboBox... cb){
         for (JComboBox cm : cb) {
-            cm.addItem("");
-            cm.removeAllItems();
+//            cm.addItem("");
+//            cm.removeAllItems();
+            cm.setSelectedIndex(-1);
             
         }
     }
-    public void ClearTable(JTable tb,DefaultTableModel m){
-        m=(DefaultTableModel)tb.getModel();
-        tb.setModel(m);
-        m.removeRow(0);
+
+public void ClearJdateChooser(JDateChooser... dc){
+    for (JDateChooser c : dc) {
+        c.setDate(null);
+    }
+}
+
+public void ClearTextArea(JTextArea... area){
+    for (JTextArea a : area) {
+        a.setText(null);
+    }
+}
+
+public void ClearTable(JTable tb){
+        while (tb.getRowCount() > 0) {
+	((DefaultTableModel) tb.getModel()).removeRow(0);
+        }
     }
     
-      public boolean check(String id,JTable tb,DefaultTableModel m){
+public boolean check(String id,JTable tb,DefaultTableModel m){
         for(int i=0;i<tb.getRowCount();i++){
-            if(id==m.getValueAt(i, 0).toString()){     
+            if(id == null ? m.getValueAt(i, 0).toString() == null : id.equals(m.getValueAt(i, 0).toString())){     
                 return true;
             }
         }
         return false;
     }
-        public void DisplayName(AutoComboBox cb, String sql ){
+public void DisplayName(AutoComboBox cb, String sql ){
         try {
             cb.removeAllItems();
             st = con.createStatement();
             rs = st.executeQuery(sql);
                  while (rs.next()) {                
-                String st =rs.getString(1).toString();
+                String s =rs.getString(1);
                
-                cb.addItem(st);
+                cb.addItem(s);
             }
         } catch (Exception e) {
         }
     }
     
-     public void DisplayId(String sql,JTextField txtid){
+public void DisplayId(String sql,JTextField txtid){
         try {
            
                 pst = con.prepareStatement(sql);
@@ -325,76 +425,190 @@ public void Sum_Columns(JTable t,DefaultTableModel model,int c1,int c2,int c3){
         }
     }
      
-     public void CreateSkill(JPanel p ,JTextField txt,String sql){
-          //  String[] food = {"Pizza", "Burger", "Pasta", "Hot Dog", "etc","Pizza", "Burger", "Pasta", "Hot Dog", "etc"};
+public void CreateSkill(JPanel p ,JTextArea txt,String sql){
+        
             List<String> SKILL = new ArrayList<>();
-            //p.setLayout(new GridLayout());
-            try {  
-            
+            Checkboxall = new ArrayList<>();
+            try { 
+                
              pst = con.prepareStatement(sql);  
              rs = pst.executeQuery();  
                while (rs.next()) {  
                    String skill =rs.getString(1);
                    SKILL.add(skill);
-//                 String name = rs.getString(1);
-//                 cb.addItem(name);
-
                } 
-                for(int i = 0; i<SKILL.size(); i++){
-            JCheckBox box = new JCheckBox();
-
-            box.setText(SKILL.get(i));
+            for(int i = 0; i<SKILL.size(); i++){
+            JCheckBox box = new JCheckBox(SKILL.get(i),false);
+            box.setName(SKILL.get(i));
             box.setActionCommand(String.valueOf(i));
-            box.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    if (e.getStateChange() == ItemEvent.SELECTED) {
-                       String b =box.getText();
-                        txt.setText(" "+b+" ");
-                    }
-                    if (e.getStateChange() == ItemEvent.DESELECTED) {
-                             String b =box.getText();
-                        if (txt.getText().contains(b)) {
-                            // I think I need to write the code to here which will
-                            // delete the text
-                            String editorText = txt.getText();
-                            editorText = editorText.replaceAll (b, "");
-                            txt.setText(editorText);
-                        }
+            
+            
+            
+            box.addItemListener((ItemEvent e) -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String b =box.getText();
+                    txt.append(" "+b+" ");
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    String b =box.getText();
+                    if (txt.getText().contains(b)) {
+                        // I think I need to write the code to here which will
+                        // delete the text
+                        String editorText = txt.getText();
+                        editorText = editorText.replaceAll (b, " ");
+                        txt.setText(editorText);
                     }
                 }
             });
           //  p.setLayout(new FlowLayout((int) TOP_ALIGNMENT));
+            Checkboxall.add(box);
             p.add(box);
             p.revalidate();
             p.repaint();
+          
             } 
             }
                catch (Exception ex) { 
-            JOptionPane.showMessageDialog(null,"ERROR");
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
            
             System.out.println("Worked!!!!!!!!");
      }
+
+
      
-      public void ChangeName(JTable table, int col_index, String col_name){
+public void ChangeName(JTable table, int col_index, String col_name){
             table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
       }
       
-      public void HideColunmsTable(JTable tb ,TableColumn hideC,int i){
-           hideC = tb.getColumnModel().getColumn(i);
+public void HideColunmsTable(JTable tb ,int... i){
+    for (int j : i) {
+        TableColumn    hideC = tb.getColumnModel().getColumn(j);
            tb.getColumnModel().removeColumn(hideC);
-      }
-    public void DisplayTextName(String sql ,Java2sAutoTextField1 textfield){
-        try {
+    }
            
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
+      }
+public void DisplayTextName(String sql ,JTextField txt){
+        try {
+            String COMMIT_ACTION = "commit";
+            txt.setFocusTraversalKeysEnabled(false);
+            List<String>  keywords = new ArrayList<>();
+             st = con.createStatement();
+             rs = st.executeQuery(sql);
                  while (rs.next()) {                
-                String st =rs.getString(1).toString();
+                String s =rs.getString(1);
+                keywords.add(s);
                
-            }
+          }
+                Autocompletes au = new Autocompletes(txt, keywords);
+                txt.getDocument().addDocumentListener(au);
+
+        // Maps the tab key to the commit action, which finishes the autocomplete
+        // when given a suggestion
+                txt.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+                txt.getActionMap().put(COMMIT_ACTION, au.new CommitAction());
            
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+    
+public void TextOnlyNumber(JTextField... txtnums){
+           for (JTextField txtnum : txtnums) {
+                 txtnum.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyTyped(KeyEvent e) {
+                      char c = e.getKeyChar();
+                      if (!(Character.isDigit(c) ||
+                         (c == KeyEvent.VK_BACK_SPACE) ||
+                         (c == KeyEvent.VK_DELETE) )) {
+                        txtnum.getToolkit().beep();
+                        e.consume();
+                      }
+                        //`~!@#$%^&*()_+=\\|\"':;?/>.<,
+        //                String badchars  = "`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
+        //                 char c = e.getKeyChar();
+        //
+        //                 if((Character.isLetter(c) && !e.isAltDown()) 
+        //                           || badchars.indexOf(c) > -1) {
+        //                            e.consume();
+        //                            return;
+        //                        }
+        //             if(c == '-' && txtnum.getDocument().getLength() > 0) 
+        //                e.consume();
+             
+              }
+           
+          });
+     }
+           
+    }
+    
+public void TextOnlyCharacters(JTextField... txtchars){
+     
+    for (JTextField txtchar : txtchars) {
+        txtchar.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+
+//                if(!(Character.isLetter(evt.getKeyChar()))){
+//                       evt.consume();
+//                   }
+                    char c=evt.getKeyChar();
+                    if(!(Character.isAlphabetic(c) ||  (c==KeyEvent.VK_BACK_SPACE)||  c==KeyEvent.VK_DELETE ))
+                        evt.consume();
+           
+            }
+        });
+    }
+    
+    }
+    
+public void TableMouseReleased(java.awt.event.MouseEvent evt ,JTable tb,JPopupMenu jpm) {                                     
+       if (evt.isPopupTrigger())
+        {
+            JTable source = (JTable)evt.getSource();
+            int row = source.rowAtPoint( evt.getPoint() );
+            int column = source.columnAtPoint( evt.getPoint() );
+ 
+            if (! source.isRowSelected(row))
+                source.changeSelection(row, column, false, false);
+            else
+                tb.setComponentPopupMenu(jpm);
+                     jpm.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }     
+
+public void FormartDate(JDateChooser... dateChooser){
+    for (JDateChooser jDateChooser : dateChooser) {
+         jDateChooser.setDateFormatString("yyyy-MM-dd");
+    }
+    
+}
+
+public void FormartDateInTable(JDateChooser chooser ,JTable tb ,int row){
+    int i = tb.getSelectedRow();
+    TableModel m = tb.getModel();
+    Date date;
+    try {
+        date = new SimpleDateFormat("yyyy-MM-dd").parse(m.getValueAt(i, row).toString());
+        chooser.setDate(date);
+    } catch (ParseException ex) {
+        Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+    }
+   
+}
+
+public void SetCurrentDateNow(JDateChooser... choosers){
+     Date date = new Date();
+     String modifiedDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
+     System.out.println(modifiedDate);
+     for (JDateChooser chooser : choosers) {
+         chooser.setDate(date);
+         FormartDate(chooser);
+    }
+    
+}
+
+
 }
