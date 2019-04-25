@@ -7,16 +7,31 @@ package Recruitment;
 
 
 import CMS.DB;
+import CMS.JDateChooserEditor;
+import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import javaapplication21.AutoComboBox;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 /**
@@ -38,7 +53,8 @@ public final class Apply extends javax.swing.JFrame {
         cbstatus.setSelectedIndex(0);
         cbblock.setSelectedIndex(0);
         cbgender.setSelectedIndex(0);
-      
+        tbIntervieDetails.setRowHeight(20);
+        tbInterview.setRowHeight(20);
     }
     DB c = new DB();
     String Sql_inwee=null;
@@ -51,14 +67,19 @@ public final class Apply extends javax.swing.JFrame {
     JTextField txtrid = new JTextField();
     JTextField txtInvuID =new JTextField();
     JTextField txtInvuVID = new JTextField();
+    JTextField emid = new JTextField();
     JTextArea txtskill = new JTextArea();
     DefaultTableModel mod ;
     DefaultTableModel modin ;
     DefaultTableModel modind ;
     SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+    AutoComboBox ab = new AutoComboBox();
+    JComboBox cbStatusCome;
+    JComboBox cblock;
     int id=0;
     int number_of_rows ;
-    String Interview_id;
+    String interview_id;
+    String interview_details_id;
 
 //------------------------------------------------------------------------------    
     void SUMCOLUMNS(){
@@ -369,24 +390,131 @@ public final class Apply extends javax.swing.JFrame {
     void SELECTEDTABLEINTERVIEW(){
         int i = tbInterview.getSelectedRow();
         TableModel m = tbInterview.getModel();
-        Interview_id = m.getValueAt(i, 0).toString();
-        
+        interview_id = m.getValueAt(i, 0).toString();  
         SHOWINTERVIEWDETAILS();
+        modind = (DefaultTableModel)tbIntervieDetails.getModel();
+        tbIntervieDetails.setModel(modind);
+        modind.addColumn("Choose Staff");
+        modind.addColumn("ReinterDate");
+        modind.addColumn("Check");
+        modind.addColumn("StaffID");
+      
+       COMBOBOX_INTERVIEWDETAILS();
+       c.HideColunmsTable(tbIntervieDetails, 12,8,7,6,5);
+       SELECTEDCOMBOBOX(cbStatusCome,cblock);
     }
+    void MOVECOLUMNS(JTable tb ,int ... i){
+        for (int j : i) {
+              tb.moveColumn(tbIntervieDetails.getColumnCount() - 1, j);
+        }
+    }
+    
     void SHOWINTERVIEWDETAILS(){
-        Sql="SELECT * FROM vu_interview_details WHERE InterviewID = '"+Interview_id+"';";
+       
+        Sql="SELECT * FROM vu_interview_details WHERE InterviewID = '"+interview_id+"';";
         c.showDataInTable(tbIntervieDetails, Sql, modind);
     }    
     
     void UPDATEINTERVIEW(){
-        
+        Sql = "UPDATE interviewees\n" +
+            "SET  Blocked='none'\n" +
+            "WHERE IntervieweeId=0;";
+        String query ="UPDATE interviewdetails\n" +
+            "SET  StatusCome='none', StatusOfReinter='none'\n" +
+            "WHERE InterviewDetailId=0;";
     }
     void UPDATEINTERVIEWDETAILS(){
-        
+        Sql = "";
     }
     void SELECTEDTABLEINTERVIEWDETAIL(){
+        int i = tbIntervieDetails.getSelectedRow();
+        TableModel m = tbIntervieDetails.getModel();
         
     }
+    
+    void COMBOBOX_INTERVIEWDETAILS(){
+        
+        String[] item = {"come","not come"};
+        cbStatusCome = new JComboBox(item);
+        TableColumn countryColumn = tbIntervieDetails.getColumnModel().getColumn(3); 
+	countryColumn.setCellEditor(new DefaultCellEditor(cbStatusCome));
+        String[] bk = {"none","blacklist"};
+         cblock = new JComboBox(bk);
+        TableColumn tbm = tbIntervieDetails.getColumnModel().getColumn(2); 
+	tbm.setCellEditor(new DefaultCellEditor(cblock));
+        
+        Sql="SELECT\n" +
+            "interviewees.`Name`\n" +
+            "FROM\n" +
+            "employees\n" +
+            "INNER JOIN interviewees ON employees.IntervieweeId = interviewees.IntervieweeId";
+        c.DisplayName(ab, Sql);
+        TableColumn tbms = tbIntervieDetails.getColumnModel().getColumn(9); 
+	tbms.setCellEditor(new DefaultCellEditor(ab));
+        tbIntervieDetails.getColumnModel().getColumn(10).setCellEditor(new JDateChooserEditor(new JCheckBox()));
+         TableColumn tcs = tbIntervieDetails.getColumnModel().getColumn(11);
+        tcs.setCellEditor(tbIntervieDetails.getDefaultEditor(Boolean.class));
+        tcs.setCellRenderer(tbIntervieDetails.getDefaultRenderer(Boolean.class));
+    }
+    
+    void ADDDATE_INTERVIEWDETAILS(JTable table,int i){
+        TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
+              SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd");
+              @Override
+              public Component getTableCellRendererComponent(JTable table,
+                      Object value, boolean isSelected, boolean hasFocus,
+                      int row, int column) {
+                  if( value instanceof Date) {
+                      value = f.format(value);
+                  }
+                  return super.getTableCellRendererComponent(table, value, isSelected,
+                          hasFocus, row, column);
+              }
+          };
+          table.getColumnModel().getColumn(i).setCellRenderer(tableCellRenderer);
+    }
+    
+    void ShowEmployeeID(){
+        
+        try {
+              Sql="SELECT\n" +
+                "employees.EmpId\n" +
+                "FROM\n" +
+                "employees\n" +
+                "INNER JOIN interviewees ON employees.IntervieweeId = interviewees.IntervieweeId WHERE interviewees.`Name` = '"+ab.getSelectedItem()+"'";
+            c.DisplayId(Sql, emid);
+            System.out.println(emid.getText());
+        } catch (Exception e) {
+        }
+      
+    }
+    void SELECTEDCOMBOBOX(JComboBox... cb ){
+        for (JComboBox ab : cb) {
+             ab.addPopupMenuListener(new PopupMenuListener() {
+         @Override
+         public void popupMenuCanceled(PopupMenuEvent e) {
+            System.out.println("popupMenu canceled");
+         }
+         @Override
+         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+               bedit.setEnabled(true);
+         }
+         @Override
+         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+//            if (ab.getModel().getSize() <= 1) {
+//               // lazily populate combobox
+//               for (int i=0; i<100; i++) {
+//                  ab.insertItemAt("Item #" + i, 0);
+//               }
+//               ab.validate();
+//            }
+//            System.out.println("popupMenu will become visible");
+           
+         }
+      }); 
+        }
+    }
+   
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -452,6 +580,8 @@ public final class Apply extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tbIntervieDetails = new javax.swing.JTable();
+        bedit = new javax.swing.JButton();
+        binsertreinter = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jLabel19 = new javax.swing.JLabel();
@@ -723,7 +853,27 @@ public final class Apply extends javax.swing.JFrame {
 
             }
         ));
+        tbIntervieDetails.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tbIntervieDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbIntervieDetailsMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tbIntervieDetails);
+
+        bedit.setText("Update");
+        bedit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                beditActionPerformed(evt);
+            }
+        });
+
+        binsertreinter.setText("Add");
+        binsertreinter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                binsertreinterActionPerformed(evt);
+            }
+        });
 
         jDesktopPane3.setLayer(jLabel15, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane3.setLayer(txtDateFrom, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -733,29 +883,40 @@ public final class Apply extends javax.swing.JFrame {
         jDesktopPane3.setLayer(bSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane3.setLayer(jLabel20, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane3.setLayer(jScrollPane5, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane3.setLayer(bedit, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane3.setLayer(binsertreinter, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane3Layout = new javax.swing.GroupLayout(jDesktopPane3);
         jDesktopPane3.setLayout(jDesktopPane3Layout);
         jDesktopPane3Layout.setHorizontalGroup(
             jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(bSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(223, 223, 223)
-                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(361, Short.MAX_VALUE))
-            .addGroup(jDesktopPane3Layout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane5)
+                .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopPane3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5))
+                    .addGroup(jDesktopPane3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jDesktopPane3Layout.createSequentialGroup()
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44)
+                                .addComponent(bSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(223, 223, 223)
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 351, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane3Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(binsertreinter, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bedit, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jDesktopPane3Layout.setVerticalGroup(
@@ -764,7 +925,11 @@ public final class Apply extends javax.swing.JFrame {
                 .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jDesktopPane3Layout.createSequentialGroup()
                         .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                        .addGap(58, 58, 58))
+                        .addGap(17, 17, 17)
+                        .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bedit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(binsertreinter, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8))
                     .addGroup(jDesktopPane3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -872,9 +1037,28 @@ public final class Apply extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-      
-   
-        
+        binsertreinter.setEnabled(false);
+        bedit.setEnabled(false);
+        tbIntervieDetails.setRowSelectionAllowed(false);
+        ab.addPopupMenuListener(new PopupMenuListener() {
+         @Override
+         public void popupMenuCanceled(PopupMenuEvent e) {
+            System.out.println("popupMenu canceled");
+         }
+         @Override
+         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                ShowEmployeeID();
+                int id =tbIntervieDetails.getSelectedRow();
+                TableModel m = tbIntervieDetails.getModel();
+                m.setValueAt(emid.getText(), id, 12);
+                bedit.setEnabled(true);
+         }
+         @Override
+         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+           
+         }
+      }); 
+       
     }//GEN-LAST:event_formWindowOpened
 
     private void txtbirthMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtbirthMouseReleased
@@ -921,6 +1105,43 @@ public final class Apply extends javax.swing.JFrame {
         SELECTEDTABLEINTERVIEW();
     }//GEN-LAST:event_tbInterviewMouseClicked
 
+    private void beditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beditActionPerformed
+          bedit.setEnabled(false);
+          
+
+    }//GEN-LAST:event_beditActionPerformed
+
+ 
+    private void tbIntervieDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbIntervieDetailsMouseClicked
+        try {
+        boolean b=Boolean.TRUE;
+        int i = tbIntervieDetails.getRowCount();
+        TableModel m = tbIntervieDetails.getModel();
+        for (int j=0;j< i;j++) {
+            if ((boolean)m.getValueAt(j, 11)==b) {
+                binsertreinter.setEnabled(true);
+            }
+        }
+      
+    } 
+    catch (Exception e) {
+        
+        }
+         bedit.setEnabled(true);
+       
+    }//GEN-LAST:event_tbIntervieDetailsMouseClicked
+
+    private void binsertreinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_binsertreinterActionPerformed
+            binsertreinter.setEnabled(false);
+            try {
+                TableModel m = tbIntervieDetails.getModel();
+                for (int i = 0; i < tbIntervieDetails.getRowCount(); i++) {
+                    m.setValueAt(Boolean.FALSE, i, 11);
+                }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_binsertreinterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -960,7 +1181,9 @@ public final class Apply extends javax.swing.JFrame {
     private javax.swing.JButton bSearch;
     private javax.swing.JButton bcancel;
     private javax.swing.JButton bdelete;
+    private javax.swing.JButton bedit;
     private javax.swing.JButton binsert;
+    private javax.swing.JButton binsertreinter;
     private javax.swing.JButton bsave;
     private javax.swing.JButton bupdate;
     private javaapplication21.AutoComboBox cbApplyPosition;

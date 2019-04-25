@@ -200,7 +200,7 @@ public class frm_Employee extends javax.swing.JFrame {
         cbEmployeeType.setAutocomplete(true);
         cbEmployeeType.setKeyWord(new String[] {});
 
-        btnSave.setText("Save");
+        btnSave.setText("Add");
 
         btnUpdate.setText("Update");
 
