@@ -41,7 +41,7 @@ public class dataCon {
     
     public static void connectToDB()throws Exception{
         Class.forName("com.mysql.jdbc.Driver");  
-        Con=DriverManager.getConnection("jdbc:mysql://localhost/staduim","root","");     
+        Con=DriverManager.getConnection("jdbc:mysql://localhost/hr","root","");     
     }
 
     /**
