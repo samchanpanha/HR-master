@@ -122,10 +122,7 @@ public class Attendent extends javax.swing.JFrame {
         Tattnden.setFont(new java.awt.Font("Century Schoolbook", 0, 12)); // NOI18N
         Tattnden.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "a", "1"},
-                {"2", "f", "sadf"},
-                {"asf", "f", "as"},
-                {null, null, null}
+
             },
             new String [] {
                 "ID", "Date Created", "Create By"

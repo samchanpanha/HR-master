@@ -117,10 +117,7 @@ public class Attenden_Details extends javax.swing.JFrame {
 
         TattendenDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Nº", "Day In", "Time In", "Day Out", "Time Out", "For Employee"
