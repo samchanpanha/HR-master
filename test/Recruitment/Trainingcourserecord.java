@@ -183,7 +183,7 @@ public class Trainingcourserecord extends javax.swing.JFrame {
         btndelte = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -388,7 +388,8 @@ public class Trainingcourserecord extends javax.swing.JFrame {
                 .addGap(0, 31, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(952, 924));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdatestartMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdatestartMouseReleased

@@ -25,11 +25,7 @@ public class frmCRMList extends javax.swing.JFrame {
     public frmCRMList() {
         initComponents();
         
-         try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+      
          
         clFunction.changeLookTable(jTableOpportunity);
         

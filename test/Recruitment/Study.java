@@ -220,7 +220,7 @@ public class Study extends javax.swing.JFrame {
         cbMajor = new javaapplication21.AutoComboBox();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(989, 908));
         setMinimumSize(new java.awt.Dimension(989, 908));
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -487,7 +487,8 @@ public class Study extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        setSize(new java.awt.Dimension(995, 898));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdateendMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateendMouseReleased

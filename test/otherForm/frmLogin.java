@@ -5,6 +5,8 @@
  */
 package otherForm;
 
+import CMS.ConMysql;
+import java.sql.Connection;
 import myClass.dataCon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,13 +108,13 @@ public class frmLogin extends javax.swing.JFrame {
         for (char p : ch){
             password+=p;
         }
-        
+       
         
         String sql="select empId,name,role,active from employees e join interviewees i on e.IntervieweeId=i.intervieweeID join users u on e.userId=u.UserId join roles r on u.RoleId=r.RoleId"
                 + " where username='"+username+"'  and password='"+password+"';";
         
         try {
-            Statement stmt=dataCon.getCon().createStatement();
+            Statement stmt=ConMysql.getDBConnection().createStatement();
             ResultSet rs=stmt.executeQuery(sql);
            
             
