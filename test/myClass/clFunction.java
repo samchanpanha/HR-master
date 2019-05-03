@@ -95,11 +95,11 @@ public class clFunction {
     }
      
     public static void prepareInternalFrame(JInternalFrame internal){
-        BasicInternalFrameUI ui = (BasicInternalFrameUI)internal.getUI();
-        Container north = (Container)ui.getNorthPane();
-        north.remove(0);
-        north.validate();
-        north.repaint();
+//        BasicInternalFrameUI ui = (BasicInternalFrameUI)internal.getUI();
+//        Container north = (Container)ui.getNorthPane();
+//        north.remove(0);
+//        north.validate();
+//        north.repaint();
         
         internal.setClosable(true);
         internal.setIconifiable(true);

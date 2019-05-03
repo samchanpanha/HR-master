@@ -334,6 +334,7 @@ CREATE TABLE `opportunitydetails`  (
   `Location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `Actionid` int(11) NULL DEFAULT NULL,
   `approveDate` datetime(0) NULL DEFAULT NULL,
+  `approveBy` int(11) NULL DEFAULT NULL,
   `EmpID` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`OpportunityDetailId`) USING BTREE,
   INDEX `OpportunityId`(`OpportunityId`) USING BTREE,
@@ -341,7 +342,8 @@ CREATE TABLE `opportunitydetails`  (
   INDEX `opportunitydetails_ibfk_3`(`EmpID`) USING BTREE,
   CONSTRAINT `opportunitydetails_ibfk_1` FOREIGN KEY (`OpportunityId`) REFERENCES `opportunitys` (`OpportunityId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `opportunitydetails_ibfk_2` FOREIGN KEY (`Actionid`) REFERENCES `actions` (`Actionid`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `opportunitydetails_ibfk_3` FOREIGN KEY (`EmpID`) REFERENCES `employees` (`EmpId`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `opportunitydetails_ibfk_3` FOREIGN KEY (`EmpID`) REFERENCES `employees` (`EmpId`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `opportunitydetails_ibfk_4` FOREIGN KEY (`approveBy`) REFERENCES `employees` (`EmpId`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1257,4 +1259,4 @@ delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-update employees set userId=1 where empId=1;
+
