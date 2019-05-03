@@ -31,6 +31,29 @@ public  Statement st;
 public  ResultSet rs;
 public PreparedStatement pst;
 public Connection con = ConAccess.getDBConnection();
+
+public void Query(String tb) {
+    
+     try{
+        
+         
+            String sql = tb ;
+            st = con.createStatement();
+           st.executeUpdate(sql);
+       //    JOptionPane.showConfirmDialog(null, "EXECUTE SUCCESS");  
+          
+           st.close();
+        }catch(SQLException e){
+         try {
+             con.rollback();
+         } catch (SQLException ex) {
+             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+         }
+            JOptionPane.showMessageDialog(null, e.getMessage());
+       
+        }
+}
+
     public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
 {
                try {

@@ -499,8 +499,12 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
             txtdegree.setText(m.getValueAt(i,8 ).toString());
             txtlanguage.setText(m.getValueAt(i,9 ).toString());
             
-            String sle="SELECT Image From interviewees WHERE IntervieweeId = '"+interid.getText()+"'";
+            try {
+                String sle="SELECT Image From interviewees WHERE IntervieweeId = '"+interid.getText()+"'";
             c.showpic(sle, pic);
+            } catch (Exception e) {
+            }
+  
             System.out.println(m.getValueAt(i, 0).toString()+"");
             Uncheck();
             c.FormartDateInTable(txtdate, tbdata, 11);        
@@ -549,7 +553,8 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btntranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntranActionPerformed
-     
+        Trainingcourserecord trin = new Trainingcourserecord();
+        trin.show();
         
     }//GEN-LAST:event_btntranActionPerformed
 
@@ -562,11 +567,13 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertActionPerformed
 
     private void btnworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnworkActionPerformed
-        // TODO add your handling code here:
+       WorkExpericence work = new WorkExpericence();
+       work.show();
     }//GEN-LAST:event_btnworkActionPerformed
 
     private void btndtudyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndtudyActionPerformed
-        // TODO add your handling code here:
+         Study stu = new Study();
+        stu.show();
     }//GEN-LAST:event_btndtudyActionPerformed
 
     /**

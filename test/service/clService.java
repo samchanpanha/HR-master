@@ -129,7 +129,7 @@ public class clService {
     
     public static boolean insert(String serviceId,String[] master,List<String[]> detail ){
         success=true;
-        sql="INSERT INTO `hrm`.`services`(`DateCreated`, `Total`, `EmpId`, `CustomerId`,`ServiceId`) VALUES (now(), ?, ?, ?, '"+serviceId+"' )";
+        sql="INSERT INTO `services`(`DateCreated`, `Total`, `EmpId`, `CustomerId`,`ServiceId`) VALUES (now(), ?, ?, ?, '"+serviceId+"' )";
         
         
         try{

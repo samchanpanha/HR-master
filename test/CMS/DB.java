@@ -221,20 +221,16 @@ public void showDataInTable(JTable tb,String q,DefaultTableModel dm)
           JOptionPane.showMessageDialog(null, ex.getMessage());
        }
 }
-public void Value_ID(String sql,JLabel txt){
+public void Value_ID(String sql,JTextField txt){
     try {  
-        
-        
-       
         pst = con.prepareStatement(sql);  
      rs = pst.executeQuery();  
        while (rs.next()) {  
          String id = rs.getString(1);
-           if ("".equals(id)) {
+           if ("".equals(id) || id==null) {
               txt.setText("1");
               return;
-           }
-       
+           }  
          int i =0;
               i = Integer.parseInt(id)+1;
               txt.setText(i+"");

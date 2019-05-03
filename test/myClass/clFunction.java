@@ -6,6 +6,7 @@
 package myClass;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -15,12 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -63,6 +68,50 @@ public class clFunction {
         dialog.add(panel);
         dialog.pack();
         dialog.setVisible(true);
+    }
+    
+     
+    public static void showInternalFrame(JDesktopPane pane,JInternalFrame internal){
+        internal.setVisible(true);
+       
+        
+        if(internal.isIcon()){
+            try{
+                internal.setIcon(false);
+                
+            }catch(Exception ex){
+                System.out.println(ex.getMessage());
+            }
+            
+        }
+        
+        if(internal.getParent()==null){
+            prepareInternalFrame(internal);
+            pane.add(internal);
+        }
+        
+        
+        
+    }
+     
+    public static void prepareInternalFrame(JInternalFrame internal){
+        BasicInternalFrameUI ui = (BasicInternalFrameUI)internal.getUI();
+        Container north = (Container)ui.getNorthPane();
+        north.remove(0);
+        north.validate();
+        north.repaint();
+        
+        internal.setClosable(true);
+        internal.setIconifiable(true);
+        internal.setMaximizable(true);
+        internal.setResizable(true);
+        
+        
+        
+        JComponent c = (BasicInternalFrameTitlePane)((BasicInternalFrameUI) internal.getUI()).getNorthPane();
+        
+        int titleHeight=23;
+        c.setPreferredSize(new Dimension(c.getPreferredSize().width,titleHeight));
     }
      
      public static void addPopUpToControl(JPopupMenu popupMenu,JComponent component){
@@ -154,9 +203,9 @@ public class clFunction {
         
         long diffInMillies = (dateEnd.getTime() - dateStart.getTime())/number;
         
-        System.out.println(dateStart +"----"+ dateEnd);
-        
-        System.out.println(diffInMillies +" "+ limiter);
+//        System.out.println(dateStart +"----"+ dateEnd);
+//        
+//        System.out.println(diffInMillies +" "+ limiter);
         
 
         return diffInMillies<limiter;
@@ -173,6 +222,10 @@ public class clFunction {
     }
     
    
-    
+    public static void updateTableModel(DefaultTableModel model,int selectedRow,String[] data){
+        for(int i=1;i<model.getColumnCount();i++){
+            model.setValueAt(data[i-1], selectedRow, i);
+        }
+    }
     
 }

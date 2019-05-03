@@ -202,7 +202,7 @@ public class WorkExpericence extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         txtsearch = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setMaximumSize(new java.awt.Dimension(989, 908));
         setMinimumSize(new java.awt.Dimension(989, 908));
@@ -460,7 +460,8 @@ public class WorkExpericence extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1005, 873));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdatestartMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdatestartMouseReleased

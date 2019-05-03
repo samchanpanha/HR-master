@@ -22,6 +22,7 @@ import javax.swing.table.TableColumnModel;
 import myClass.FormatRenderer;
 import myClass.IdAndName;
 import myClass.clFunction;
+import myClass.currentEmployee;
 import myClass.dataCon;
 
 /**
@@ -38,17 +39,18 @@ public class frmAddCRM extends javax.swing.JPanel {
         txtId.setText(clFunction.getLastId("Opportunitys"));
         
         this.modelCRMList=modelCRMList;
+        
+        if(!currentEmployee.getRole().equals("Admin")){
+            lbApprove.setVisible(false);
+            checkApprive.setVisible(false);
+        }
     }
     
     void init(){
         
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+      
         
         prepareForm();
         
@@ -236,6 +238,8 @@ public class frmAddCRM extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtLocation = new javax.swing.JTextArea();
         cbStatus = new javax.swing.JComboBox();
+        lbApprove = new javax.swing.JLabel();
+        checkApprive = new javax.swing.JCheckBox();
 
         txtId.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
 
@@ -358,6 +362,9 @@ public class frmAddCRM extends javax.swing.JPanel {
         cbStatus.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pending", "Success", "Fail" }));
 
+        lbApprove.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        lbApprove.setText("Approve:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -370,14 +377,14 @@ public class frmAddCRM extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(44, 44, 44))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel10)
                                             .addComponent(jLabel11))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addGap(44, 44, 44)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
                                     .addComponent(spinPriority)
@@ -400,19 +407,22 @@ public class frmAddCRM extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel8)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(lbApprove))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
-                                    .addComponent(dStart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbAction, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(jScrollPane3)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkApprive)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(dEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                                        .addComponent(dStart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cbAction, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane1)
+                                        .addComponent(jScrollPane3)))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(40, 40, 40)
@@ -485,7 +495,15 @@ public class frmAddCRM extends javax.swing.JPanel {
                         .addComponent(btnEdit)
                         .addGap(18, 18, 18)
                         .addComponent(btnDelete)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addComponent(lbApprove)
+                        .addGap(25, 25, 25))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(checkApprive)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );
@@ -830,6 +848,7 @@ public class frmAddCRM extends javax.swing.JPanel {
     private controls.SubJComboBox cbCustomer;
     private controls.SubJComboBox cbEmployee;
     private javax.swing.JComboBox cbStatus;
+    private javax.swing.JCheckBox checkApprive;
     private controls.JDateTimePicker dEnd;
     private controls.JDateTimePicker dStart;
     private javax.swing.JLabel jLabel10;
@@ -848,6 +867,7 @@ public class frmAddCRM extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTableCRMDetail;
+    private javax.swing.JLabel lbApprove;
     private javax.swing.JSpinner spinPriority;
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JTextField txtId;

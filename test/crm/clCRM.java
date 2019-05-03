@@ -158,7 +158,7 @@ public class clCRM {
     
     public static boolean insert(String opportunityId,String[] master,List<String[]> detail ){
         success=true;
-        sql="INSERT INTO `hrm`.`opportunitys`(`Description`, `Priority`, `Done`, `EmpId`, `CustomerId`,`DateCreated`) "
+        sql="INSERT INTO `opportunitys`(`Description`, `Priority`, `Done`, `EmpId`, `CustomerId`,`DateCreated`) "
                 + "VALUES (?, ?, ?, ?, ?, now())";
         
         
@@ -212,7 +212,7 @@ public class clCRM {
                 
                 //"#", "Employee", "Action", "Date Start", "Date End", "Location", "Description"
                 
-                sql="INSERT INTO `hrm`.`opportunitydetails`(`OpportunityId`,`EmpID`, `Actionid`,`dateStart`,`dateEnd`, `Location`, `descrption`) "
+                sql="INSERT INTO `opportunitydetails`(`OpportunityId`,`EmpID`, `Actionid`,`dateStart`,`dateEnd`, `Location`, `descrption`) "
                     + "VALUES ('"+opportunityId+"', ?, ?, ?, ?, ?, ?)";
                 
                 
@@ -222,7 +222,7 @@ public class clCRM {
                     prepareStmt.setString(i+1, st[i]);
                 }
                 
-                 prepareStmt.execute();
+                prepareStmt.execute();
 
             }
         }catch(SQLException ex){
