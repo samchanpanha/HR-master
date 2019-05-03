@@ -24,7 +24,7 @@ public class clServiceType {
     
     static boolean success;
     static String sql;
-    static PreparedStatement preparedStmt;
+   
     static PreparedStatement prepareStmt;
     static Statement stmt;
     static ResultSet rs;
@@ -38,12 +38,12 @@ public class clServiceType {
         
         
         try{
-            preparedStmt=dataCon.getCon().prepareStatement(sql);
+            prepareStmt=dataCon.getCon().prepareStatement(sql);
             for(int i=0;i<data.length;i++){
-                preparedStmt.setString(i+1, data[i]);
+                prepareStmt.setString(i+1, data[i]);
             }
             
-            preparedStmt.execute();
+            prepareStmt.execute();
             
         }catch(SQLException ex){
             success=false;

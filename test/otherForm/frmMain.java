@@ -13,6 +13,7 @@ import customer.frmCustomer;
 import javax.swing.JFrame;
 import myClass.clFunction;
 import myClass.currentEmployee;
+import timeTable.frmTimeTableList;
 
 /**
  *
@@ -30,7 +31,7 @@ public class frmMain extends javax.swing.JFrame {
         lbName.setText("Name: "+ currentEmployee.getName()+"    Role: "+currentEmployee.getRole());
         
         DropDown ddEmployee=new DropDown(btnEmployee, pEmployee, 500, 10, 15);
-        DropDown ddCustomer=new DropDown(btnCustomer, pCustomer, 200, 10, 20);
+        DropDown ddCustomer=new DropDown(btnCustomer, pCustomer, 250, 10, 20);
         
     }
 
@@ -63,6 +64,7 @@ public class frmMain extends javax.swing.JFrame {
         btnCustomerList = new javax.swing.JButton();
         btnService = new javax.swing.JButton();
         btnCRM = new javax.swing.JButton();
+        btnTimeTable = new javax.swing.JButton();
         btnOther = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -245,6 +247,14 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
 
+        btnTimeTable.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        btnTimeTable.setText("Time Table");
+        btnTimeTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimeTableActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pCustomerLayout = new javax.swing.GroupLayout(pCustomer);
         pCustomer.setLayout(pCustomerLayout);
         pCustomerLayout.setHorizontalGroup(
@@ -253,6 +263,7 @@ public class frmMain extends javax.swing.JFrame {
             .addComponent(btnService, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
             .addComponent(btnCRM, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
             .addComponent(btnCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnTimeTable, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         );
         pCustomerLayout.setVerticalGroup(
             pCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,6 +276,8 @@ public class frmMain extends javax.swing.JFrame {
                 .addComponent(btnService, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnCRM, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnTimeTable, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -312,7 +325,7 @@ public class frmMain extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))
+                    .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
@@ -397,6 +410,13 @@ public class frmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTrainningTypeActionPerformed
 
     
+    
+    frmTimeTableList timeTableList=new frmTimeTableList();
+    private void btnTimeTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimeTableActionPerformed
+        clFunction.showInternalFrame(myDesktopPane1, timeTableList);
+    }//GEN-LAST:event_btnTimeTableActionPerformed
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
@@ -411,6 +431,7 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JButton btnOther;
     private javax.swing.JButton btnRecruit;
     private javax.swing.JButton btnService;
+    private javax.swing.JButton btnTimeTable;
     private javax.swing.JButton btnTrainning;
     private javax.swing.JButton btnTrainningType;
     private javax.swing.JButton btnWorkDay;
