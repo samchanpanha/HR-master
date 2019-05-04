@@ -6,6 +6,8 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,12 +19,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import myClass.clFunction;
+import otherForm.frmMain;
 
 /**
  *
  * @author panha
  */
-public final class Insert_Interviewee extends javax.swing.JFrame {
+public final class Insert_Interviewee extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Insert_Interviewee
@@ -293,24 +297,24 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Language :");
-        jpinterviewee.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 80, 28));
+        jpinterviewee.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 80, 28));
 
         txtdegree.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txtdegree, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, 220, 28));
+        jpinterviewee.add(txtdegree, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 50, 220, 28));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel9.setText("Degree :");
-        jpinterviewee.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 50, 70, 28));
+        jpinterviewee.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 70, 28));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel10.setText("Block :");
-        jpinterviewee.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 50, 50, 28));
+        jpinterviewee.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 50, 50, 28));
 
         cbblock.setKeyWord(new String[] {"none", "block"});
-        jpinterviewee.add(cbblock, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 50, 220, 28));
+        jpinterviewee.add(cbblock, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 50, 220, 28));
 
         pic.setBackground(new java.awt.Color(255, 255, 255));
-        jpinterviewee.add(pic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 10, 140, 150));
+        jpinterviewee.add(pic, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 10, 140, 150));
 
         jButton1.setText("Choose Photo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -318,7 +322,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jpinterviewee.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 170, 121, 31));
+        jpinterviewee.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 170, 121, 31));
 
         tbdata.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -339,10 +343,10 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tbdata);
 
-        jpinterviewee.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, 282, 1420, 490));
+        jpinterviewee.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, 282, 1220, 490));
 
         txttel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txttel, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 220, 28));
+        jpinterviewee.add(txttel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 90, 220, 28));
 
         txtsearch.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -350,33 +354,33 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 txtsearchKeyReleased(evt);
             }
         });
-        jpinterviewee.add(txtsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 170, 520, 28));
+        jpinterviewee.add(txtsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 170, 520, 28));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("Tel :");
-        jpinterviewee.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 80, 28));
+        jpinterviewee.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, 80, 28));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setText("Search :");
-        jpinterviewee.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 170, 50, 28));
+        jpinterviewee.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 170, 50, 28));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("Email :");
-        jpinterviewee.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 90, 50, 28));
+        jpinterviewee.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 90, 50, 28));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setText("Status :");
-        jpinterviewee.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, 50, 28));
+        jpinterviewee.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 10, 50, 28));
 
         txtemail.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txtemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 90, 220, 28));
+        jpinterviewee.add(txtemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 90, 220, 28));
 
         cbstatus.setKeyWord(new String[] {"none", "block"});
-        jpinterviewee.add(cbstatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 10, 220, 28));
+        jpinterviewee.add(cbstatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 10, 220, 28));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Dob :");
-        jpinterviewee.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 130, 60, 28));
+        jpinterviewee.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 130, 60, 28));
 
         btntran.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btntran.setText("Training");
@@ -385,45 +389,45 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 btntranActionPerformed(evt);
             }
         });
-        jpinterviewee.add(btntran, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 220, 100, 36));
+        jpinterviewee.add(btntran, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 220, 100, 36));
 
         cbgender.setKeyWord(new String[] {"Male", "Female"});
-        jpinterviewee.add(cbgender, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 50, 220, 31));
+        jpinterviewee.add(cbgender, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, 220, 31));
 
         txtdate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 txtdateMouseReleased(evt);
             }
         });
-        jpinterviewee.add(txtdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 130, 220, 28));
+        jpinterviewee.add(txtdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, 220, 28));
 
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Skill", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
         jpskill.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(jpskill);
 
-        jpinterviewee.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, 320, 110));
+        jpinterviewee.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 320, 110));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Name :");
-        jpinterviewee.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 70, 28));
+        jpinterviewee.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 70, 28));
 
         txtname.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txtname, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, 220, 28));
+        jpinterviewee.add(txtname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 220, 28));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Gender :");
-        jpinterviewee.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 70, 28));
+        jpinterviewee.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 70, 28));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Address :");
-        jpinterviewee.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 70, 28));
+        jpinterviewee.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 70, 28));
 
         txtaddress.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txtaddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, 220, 58));
+        jpinterviewee.add(txtaddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, 220, 58));
 
         txtlanguage.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jpinterviewee.add(txtlanguage, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, 220, 28));
+        jpinterviewee.add(txtlanguage, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, 220, 28));
 
         btnInsert.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnInsert.setText("Insert");
@@ -432,7 +436,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 btnInsertActionPerformed(evt);
             }
         });
-        jpinterviewee.add(btnInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 220, 100, 36));
+        jpinterviewee.add(btnInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 220, 100, 36));
 
         btnwork.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnwork.setText("WorkExperice");
@@ -441,7 +445,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 btnworkActionPerformed(evt);
             }
         });
-        jpinterviewee.add(btnwork, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 220, 100, 36));
+        jpinterviewee.add(btnwork, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 220, 100, 36));
 
         btndtudy.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btndtudy.setText("Study");
@@ -450,7 +454,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 btndtudyActionPerformed(evt);
             }
         });
-        jpinterviewee.add(btndtudy, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 220, 100, 36));
+        jpinterviewee.add(btndtudy, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 220, 100, 36));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -462,7 +466,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 .addGap(554, 554, 554))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpinterviewee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jpinterviewee, javax.swing.GroupLayout.PREFERRED_SIZE, 1241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -472,7 +476,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jpinterviewee, javax.swing.GroupLayout.PREFERRED_SIZE, 783, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -554,7 +558,7 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
 
     private void btntranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntranActionPerformed
         Trainingcourserecord trin = new Trainingcourserecord();
-        trin.show();
+          clFunction.showInternalFrame(frmMain.myDesktopPane1, trin);
         
     }//GEN-LAST:event_btntranActionPerformed
 
@@ -568,12 +572,13 @@ public final class Insert_Interviewee extends javax.swing.JFrame {
 
     private void btnworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnworkActionPerformed
        WorkExpericence work = new WorkExpericence();
-       work.show();
+         clFunction.showInternalFrame(frmMain.myDesktopPane1, work);
+       
     }//GEN-LAST:event_btnworkActionPerformed
 
     private void btndtudyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndtudyActionPerformed
          Study stu = new Study();
-        stu.show();
+          clFunction.showInternalFrame(frmMain.myDesktopPane1, stu);
     }//GEN-LAST:event_btndtudyActionPerformed
 
     /**

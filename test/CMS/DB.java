@@ -326,6 +326,13 @@ public void X_Columns(JTable t,int c){
             sum = sum + Double.parseDouble(t.getValueAt(i, c).toString());
         }
    }
+
+public void Move_Columns(JTable tb ,int ... i){
+        for (int j : i) {
+              tb.moveColumn(tb.getColumnCount() - 1, j);
+        }
+    }
+    
    
 public void  clock(Thread ck,JLabel date ,JLabel time){
       ck = new Thread(){

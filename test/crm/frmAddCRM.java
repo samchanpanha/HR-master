@@ -22,7 +22,8 @@ import javax.swing.table.TableColumnModel;
 import myClass.FormatRenderer;
 import myClass.IdAndName;
 import myClass.clFunction;
-import myClass.dataCon;
+import myClass.currentEmployee;
+
 
 /**
  *
@@ -38,6 +39,20 @@ public class frmAddCRM extends javax.swing.JPanel {
         txtId.setText(clFunction.getLastId("Opportunitys"));
         
         this.modelCRMList=modelCRMList;
+        
+        if(!currentEmployee.getRole().equals("Admin")){
+            lbApprove.setVisible(false);
+            checkApprove.setVisible(false);
+        }
+        
+        
+        
+        if(!currentEmployee.getRole().equals("Admin")){
+            dAppoveDate.setEnabled(false);
+            checkApprove.setEnabled(false);
+        }
+        
+        
     }
     
     void init(){
@@ -161,6 +176,8 @@ public class frmAddCRM extends javax.swing.JPanel {
         m.getColumn(3).setCellRenderer(renderer);
         m.getColumn(4).setCellRenderer(renderer);
         
+        m.getColumn(7).setCellRenderer(renderer);
+        
         String[] st = {"1","2","3"};
         SpinnerListModel modelSpinPriority = new SpinnerListModel(st);
         
@@ -232,6 +249,9 @@ public class frmAddCRM extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtLocation = new javax.swing.JTextArea();
         cbStatus = new javax.swing.JComboBox();
+        lbApprove = new javax.swing.JLabel();
+        checkApprove = new javax.swing.JCheckBox();
+        dAppoveDate = new controls.JDateTimePicker();
 
         txtId.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
 
@@ -299,14 +319,14 @@ public class frmAddCRM extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "Employee", "Action", "Date Start", "Date End", "Location", "Description"
+                "#", "Employee", "Action", "Date Start", "Date End", "Location", "Description", "Approve Date", "Approve By"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -354,6 +374,18 @@ public class frmAddCRM extends javax.swing.JPanel {
         cbStatus.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pending", "Success", "Fail" }));
 
+        lbApprove.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        lbApprove.setText("Approve:");
+
+        checkApprove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkApproveActionPerformed(evt);
+            }
+        });
+
+        dAppoveDate.setEnabled(false);
+        dAppoveDate.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -366,14 +398,14 @@ public class frmAddCRM extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(44, 44, 44))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel10)
                                             .addComponent(jLabel11))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addGap(44, 44, 44)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
                                     .addComponent(spinPriority)
@@ -396,29 +428,29 @@ public class frmAddCRM extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel8)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(lbApprove))
+                        .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
-                                    .addComponent(dStart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbAction, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(jScrollPane3)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(dEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                                .addComponent(dStart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbAction, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1)
+                                .addComponent(jScrollPane3)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(checkApprove)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(dAppoveDate, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                            .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(40, 40, 40)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
@@ -432,56 +464,65 @@ public class frmAddCRM extends javax.swing.JPanel {
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel12)
                                 .addComponent(cbCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(34, 34, 34)
+                        .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnSave)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(124, 124, 124)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(spinPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel10)
-                                                .addComponent(jLabel4))
-                                            .addGap(35, 35, 35)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(jLabel11)
-                                                .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(cbAction, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel8))
-                                            .addGap(25, 25, 25)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(dStart, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel3))
-                                            .addGap(18, 18, 18)
-                                            .addComponent(dEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(30, 30, 30)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel6)
-                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGap(20, 20, 20)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel7))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(124, 124, 124)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(spinPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel4))
+                                        .addGap(35, 35, 35)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel11)
+                                            .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(cbAction, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel8))
+                                        .addGap(25, 25, 25)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(dStart, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(dEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(30, 30, 30)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAdd)
-                        .addGap(18, 18, 18)
+                        .addGap(56, 56, 56)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAdd))
+                        .addGap(12, 12, 12)
                         .addComponent(btnEdit)
-                        .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
                         .addComponent(btnDelete)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dAppoveDate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(checkApprove)
+                            .addComponent(lbApprove))
+                        .addGap(9, 9, 9)))
+                .addGap(30, 30, 30)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );
@@ -515,7 +556,7 @@ public class frmAddCRM extends javax.swing.JPanel {
         String status = cbStatus.getSelectedItem()+"";
         
         
-        IdAndName curEmp=new IdAndName("1","roth"); //EMPID
+        
         
         //(`Description`, `Priority`, `Done`, `EmpId`, `CustomerId`)
         
@@ -531,7 +572,7 @@ public class frmAddCRM extends javax.swing.JPanel {
         
         String formatPattern="yyyy/MM/dd HH:mm";
         
-        String stStart,stEnd;
+        String stStart,stEnd,stApproveDate;
         
         
         for(int i=0;i<modelCRMDetail.getRowCount();i++){
@@ -545,6 +586,14 @@ public class frmAddCRM extends javax.swing.JPanel {
             stStart=clFunction.getFormattedDate((Date)modelCRMDetail.getValueAt(i,3) , formatPattern);
             stEnd=clFunction.getFormattedDate((Date)modelCRMDetail.getValueAt(i,4) , formatPattern);
             
+            if((modelCRMDetail.getValueAt(i,7)+"").equals("")){
+                stApproveDate="";
+            }else{
+                stApproveDate=clFunction.getFormattedDate((Date)modelCRMDetail.getValueAt(i,7) , formatPattern);
+            }
+            
+            
+            IdAndName approveBy=(IdAndName)modelCRMDetail.getValueAt(i,8);
             
             d[0]=employee.getId();
             d[1]=action.getId();
@@ -552,8 +601,12 @@ public class frmAddCRM extends javax.swing.JPanel {
             d[2]=stStart;
             d[3]=stEnd;
             
-            d[4]= modelCRMDetail.getValueAt(i,5)+"";
-            d[5]= modelCRMDetail.getValueAt(i,6)+"";
+            d[4] = modelCRMDetail.getValueAt(i,5)+"";
+            d[5] = modelCRMDetail.getValueAt(i,6)+"";
+            
+            d[6] = stApproveDate;
+            d[7] = approveBy.getId();
+            
             
             detail.add(d);
             
@@ -566,13 +619,13 @@ public class frmAddCRM extends javax.swing.JPanel {
         
             String stNow=clFunction.getFormattedDate(new Date(), this.formatPattern);
             
-            String [] master={masterDesc,priority,status,curEmp.getId(),customer.getId()};
+            String [] master={masterDesc,priority,status,currentEmployee.getId(),customer.getId()};
             
             if(clCRM.insert(opportunityId,master, detail)){
 
 
 
-                Object [] obj={opportunityId,masterDesc,stNow,priority,status,curEmp,customer};
+                Object [] obj={opportunityId,masterDesc,stNow,priority,status,currentEmployee.getName(),customer};
 
 
                 modelCRMList.addRow(obj);
@@ -629,6 +682,9 @@ public class frmAddCRM extends javax.swing.JPanel {
         txtLocation.setText("");
         txtDescription.setText("");
         
+        checkApprove.setSelected(false);
+        
+        checkApproveActionPerformed(null);
         
     }
     
@@ -775,10 +831,22 @@ public class frmAddCRM extends javax.swing.JPanel {
         
         String description=txtDescription.getText().trim();
         
+        IdAndName approver;
         
         
+        Object stApproveDate;
         
-        Object [] obj={n,employee,action,dStart.getValue(),dEnd.getValue(),location,description};
+        
+        if(checkApprove.isSelected()){
+            stApproveDate=dAppoveDate.getValue();
+            approver=new IdAndName(currentEmployee.getId(),currentEmployee.getName());
+        }else{
+            stApproveDate="";
+            approver=new IdAndName("","");
+        }
+        
+        
+        Object [] obj={n,employee,action,dStart.getValue(),dEnd.getValue(),location,description,stApproveDate,approver};
          
         return obj;
         
@@ -813,6 +881,11 @@ public class frmAddCRM extends javax.swing.JPanel {
         clFunction.resetAutoNumber(selectedRowIndex, modelCRMDetail);
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void checkApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkApproveActionPerformed
+       dAppoveDate.setEnabled(checkApprove.isSelected());
+    }//GEN-LAST:event_checkApproveActionPerformed
+
+    
     
     
     
@@ -826,6 +899,8 @@ public class frmAddCRM extends javax.swing.JPanel {
     private controls.SubJComboBox cbCustomer;
     private controls.SubJComboBox cbEmployee;
     private javax.swing.JComboBox cbStatus;
+    private javax.swing.JCheckBox checkApprove;
+    private controls.JDateTimePicker dAppoveDate;
     private controls.JDateTimePicker dEnd;
     private controls.JDateTimePicker dStart;
     private javax.swing.JLabel jLabel10;
@@ -844,6 +919,7 @@ public class frmAddCRM extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTableCRMDetail;
+    private javax.swing.JLabel lbApprove;
     private javax.swing.JSpinner spinPriority;
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JTextField txtId;
@@ -871,6 +947,16 @@ public class frmAddCRM extends javax.swing.JPanel {
         
         txtDescription.setText(modelCRMDetail.getValueAt(selectedRowIndex,6)+"");
         
+        
+        
+        
+        if((modelCRMDetail.getValueAt(selectedRowIndex,7)+"").equals("")){
+            checkApprove.setSelected(false);
+        }else{
+            checkApprove.setSelected(true);
+            dAppoveDate.setValue((Date)modelCRMDetail.getValueAt(selectedRowIndex,7));
+        }
+        checkApproveActionPerformed(null);
     }
 }
 

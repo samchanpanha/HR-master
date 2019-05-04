@@ -6,12 +6,12 @@
 package otherForm;
 
 import CMS.ConMysql;
-import java.sql.Connection;
-import myClass.dataCon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import myClass.currentEmployee;
 
 /**
  *
@@ -126,8 +126,15 @@ public class frmLogin extends javax.swing.JFrame {
                     return;
                 }
                 
+                currentEmployee.setId(rs.getString(1));
+                currentEmployee.setName(rs.getString(2));
+                currentEmployee.setRole(rs.getString(3));
                
+                main.main(null);
+                
                 dispose();
+                
+                
                 
                //show main form here 
                 
@@ -148,6 +155,9 @@ public class frmLogin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnLoginActionPerformed
 
+    
+    frmMain main;
+    
     /**
      * @param args the command line arguments
      */

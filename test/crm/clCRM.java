@@ -31,6 +31,8 @@ public class clCRM {
     static ResultSet rs;
     
     
+    
+    
     static void getCRMList(DefaultTableModel modelCRMList){
         sql="select OpportunityId,Description,DATE_FORMAT(dateCreated,'%d/%m/%Y') dateCreated,Priority, Done,e.EmpId, i.name 'employee',c.CustomerId,c.name 'customer' from opportunitys o join customers c on o.CustomerId=c.CustomerId join employees e on e.EmpId=o.empId join interviewees i on e.intervieweeId=i.intervieweeId;";        try {
         stmt=dataCon.getCon().createStatement();
@@ -75,8 +77,8 @@ public class clCRM {
         
         //"#", "Employee", "Action", "Date Start", "Date End", "Location", "Description"
 
-        sql="select e.EmpId,i.Name,o.Actionid,a.ActionType,DATE_FORMAT(o.dateStart,'%d/%m/%Y %H:%i') dateStart,DATE_FORMAT(o.dateEnd,'%d/%m/%Y %H:%i') dateEnd,o.Location,o.descrption \n" +
-            "from opportunityDetails o join actions a on o.Actionid=a.Actionid join employees e on e.EmpId=o.empId join interviewees i on e.intervieweeId=i.intervieweeId where OpportunityId="+opportunityId+";";
+        sql="select e.EmpId,i.Name,o.Actionid,a.ActionType,DATE_FORMAT(o.dateStart,'%d/%m/%Y %H:%i') dateStart,DATE_FORMAT(o.dateEnd,'%d/%m/%Y %H:%i') dateEnd,o.Location,o.descrption,ifnull(DATE_FORMAT(approveDate,'%d/%m/%Y %H:%i'),'') approveDate,approveBy,appInter.name\n" +
+"from opportunityDetails o join actions a on o.Actionid=a.Actionid join employees e on e.EmpId=o.empId join interviewees i on e.intervieweeId=i.intervieweeId left join employees app on app.empId=o.approveBy left join interviewees appInter on app.IntervieweeId=appInter.IntervieweeId where OpportunityId="+opportunityId+";";
         try {
             stmt=dataCon.getCon().createStatement();
             rs=stmt.executeQuery(sql);
@@ -86,7 +88,7 @@ public class clCRM {
                 int autoNumber=1;
                 do{
                     
-                    Object[] obj=new Object[7];
+                    Object[] obj=new Object[9];
                     
                     IdAndName employee=new IdAndName(rs.getString(1),rs.getString(2));
                     IdAndName action=new IdAndName(rs.getString(3),rs.getString(4));
@@ -105,6 +107,16 @@ public class clCRM {
                     obj[5]=rs.getString(7);
                     obj[6]=rs.getString(8);
                     
+                    if(rs.getString(9).equals("")){
+                        obj[7]="";
+                    }else{
+                        obj[7]= clFunction.formatStringTodate(rs.getString(9), formatPattern);
+                    }
+                    
+                    
+                    IdAndName approver=new IdAndName(rs.getString(10),rs.getString(11));
+                    
+                    obj[8]=approver;
                     
                     modelCRMDetail.addRow(obj);
                     
@@ -158,7 +170,7 @@ public class clCRM {
     
     public static boolean insert(String opportunityId,String[] master,List<String[]> detail ){
         success=true;
-        sql="INSERT INTO `hrm`.`opportunitys`(`Description`, `Priority`, `Done`, `EmpId`, `CustomerId`,`DateCreated`) "
+        sql="INSERT INTO `opportunitys`(`Description`, `Priority`, `Done`, `EmpId`, `CustomerId`,`DateCreated`) "
                 + "VALUES (?, ?, ?, ?, ?, now())";
         
         
@@ -212,18 +224,32 @@ public class clCRM {
                 
                 //"#", "Employee", "Action", "Date Start", "Date End", "Location", "Description"
                 
-                sql="INSERT INTO `hrm`.`opportunitydetails`(`OpportunityId`,`EmpID`, `Actionid`,`dateStart`,`dateEnd`, `Location`, `descrption`) "
+                sql="INSERT INTO `opportunitydetails`(`OpportunityId`,`EmpID`, `Actionid`,`dateStart`,`dateEnd`, `Location`, `descrption`) "
                     + "VALUES ('"+opportunityId+"', ?, ?, ?, ?, ?, ?)";
                 
                 
                 prepareStmt=dataCon.getCon().prepareStatement(sql);
                 
-                for(int i=0;i<st.length;i++){
+                for(int i=0;i<st.length-2;i++){
                     prepareStmt.setString(i+1, st[i]);
                 }
                 
-                 prepareStmt.execute();
+                String detailId=clFunction.getLastId("opportunitydetails");
+                
+                prepareStmt.execute();
 
+                
+                if(!st[st.length-1].equals("")){
+                    
+                    sql="update opportunitydetails set approveDate='"+st[st.length-2]+"',approveBy="+st[st.length-1]+" where OpportunityDetailId="+detailId;
+                    prepareStmt=dataCon.getCon().prepareStatement(sql);
+                    prepareStmt.execute();
+                    
+                    
+                   
+                    
+                }
+                
             }
         }catch(SQLException ex){
             success=false;

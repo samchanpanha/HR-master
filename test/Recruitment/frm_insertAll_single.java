@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class frm_insertAll_single extends javax.swing.JFrame {
+public class frm_insertAll_single extends javax.swing.JInternalFrame {
     DB c = new DB();
     String Sql=null;
     AC ac = new AC();

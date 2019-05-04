@@ -6,6 +6,7 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.util.List;
 import javaapplication21.AutoComboBox;
 import javax.swing.JCheckBox;
@@ -21,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author panha
  */
-public class frm_search_Interviewee extends javax.swing.JFrame {
+public class frm_search_Interviewee extends javax.swing.JInternalFrame {
 
      JTextArea txtskill = new JTextArea();
      JTextArea txtcate = new JTextArea();

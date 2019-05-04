@@ -6,6 +6,7 @@
 package crm;
 
 import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
@@ -17,7 +18,7 @@ import myClass.dataCon;
  *
  * @author Nemesis
  */
-public class frmCRMList extends javax.swing.JFrame {
+public class frmCRMList extends JInternalFrame {
 
     /**
      * Creates new form frmCRMList
@@ -25,7 +26,7 @@ public class frmCRMList extends javax.swing.JFrame {
     public frmCRMList() {
         initComponents();
         
-      
+        clFunction.prepareInternalFrame(this);
          
         clFunction.changeLookTable(jTableOpportunity);
         
@@ -98,7 +99,7 @@ public class frmCRMList extends javax.swing.JFrame {
         });
         jPopupMenu1.add(popDelete);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTableOpportunity.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
