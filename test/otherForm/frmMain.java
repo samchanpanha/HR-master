@@ -37,7 +37,7 @@ public class frmMain extends javax.swing.JFrame {
         DropDown ddCustomer=new DropDown(btnCustomer, pCustomer, 250, 10, 20);
         
     }
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,6 +47,13 @@ public class frmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        try {
+            myDesktopPane1 =(controls.MyDesktopPane)java.beans.Beans.instantiate(getClass().getClassLoader(), "otherForm.frmMain_myDesktopPane1");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
         jPanel1 = new javax.swing.JPanel();
         lbName = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -68,8 +75,6 @@ public class frmMain extends javax.swing.JFrame {
         btnCRM = new javax.swing.JButton();
         btnTimeTable = new javax.swing.JButton();
         btnOther = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        myDesktopPane1 = new controls.MyDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -309,15 +314,8 @@ public class frmMain extends javax.swing.JFrame {
                 .addComponent(pCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnOther, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 5, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane1.setAutoscrolls(true);
-
-        myDesktopPane1.setAutoscrolls(true);
-        jScrollPane1.setViewportView(myDesktopPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -327,7 +325,7 @@ public class frmMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 854, Short.MAX_VALUE))
+                .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,8 +334,8 @@ public class frmMain extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))))
+                        .addGap(2, 2, 2)
+                        .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))
         );
 
         pack();
@@ -409,14 +407,15 @@ public class frmMain extends javax.swing.JFrame {
     private void btnCRMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCRMActionPerformed
         clFunction.showInternalFrame(myDesktopPane1, crmList);
     }//GEN-LAST:event_btnCRMActionPerformed
-
+     Insert_Interviewee iw = new Insert_Interviewee();
     private void btnIntervieweeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIntervieweeActionPerformed
-       Insert_Interviewee iw = new Insert_Interviewee();
+      
         clFunction.showInternalFrame(myDesktopPane1, iw);
-    }//GEN-LAST:event_btnIntervieweeActionPerformed
 
+    }//GEN-LAST:event_btnIntervieweeActionPerformed
+    Create_User u = new Create_User();
     private void btnOtherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtherActionPerformed
-        Create_User u = new Create_User();
+      
         clFunction.showInternalFrame(myDesktopPane1, u);
     }//GEN-LAST:event_btnOtherActionPerformed
 
@@ -454,7 +453,6 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JButton btnWorkDay;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbName;
     public static controls.MyDesktopPane myDesktopPane1;
     private javax.swing.JPanel pCustomer;

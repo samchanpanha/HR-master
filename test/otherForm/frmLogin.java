@@ -9,7 +9,7 @@ import CMS.ConMysql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JFrame;
+
 import javax.swing.JOptionPane;
 import myClass.currentEmployee;
 
@@ -49,11 +49,13 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel2.setText("Username:");
 
         txtUsername.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        txtUsername.setText("admin");
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel3.setText("Password:");
 
         txtPassword.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        txtPassword.setText("admin");
 
         btnLogin.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         btnLogin.setText("Login");

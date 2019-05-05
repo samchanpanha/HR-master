@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import myClass.currentEmployee;
 
 /**
  *
@@ -26,6 +27,7 @@ public class Recruit extends javax.swing.JFrame {
      */
     public Recruit() {
         initComponents();
+        cemid.setText(currentEmployee.getId());
     }
     DB c = new DB();
     DefaultTableModel mod;
@@ -42,6 +44,7 @@ public class Recruit extends javax.swing.JFrame {
     JTextField valueID = new JTextField();
     SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
     JLabel lbtime = new JLabel();
+    JTextField cemid = new JTextField();
     Thread th ;
     String EmployeeID =null;
     int id=0;
@@ -123,7 +126,7 @@ public class Recruit extends javax.swing.JFrame {
         
         String query ="INSERT INTO recruits\n" +
         "(DateCreated, EndDate, Description,cEmpId)\n" +
-        "VALUES('"+cDate+"', '"+eDate+"', '"+txtdes.getText()+"', 1);";
+        "VALUES('"+cDate+"', '"+eDate+"', '"+txtdes.getText()+"', "+cemid.getText()+");";
         c.Query(query);
         ShowID();
         String RecruitID = valueID.getText();
@@ -224,7 +227,7 @@ public class Recruit extends javax.swing.JFrame {
        String Description = txtdes1.getText();
        Sql = "UPDATE recruits\n" +
         "SET DateCreated='"+CreateDate+"', EndDate='"+EndDate+"', Description='"+Description+"', ModifiedDate='"+lbdatetime.getText()+"',"
-        + " mEmpId='"+"1"+"'\n" +
+        + " mEmpId='"+cemid.getText()+"'\n" +
         "WHERE RecruitId='"+reID+"';";
         c.Query(Sql);
         SearchRecruit();
@@ -236,7 +239,7 @@ public class Recruit extends javax.swing.JFrame {
        String Description = txtdes1.getText();
        Sql = "UPDATE recruits\n" +
         "SET DateCreated='"+CreateDate+"', EndDate='"+EndDate+"', Description='"+Description+"', ModifiedDate='"+lbdatetime.getText()+"',"
-        + " mEmpId='"+"1"+"'\n" +
+        + " mEmpId='"+cemid.getText()+"'\n" +
         "WHERE RecruitId='"+reID+"';";
        
        query="UPDATE recruitdetails\n" +
