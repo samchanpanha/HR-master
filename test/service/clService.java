@@ -33,6 +33,7 @@ public class clService {
     
     
     static void getServiceList(DefaultTableModel modelCRMList){
+        modelCRMList.setRowCount(0);
         sql="select serviceId,DATE_FORMAT(DateCreated,'%d/%m/%Y') dateCreated,Total,e.EmpId, i.name 'employee',c.CustomerId,c.name 'customer' from services s join customers c on s.CustomerId=c.CustomerId join employees e on e.EmpId=s.empId join interviewees i on e.intervieweeId=i.intervieweeId;";        
         try {
             stmt=dataCon.getCon().createStatement();

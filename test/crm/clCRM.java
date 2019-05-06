@@ -34,9 +34,10 @@ public class clCRM {
     
     
     static void getCRMList(DefaultTableModel modelCRMList){
-        sql="select OpportunityId,Description,DATE_FORMAT(dateCreated,'%d/%m/%Y') dateCreated,Priority, Done,e.EmpId, i.name 'employee',c.CustomerId,c.name 'customer' from opportunitys o join customers c on o.CustomerId=c.CustomerId join employees e on e.EmpId=o.empId join interviewees i on e.intervieweeId=i.intervieweeId;";        try {
-        stmt=dataCon.getCon().createStatement();
-        rs=stmt.executeQuery(sql);
+        sql="select OpportunityId,Description,DATE_FORMAT(dateCreated,'%d/%m/%Y') dateCreated,Priority, Done,e.EmpId, i.name 'employee',c.CustomerId,c.name 'customer' from opportunitys o join customers c on o.CustomerId=c.CustomerId join employees e on e.EmpId=o.empId join interviewees i on e.intervieweeId=i.intervieweeId;";        
+        try {
+            stmt=dataCon.getCon().createStatement();
+            rs=stmt.executeQuery(sql);
            
             
             if(rs.first()){
@@ -70,6 +71,54 @@ public class clCRM {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
+    
+    
+    public static void getModelCbEmployeeFree(DefaultComboBoxModel modelCbEmployee,Date dStart,Date dEnd){
+        modelCbEmployee.removeAllElements();
+        String formatPattern="yyyy-MM-dd HH:mm";
+        
+        String stStart=clFunction.getFormattedDate(dStart, formatPattern);  
+        String stEnd=clFunction.getFormattedDate(dEnd, formatPattern);  
+        sql="select e.empId,name \n" +
+            "from employees e join interviewees i using (intervieweeId)\n" +
+            "where e.EmpId not in(\n" +
+            "	select o.EmpID from opportunitydetails o \n" +
+            "		where approveBy is not null and (\n" +
+            "        (dateStart between '"+stStart+"' and '"+stEnd+"') or \n" +
+            "        (dateEnd between '"+stStart+"' and '"+stEnd+"') or \n" +
+            "        ('"+stStart+"' between dateStart and dateEnd)));";
+        System.out.println("--------");
+        System.out.println(sql);
+        
+        try {
+            stmt=dataCon.getCon().createStatement();
+            rs=stmt.executeQuery(sql);
+           
+            
+            if(rs.first()){
+                
+                do{
+                    
+                    IdAndName employee=new IdAndName(rs.getString(1),rs.getString(2));
+                    
+                    modelCbEmployee.addElement(employee);
+                    
+                }while(rs.next());
+                        
+            }
+            
+            rs.close();
+            stmt.close();
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        
+        
+        
+    }
+    
     
     static String formatPattern="dd/MM/yyyy HH:mm";
     public static void getModelCRMDetailForEdit(String opportunityId,DefaultTableModel modelCRMDetail){

@@ -32,9 +32,10 @@ public class clDayOff {
     static Map<String, String> map = new HashMap<String, String>();
     
     
+    
     public static void getModelDayOffList(DefaultTableModel modelDayOff){
-        sql="select SceheduleDayOff,date_format(StartDate,'%d/%m/%Y'), Date_Format(EndDate,'%d/%m/%Y'),dayId,e.EmpId,name from sceheduledayoffs s join employees e on e.empId=s.empId join interviewees i on i.IntervieweeId=e.IntervieweeId;";
-        
+        map=frmDayOff.getMap();
+        map.clear();
         map.put("1","Monday");
         map.put("2","TuesDay");
         map.put("3","Wednesday");
@@ -42,6 +43,11 @@ public class clDayOff {
         map.put("5","Friday");
         map.put("6","Saturday");
         map.put("7","Sunday");
+        
+        modelDayOff.setRowCount(0);
+        sql="select SceheduleDayOff,date_format(StartDate,'%d/%m/%Y'), Date_Format(EndDate,'%d/%m/%Y'),dayId,e.EmpId,name from sceheduledayoffs s join employees e on e.empId=s.empId join interviewees i on i.IntervieweeId=e.IntervieweeId;";
+        
+       
         
         try {
             stmt=dataCon.getCon().createStatement();
@@ -89,8 +95,9 @@ public class clDayOff {
     }
     
     
-    public static void getModelCbEmployee(DefaultComboBoxModel modelCbEmployee,String where){
-       sql="select EmpId,name from employees e join interviewees i on e.IntervieweeId=i.IntervieweeId where " +where+ ";";
+    public static void getModelCbEmployee(DefaultComboBoxModel modelCbEmployee){
+        modelCbEmployee.removeAllElements();
+        sql="select EmpId,name from employees e join interviewees i on e.IntervieweeId=i.IntervieweeId;";
        
        
         

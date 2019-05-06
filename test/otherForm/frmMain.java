@@ -6,14 +6,19 @@
 package otherForm;
 
 import Recruitment.Apply;
+import Recruitment.frm_Employee;
+import Training.frmTrainingAdd;
 import TrainningType.frmTrainingTypeAdd;
 import controls.DropDown;
 import crm.frmCRMList;
 import customer.frmCustomer;
+import dayOff.frmDayOff;
 import javax.swing.JFrame;
 import myClass.clFunction;
 import myClass.currentEmployee;
+import service.frmServiceList;
 import timeTable.frmTimeTableList;
+import workDay.frmWorkDay;
 
 /**
  *
@@ -312,12 +317,12 @@ public class frmMain extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE))
+                .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,32 +352,38 @@ public class frmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmployeeActionPerformed
 
     Apply apply=new Apply();
+    
+    
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
-        // TODO add your handling code here:
+               
     }//GEN-LAST:event_btnApplyActionPerformed
 
     private void btnRecruitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecruitActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRecruitActionPerformed
 
+    frm_Employee employee=new frm_Employee();
     private void btnEmployeeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeListActionPerformed
-        // TODO add your handling code here:
+        clFunction.showInternalFrame(myDesktopPane1, employee);
     }//GEN-LAST:event_btnEmployeeListActionPerformed
 
+    frmTrainingAdd trainingAdd=new frmTrainingAdd();
     private void btnTrainningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrainningActionPerformed
-        // TODO add your handling code here:
+        clFunction.showInternalFrame(myDesktopPane1, trainingAdd);
     }//GEN-LAST:event_btnTrainningActionPerformed
 
+    frmDayOff dayOff=new frmDayOff();
     private void btnDayOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDayOffActionPerformed
-        // TODO add your handling code here:
+        clFunction.showInternalFrame(myDesktopPane1, dayOff);
     }//GEN-LAST:event_btnDayOffActionPerformed
 
     private void btnDisplayCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayCheckActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDisplayCheckActionPerformed
 
+    frmWorkDay workDay=new frmWorkDay();
     private void btnWorkDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWorkDayActionPerformed
-        // TODO add your handling code here:
+        clFunction.showInternalFrame(myDesktopPane1, workDay);
     }//GEN-LAST:event_btnWorkDayActionPerformed
 
     private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
@@ -380,13 +391,15 @@ public class frmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCustomerActionPerformed
 
     
-    
+    frmCustomer customerList=new frmCustomer();
     private void btnCustomerListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerListActionPerformed
-        
+        clFunction.showInternalFrame(myDesktopPane1, customerList);
     }//GEN-LAST:event_btnCustomerListActionPerformed
 
+    
+    frmServiceList serviceList=new frmServiceList();
     private void btnServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServiceActionPerformed
-        // TODO add your handling code here:
+        clFunction.showInternalFrame(myDesktopPane1, serviceList);
     }//GEN-LAST:event_btnServiceActionPerformed
 
     

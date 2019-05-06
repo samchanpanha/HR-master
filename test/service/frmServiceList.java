@@ -7,17 +7,16 @@ package service;
 
 
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.JInternalFrame;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import myClass.clFunction;
-import myClass.dataCon;
 
 /**
  *
  * @author Nemesis
  */
-public class frmServiceList extends javax.swing.JFrame {
+public class frmServiceList extends JInternalFrame {
 
     /**
      * Creates new form frmCRMList
@@ -31,7 +30,7 @@ public class frmServiceList extends javax.swing.JFrame {
         
         modelServiceList=(DefaultTableModel)jTableOpportunity.getModel();
         
-        clService.getServiceList(modelServiceList);
+        
         
         
         clFunction.addPopUpToControl(jPopupMenu1, jTableOpportunity);
@@ -98,7 +97,12 @@ public class frmServiceList extends javax.swing.JFrame {
         });
         jPopupMenu1.add(popDelete);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jTableOpportunity.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -177,6 +181,10 @@ public class frmServiceList extends javax.swing.JFrame {
         
         clFunction.prepareDialog(dialog,pAddCRM,false);
     }//GEN-LAST:event_popEditActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        clService.getServiceList(modelServiceList);
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments

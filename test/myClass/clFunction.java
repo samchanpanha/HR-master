@@ -72,8 +72,8 @@ public class clFunction {
     
      
     public static void showInternalFrame(JDesktopPane pane,JInternalFrame internal){
-        internal.setVisible(true);
-       
+        
+        
         
         if(internal.isIcon()){
             try{
@@ -91,7 +91,7 @@ public class clFunction {
         }
         
         
-        
+        internal.setVisible(true);
     }
      
     public static void prepareInternalFrame(JInternalFrame internal){

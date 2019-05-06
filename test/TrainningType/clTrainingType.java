@@ -12,7 +12,7 @@ import java.sql.Statement;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import myClass.IdAndName;
+import myClass.IdAndValue;
 import myClass.dataCon;
 
 /**
@@ -22,7 +22,7 @@ import myClass.dataCon;
 public class clTrainingType {
     static boolean success;
     static String sql;
-    static PreparedStatement preparedStmt;
+    
     static PreparedStatement prepareStmt;
     static Statement stmt;
     static ResultSet rs;
@@ -36,12 +36,12 @@ public class clTrainingType {
         
         
         try{
-            preparedStmt=dataCon.getCon().prepareStatement(sql);
+            prepareStmt=dataCon.getCon().prepareStatement(sql);
             for(int i=0;i<data.length;i++){
-                preparedStmt.setString(i+1, data[i]);
+                prepareStmt.setString(i+1, data[i]);
             }
             
-            preparedStmt.execute();
+            prepareStmt.execute();
             
         }catch(SQLException ex){
             success=false;
@@ -52,6 +52,37 @@ public class clTrainingType {
         return success;
         
         
+    }
+    
+    public static void getModelCbTrainingType(DefaultComboBoxModel modelCbTrainingType){
+        modelCbTrainingType.removeAllElements();
+        
+        sql="select trainingTypeId,trainingType,Duration from trainingTypes;";
+        
+        try {
+            stmt=dataCon.getCon().createStatement();
+            rs=stmt.executeQuery(sql);
+           
+            
+            if(rs.first()){
+                
+                do{
+                    
+                    IdAndValue obj=new IdAndValue(rs.getString(1),rs.getString(2),rs.getString(3));
+                    
+                    modelCbTrainingType.addElement(obj);
+                    
+                }while(rs.next());
+                        
+            }
+            
+            rs.close();
+            stmt.close();
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
     }
     
     public static void getTrainingTypeList(DefaultTableModel modelTrainingType){

@@ -9,6 +9,7 @@ import CA.AC;
 import CMS.DB;
 import java.text.SimpleDateFormat;
 import javaapplication21.AutoComboBox;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +19,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class frm_Employee extends javax.swing.JFrame {
+public class frm_Employee extends JInternalFrame {
 
     /**
      * Creates new form frm_Employee
@@ -332,7 +333,15 @@ public class frm_Employee extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         txtTel = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -920,6 +929,10 @@ public class frm_Employee extends javax.swing.JFrame {
         btnUpdate.setEnabled(false);
         btnDelete.setEnabled(false);
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments

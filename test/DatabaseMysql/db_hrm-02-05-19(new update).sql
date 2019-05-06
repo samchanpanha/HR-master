@@ -830,35 +830,25 @@ CREATE TABLE `trainingtypes`  (
 -- ----------------------------
 -- Table structure for trainningdetails
 -- ----------------------------
-DROP TABLE IF EXISTS `trainningdetails`;
-CREATE TABLE `trainningdetails`  (
-  `TrainingDetailId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `TrainingId` int(11) NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `training`;
+CREATE TABLE `training`  (
+  `TrainingId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `DateStart` date NULL DEFAULT NULL,
   `DateEnd` date NULL DEFAULT NULL,
   `EmpId` int(11) NULL DEFAULT NULL,
   `TrainingTypeID` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`TrainingDetailId`) USING BTREE,
-  INDEX `EmpId`(`EmpId`) USING BTREE,
-  INDEX `TrainingId`(`TrainingId`) USING BTREE,
-  INDEX `TrainingTypeID`(`TrainingTypeID`) USING BTREE,
-  CONSTRAINT `trainningdetails_ibfk_1` FOREIGN KEY (`EmpId`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `trainningdetails_ibfk_3` FOREIGN KEY (`TrainingId`) REFERENCES `trainnings` (`TrainingId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `trainningdetails_ibfk_4` FOREIGN KEY (`TrainingTypeID`) REFERENCES `trainingtypes` (`TrainingTypeID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for trainnings
--- ----------------------------
-DROP TABLE IF EXISTS `trainnings`;
-CREATE TABLE `trainnings`  (
-  `TrainingId` int(10) NOT NULL AUTO_INCREMENT,
-  `DateCreated` date NULL DEFAULT NULL,
-  `EmpId` int(11) NULL DEFAULT NULL,
+	`DateCreated` date NULL DEFAULT NULL,
+  `createdBy` int(11) NULL DEFAULT NULL,
+	`status` nvarchar(12) NULL DEFAULT NULL,
   PRIMARY KEY (`TrainingId`) USING BTREE,
   INDEX `EmpId`(`EmpId`) USING BTREE,
-  CONSTRAINT `trainnings_ibfk_1` FOREIGN KEY (`EmpId`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE
+  INDEX `TrainingTypeID`(`TrainingTypeID`) USING BTREE,
+  CONSTRAINT `trainningdetails_ibfk_1` FOREIGN KEY (`EmpId`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `trainningdetails_ibfk_4` FOREIGN KEY (`TrainingTypeID`) REFERENCES `trainingtypes` (`TrainingTypeID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `trainnings_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+
 
 -- ----------------------------
 -- Table structure for users

@@ -5,6 +5,7 @@
  */
 package customer;
 
+import javax.swing.JInternalFrame;
 import myClass.clFunction;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -15,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Nemesis
  */
-public class frmCustomer extends javax.swing.JFrame {
+public class frmCustomer extends JInternalFrame {
 
     /**
      * Creates new form frmCustomer
@@ -107,7 +108,7 @@ public class frmCustomer extends javax.swing.JFrame {
         txtName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        cbGender = new javax.swing.JComboBox<>();
+        cbGender = new javax.swing.JComboBox<String>();
         txtPhone = new controls.SubJTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableCustomer = new javax.swing.JTable();
@@ -115,11 +116,15 @@ public class frmCustomer extends javax.swing.JFrame {
         btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Customer");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
             }
         });
 
@@ -140,7 +145,7 @@ public class frmCustomer extends javax.swing.JFrame {
         jLabel5.setText("Gender:");
 
         cbGender.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
-        cbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
+        cbGender.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Male", "Female" }));
 
         txtPhone.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         txtPhone.setInputType(controls.SubJTextField.type.Number);
@@ -282,6 +287,8 @@ public class frmCustomer extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         clCustomer.getCustomerList(modelCustomer);
+        
+        
     }//GEN-LAST:event_formWindowOpened
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -312,6 +319,10 @@ public class frmCustomer extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(null, "Delete successful", "",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        clCustomer.getCustomerList(modelCustomer);
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments

@@ -7,12 +7,9 @@ package crm;
 
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import myClass.clFunction;
-import myClass.dataCon;
 
 /**
  *
