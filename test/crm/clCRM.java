@@ -73,22 +73,26 @@ public class clCRM {
     }
     
     
-    public static void getModelCbEmployeeFree(DefaultComboBoxModel modelCbEmployee,Date dStart,Date dEnd){
+    public static void getModelCbEmployeeFree(DefaultComboBoxModel modelCbEmployee,Date dStart,Date dEnd,String where){
         modelCbEmployee.removeAllElements();
         String formatPattern="yyyy-MM-dd HH:mm";
         
         String stStart=clFunction.getFormattedDate(dStart, formatPattern);  
         String stEnd=clFunction.getFormattedDate(dEnd, formatPattern);  
+
+        
+        
+        
         sql="select e.empId,name \n" +
-            "from employees e join interviewees i using (intervieweeId)\n" +
-            "where e.EmpId not in(\n" +
-            "	select o.EmpID from opportunitydetails o \n" +
-            "		where approveBy is not null and (\n" +
-            "        (dateStart between '"+stStart+"' and '"+stEnd+"') or \n" +
-            "        (dateEnd between '"+stStart+"' and '"+stEnd+"') or \n" +
-            "        ('"+stStart+"' between dateStart and dateEnd)));";
-        System.out.println("--------");
-        System.out.println(sql);
+        "from employees e join interviewees i using (intervieweeId)\n" +
+        "where e.EmpId not in(\n" +
+        "	select o.EmpID from opportunitydetails o \n" +
+        "		where approveBy is not null and not (\n" +
+        "        '"+stStart+"' >=dateEnd or '"+stEnd+"'<=dateStart) "+where+")";
+        
+        
+//        System.out.println("--------");
+//        System.out.println(sql);
         
         try {
             stmt=dataCon.getCon().createStatement();

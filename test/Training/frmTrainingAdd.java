@@ -18,7 +18,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.Document;
 import myClass.FormatRenderer;
 import myClass.IdAndName;
 import myClass.IdAndValue;
@@ -40,7 +39,7 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         
         clFunction.changeLookTable(jTableTrainingList);
         
-        cbTrainingType.setSelectedIndex(-1);
+        
         
         
         DocumentListener doc=new DocumentListener() {
@@ -74,6 +73,7 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         m.getColumn(3).setCellRenderer(renderer);
         
         m.getColumn(4).setCellRenderer(renderer);
+        jTableTrainingList.removeColumn(m.getColumn(m.getColumnCount()-1));
         
         
         jTableTrainingList.getSelectionModel().addListSelectionListener((ListSelectionEvent lse) -> {
@@ -83,8 +83,6 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         });
         
         
-        cbStatus.setSelectedIndex(1);
-        cbStatus.setSelectedIndex(0);
     }
     
     
@@ -116,8 +114,6 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableTrainingList = new javax.swing.JTable();
         txtId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -133,37 +129,14 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         btnDelete = new javax.swing.JButton();
         cbStatus = new controls.SubJComboBox();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableTrainingList = new myClass.foregroundTable();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
-
-        jTableTrainingList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Date Created", "Create By", "Date Start", "Date End", "Trainee", "Training Type", "Status"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTableTrainingList);
 
         txtId.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
 
@@ -178,10 +151,14 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
 
         dStart.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         dStart.setFormatPattern("dd/MM/yyyy");
+        dStart.setIgnoreSecond(true);
+        dStart.setIgnoreTime(true);
 
         dEnd.setEnabled(false);
         dEnd.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         dEnd.setFormatPattern("dd/MM/yyyy");
+        dEnd.setIgnoreSecond(true);
+        dEnd.setIgnoreTime(true);
 
         cbEmployee.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
 
@@ -209,6 +186,11 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         btnEdit.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnEdit.setText("Edit");
         btnEdit.setEnabled(false);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnDelete.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         btnDelete.setText("Delete");
@@ -220,6 +202,7 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         });
 
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pending", "Pass", "Fail" }));
+        cbStatus.setSelectedIndex(-1);
         cbStatus.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         cbStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,17 +213,40 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel7.setText("Status:");
 
+        jTableTrainingList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Date Created", "Created By", "DateStart", "DateEnd", "Trainee", "Training Type", "Status", "needUpdate"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTableTrainingList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jScrollPane1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(jLabel3)
@@ -303,8 +309,8 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
 
@@ -329,6 +335,29 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
 
     DefaultTableModel modelTrainingList;
     
+    
+    boolean checkData(){
+        
+        
+        
+        if(cbEmployee.getSelectedIndex()==-1){
+            JOptionPane.showMessageDialog(this, "Please select an employee","",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        if(cbTrainingType.getSelectedIndex()==-1){
+            JOptionPane.showMessageDialog(this, "Please select a trainingType","",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+         if(cbStatus.getSelectedIndex()==-1){
+            JOptionPane.showMessageDialog(this, "Please choose a status","",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+    
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         
         if(btnAdd.getText().equals("Cancel")){
@@ -338,25 +367,30 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
             return;
         }
         
-        if(cbEmployee.getSelectedIndex()==-1){
-            JOptionPane.showMessageDialog(this, "Please select an employee","",JOptionPane.WARNING_MESSAGE);
+        
+        if(!checkData()){
             return;
         }
         
-        if(cbTrainingType.getSelectedIndex()==-1){
-            JOptionPane.showMessageDialog(this, "Please select a trainingType","",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         
-        //DateStart,DateEnd,EmpId,TrainingTypeID,status,DateCreated,createdBy
-        txtId.setText(clFunction.getLastId("training"));
+        
+        IdAndName employee=(IdAndName)cbEmployee.getSelectedItem();
+        
         String formatPattern="yyyy/MM/dd";
         
         String stDateStart=dStart.getStringValue(formatPattern);
         
         String stDateEnd=dEnd.getStringValue(formatPattern);
         
-        IdAndName employee=(IdAndName)cbEmployee.getSelectedItem();
+        if(clTraining.checkOverlapDb(employee.getId(), stDateStart, stDateEnd,";")){
+            return;
+        }
+        
+        //DateStart,DateEnd,EmpId,TrainingTypeID,status,DateCreated,createdBy
+        txtId.setText(clFunction.getLastId("training"));
+        
+        
+        
         
         IdAndValue traingingType=(IdAndValue)cbTrainingType.getSelectedItem();
         
@@ -371,13 +405,56 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         
         
         if(clTraining.insert(data)){
-            Object []obj={txtId.getText(),new Date(),currentEmployee.getName(),dStart.getValue(),dEnd.getValue(),employee,traingingType,status};
+            
+           
+           
+            
+            String needUpdate=getNeedUpdate(status);
+            
+            
+            
+            Object []obj={txtId.getText(),new Date(),currentEmployee.getName(),dStart.getValue(),dEnd.getValue(),employee,traingingType,status,needUpdate};
             
             modelTrainingList.addRow(obj);
+            clearForm();
         }
         
     }//GEN-LAST:event_btnAddActionPerformed
 
+    
+    String getNeedUpdate(String status){
+        Calendar c=Calendar.getInstance();
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+//        Calendar cEnd=Calendar.getInstance();
+//        cEnd.setTime(dEnd.getValue());
+//        cEnd.set(Calendar.HOUR, 0);
+//        cEnd.set(Calendar.MINUTE, 0);
+//        cEnd.set(Calendar.SECOND, 0);
+//        cEnd.set(Calendar.MILLISECOND, 0);
+//        
+//        System.out.println(c.getTime());
+//        System.out.println(cEnd.getTime());
+//        System.out.println("----");
+
+//        boolean outdated=cEnd.getTime().before(c.getTime()) || cEnd.getTime() == c.getTime();
+        
+        boolean outdated=dEnd.getValue().before(c.getTime()) || dEnd.getValue() == c.getTime();
+        
+        
+        String needUpdate;
+        if(status.equals("Pending") && outdated){
+            needUpdate="1";
+        }else{
+            needUpdate="0";
+        }
+        
+        return needUpdate;
+    }
+    
     private void cbTrainingTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTrainingTypeActionPerformed
         
         changeDateValueOndEnd();
@@ -396,6 +473,57 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
             modelTrainingList.removeRow(selectedRowIndex);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        
+        if(!checkData()){
+            return;
+        }
+        
+        int selectedRowIndex=jTableTrainingList.getSelectedRow();
+        
+        
+        
+        IdAndName employee=(IdAndName)cbEmployee.getSelectedItem();
+        
+        String formatPattern="yyyy/MM/dd";
+        
+        String stDateStart=dStart.getStringValue(formatPattern);
+        
+        String stDateEnd=dEnd.getStringValue(formatPattern);
+        
+        if(clTraining.checkOverlapDb(employee.getId(), stDateStart, stDateEnd,"and trainingId<>"+txtId.getText())){
+            return;
+        }
+        
+        
+        IdAndValue traingingType=(IdAndValue)cbTrainingType.getSelectedItem();
+        
+        String status=cbStatus.getSelectedItem()+"";
+        
+        //update training set DateStart=?,DateEnd=?,EmpId=?,TrainingTypeID=?,status=? where trainingId=
+
+        
+        String []data={stDateStart,stDateEnd,employee.getId(),traingingType.getId(),status};
+        
+        String needUpdate=getNeedUpdate(status);
+        
+        
+        if(clTraining.update(txtId.getText(), data)){
+            //"ID", "Date Created", "Create By", "Date Start", "Date End", "Trainee", "Training Type", "Status"
+            
+            modelTrainingList.setValueAt(dStart.getValue(), selectedRowIndex, 3);
+            modelTrainingList.setValueAt(dEnd.getValue(), selectedRowIndex, 4);
+            modelTrainingList.setValueAt(employee, selectedRowIndex, 5);
+            modelTrainingList.setValueAt(traingingType, selectedRowIndex, 6);
+            modelTrainingList.setValueAt(status, selectedRowIndex, 7);
+            
+            modelTrainingList.setValueAt(needUpdate, selectedRowIndex, 8);
+        }
+        
+        
+        
+    }//GEN-LAST:event_btnEditActionPerformed
 
     void changeDateValueOndEnd(){
         if(cbTrainingType.getSelectedIndex()==-1) return;
@@ -430,8 +558,8 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTableTrainingList;
+    private javax.swing.JScrollPane jScrollPane2;
+    private myClass.foregroundTable jTableTrainingList;
     private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 
@@ -445,6 +573,8 @@ public class frmTrainingAdd extends javax.swing.JInternalFrame {
         dStart.setValue((Date)modelTrainingList.getValueAt(selectedRowIndex, 3));
         
         dEnd.setValue((Date)modelTrainingList.getValueAt(selectedRowIndex, 4));
+        
+        cbEmployee.setSelectedIndex(-1);
         
         cbEmployee.setSelectedItem(modelTrainingList.getValueAt(selectedRowIndex, 5));
         

@@ -5,11 +5,13 @@
  */
 package Training;
 
+import static crm.clCRM.insertDetail;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import myClass.IdAndName;
@@ -37,19 +39,21 @@ public class clTraining {
         "    DATE_FORMAT(dateCreated,'%d/%m/%Y') dateCreated,\n" +
         "    createdby idCreatedBy,\n" +
         "    i.name createdBy,\n" +
-        "    DATE_FORMAT(dateStart,'%d/%m/%Y %H:%i') dateStart,\n" +
-        "    DATE_FORMAT(dateEnd,'%d/%m/%Y %H:%i') dateEnd,\n" +
+        "    DATE_FORMAT(dateStart,'%d/%m/%Y') dateStart,\n" +
+        "    DATE_FORMAT(dateEnd,'%d/%m/%Y') dateEnd,\n" +
         "    tr.empId traineeId,\n" +
         "    trI.name trainee,\n" +
         "    tType.trainingTypeId,\n" +
-        "    tType.TrainingType,\n " +
-        "    duration,\n " +
-        "    t.status\n " +
-        "from training t join employees e on t.createdBy=e.empId \n" +
+        "    tType.TrainingType,\n" +
+        "     duration,\n" +
+        "     t.status,\n" +
+        "     if(t.status='Pending' and dateEnd<=now(),1,0) needUpdate\n" +
+        " from training t join employees e on t.createdBy=e.empId \n" +
         "	join interviewees i using(intervieweeId) \n" +
         "    join employees tr on tr.empId=t.empId \n" +
         "    join interviewees trI on trI.intervieweeId=tr.intervieweeID\n" +
-        "    join trainingTypes tType on tType.TrainingTypeId=t.trainingTypeId;";
+        "    join trainingTypes tType on tType.TrainingTypeId=t.trainingTypeId"
+        + " order by needUpdate desc;";
         
         try {
             stmt=dataCon.getCon().createStatement();
@@ -81,7 +85,9 @@ public class clTraining {
                     
                     String status=rs.getString(12);
                     
-                    Object[] obj={id,stDateCreated,creator,dStart,dEnd,trainee,trainingType,status};
+                    String needUpdate=rs.getString(13);
+                    
+                    Object[] obj={id,stDateCreated,creator,dStart,dEnd,trainee,trainingType,status,needUpdate};
                     
                     modelTrainingList.addRow(obj);
                     
@@ -140,5 +146,75 @@ public class clTraining {
         
         
         return success;
+    }
+    
+    
+    public static boolean checkOverlapDb(String empId,String stStart,String stEnd,String where){
+        boolean isOverlap=false;
+        
+        
+        sql="select DATE_FORMAT(dateStart,'%d/%m/%Y') dateTimeStart ,DATE_FORMAT(dateEnd,'%d/%m/%Y') dateTimeEnd from training where not ('"+stStart+"'>= dateEnd or '"+stEnd+"' <= dateStart) and empId="+empId+" "+where;                       
+        
+        try {
+            stmt=dataCon.getCon().createStatement();
+            rs=stmt.executeQuery(sql);
+            
+            
+            
+            if(rs.first()){
+                
+                String st="";
+                
+                
+                do{
+                    st+=rs.getObject(1)+" - "+rs.getObject(2)+"\n";
+                }while(rs.next());
+                
+                
+                JOptionPane.showMessageDialog(null, "Date start and date end are overlapping with the following existed Training:\n"+st,"",JOptionPane.WARNING_MESSAGE);
+                
+                
+                isOverlap=true;
+            }
+            
+            rs.close();
+            stmt.close();
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        
+        
+        return isOverlap;
+    }
+    
+    public static boolean update(String trainingId,String... data){
+        success=true;
+        
+        //TrainingId,DateStart,DateEnd,EmpId,TrainingTypeID,DateCreated,createdBy,status
+
+        sql="update training set DateStart=?,DateEnd=?,EmpId=?,TrainingTypeID=?,status=? where trainingId="+trainingId;
+        
+        
+         try{
+            prepareStmt=dataCon.getCon().prepareStatement(sql);
+            
+            for(int i=0;i<data.length;i++){
+                prepareStmt.setString(i+1,data[i]);
+            }
+            
+            
+            prepareStmt.execute();
+            
+            
+            
+        }catch(SQLException ex){
+            success=false;
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "",JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return success;
+        
     }
 }

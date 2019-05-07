@@ -6,7 +6,6 @@
 package crm;
 
 
-import controls.JDateTimePicker;
 import customer.clCustomer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +54,14 @@ public class frmAddCRM extends javax.swing.JPanel {
             checkApprove.setEnabled(false);
         }
         
+
+        
+        prepareDocListener("");
+        
+        
+    }
+    
+    void prepareDocListener(String where){
         modelCBEmployee=(DefaultComboBoxModel)cbEmployee.getModel();
         
         Date d=new Date();
@@ -83,7 +90,7 @@ public class frmAddCRM extends javax.swing.JPanel {
             private void docInsertUpdate(){
                 Runnable thisInsertUpdate=()->{
                     
-                    clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue());
+                    clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue(),where);
                     adjustDate("1");
                 };
                 SwingUtilities.invokeLater(thisInsertUpdate);
@@ -113,7 +120,7 @@ public class frmAddCRM extends javax.swing.JPanel {
             private void docInsertUpdate(){
                 Runnable thisInsertUpdate=()->{
                     
-                    clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue());
+                    clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue(),where);
                     adjustDate("2");
                 };
                 SwingUtilities.invokeLater(thisInsertUpdate);
@@ -126,10 +133,8 @@ public class frmAddCRM extends javax.swing.JPanel {
         
         dEnd.addEventToSpinner(docEnd);
         
-        clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue());
+        clCRM.getModelCbEmployeeFree(modelCBEmployee,dStart.getValue(),dEnd.getValue(),where);
     }
-    
-    
     
     void adjustDate(String stControlChange){
         
@@ -174,7 +179,7 @@ public class frmAddCRM extends javax.swing.JPanel {
        getMasterForEdit();
        
        
-       
+       prepareDocListener("and OpportunityId<>"+txtId.getText());
        
     }
     
