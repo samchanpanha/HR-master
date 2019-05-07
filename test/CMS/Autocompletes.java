@@ -29,6 +29,7 @@ public class Autocompletes implements DocumentListener{
   private final List<String> keywords;
   private Mode mode = Mode.INSERT;
 
+  
   public Autocompletes(JTextField textField, List<String> keywords) {
     this.textField = textField;
     this.keywords = keywords;

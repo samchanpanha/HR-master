@@ -8,7 +8,10 @@ package otherForm;
 import Recruitment.Apply;
 import Recruitment.Create_User;
 import Recruitment.Insert_Interviewee;
+import Recruitment.Recruit;
+import Recruitment.frm_All_interviewee;
 import Recruitment.frm_Employee;
+import Recruitment.frm_insertAll_single;
 import TrainningType.frmTrainingTypeAdd;
 import controls.DropDown;
 import crm.frmCRMList;
@@ -102,6 +105,7 @@ public class frmMain extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(228, 238, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(260, 150));
 
         btnEmployee.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnEmployee.setText("Employee");
@@ -187,16 +191,16 @@ public class frmMain extends javax.swing.JFrame {
         pEmployee.setLayout(pEmployeeLayout);
         pEmployeeLayout.setHorizontalGroup(
             pEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnApply, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnInterviewee, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnRecruit, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnEmployeeList, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnTrainning, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnDayOff, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnDisplayCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnWorkDay, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnTrainningType, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(btnEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnApply, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnInterviewee, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnRecruit, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnEmployeeList, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnTrainning, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnDayOff, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnDisplayCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnWorkDay, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnTrainningType, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
         );
         pEmployeeLayout.setVerticalGroup(
             pEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,11 +271,11 @@ public class frmMain extends javax.swing.JFrame {
         pCustomer.setLayout(pCustomerLayout);
         pCustomerLayout.setHorizontalGroup(
             pCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnService, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-            .addComponent(btnCRM, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(btnCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnService, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(btnCRM, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
             .addComponent(btnCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnTimeTable, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(btnTimeTable, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
         );
         pCustomerLayout.setVerticalGroup(
             pCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,7 +307,7 @@ public class frmMain extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pEmployee, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnOther, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(btnOther, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,7 +329,7 @@ public class frmMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE))
+                .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,7 +339,7 @@ public class frmMain extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))
+                        .addComponent(myDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -358,18 +362,19 @@ public class frmMain extends javax.swing.JFrame {
 
     Apply apply=new Apply();
     
-    frm_Employee employee=new frm_Employee();
+    
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
         
-        clFunction.showInternalFrame(myDesktopPane1, new frm_Employee());
+        clFunction.showInternalFrame(myDesktopPane1, apply);
     }//GEN-LAST:event_btnApplyActionPerformed
-
+    Recruit re = new Recruit();
     private void btnRecruitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecruitActionPerformed
-        // TODO add your handling code here:
+      
+          re.setVisible(true);
     }//GEN-LAST:event_btnRecruitActionPerformed
-
+    frm_Employee employee=new frm_Employee();
     private void btnEmployeeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeListActionPerformed
-        // TODO add your handling code here:
+         clFunction.showInternalFrame(myDesktopPane1, employee);
     }//GEN-LAST:event_btnEmployeeListActionPerformed
 
     private void btnTrainningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrainningActionPerformed
@@ -407,16 +412,18 @@ public class frmMain extends javax.swing.JFrame {
     private void btnCRMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCRMActionPerformed
         clFunction.showInternalFrame(myDesktopPane1, crmList);
     }//GEN-LAST:event_btnCRMActionPerformed
-     Insert_Interviewee iw = new Insert_Interviewee();
+    frm_All_interviewee all_in = new frm_All_interviewee();
     private void btnIntervieweeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIntervieweeActionPerformed
       
-        clFunction.showInternalFrame(myDesktopPane1, iw);
+        all_in.setVisible(true);
 
     }//GEN-LAST:event_btnIntervieweeActionPerformed
     Create_User u = new Create_User();
+    frm_insertAll_single insertAll = new frm_insertAll_single();
     private void btnOtherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtherActionPerformed
-      
-        clFunction.showInternalFrame(myDesktopPane1, u);
+     
+        clFunction.showInternalFrame(myDesktopPane1, insertAll);
+        
     }//GEN-LAST:event_btnOtherActionPerformed
 
     

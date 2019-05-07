@@ -27,7 +27,7 @@
           <Group type="102" attributes="0">
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="myDesktopPane1" pref="862" max="32767" attributes="0"/>
+              <Component id="myDesktopPane1" pref="916" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -39,7 +39,7 @@
                   <Component id="jPanel2" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
-                      <Component id="myDesktopPane1" pref="148" max="32767" attributes="0"/>
+                      <Component id="myDesktopPane1" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -104,6 +104,9 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ee" red="e4" type="rgb"/>
         </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[260, 150]"/>
+        </Property>
       </Properties>
 
       <Layout>
@@ -111,7 +114,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="pEmployee" alignment="1" max="32767" attributes="0"/>
               <Component id="pCustomer" alignment="0" max="32767" attributes="0"/>
-              <Component id="btnOther" alignment="0" pref="314" max="32767" attributes="0"/>
+              <Component id="btnOther" alignment="0" pref="260" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -134,16 +137,16 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnEmployee" alignment="0" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnApply" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnInterviewee" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnRecruit" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnEmployeeList" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnTrainning" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnDayOff" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnDisplayCheck" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnWorkDay" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnTrainningType" pref="314" max="32767" attributes="0"/>
+                  <Component id="btnEmployee" alignment="0" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnApply" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnInterviewee" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnRecruit" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnEmployeeList" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnTrainning" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnDayOff" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnDisplayCheck" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnWorkDay" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnTrainningType" pref="260" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -291,11 +294,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnCustomerList" alignment="0" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnService" alignment="0" pref="314" max="32767" attributes="0"/>
-                  <Component id="btnCRM" alignment="0" pref="314" max="32767" attributes="0"/>
+                  <Component id="btnCustomerList" alignment="0" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnService" alignment="0" pref="260" max="32767" attributes="0"/>
+                  <Component id="btnCRM" alignment="0" pref="260" max="32767" attributes="0"/>
                   <Component id="btnCustomer" alignment="1" max="32767" attributes="0"/>
-                  <Component id="btnTimeTable" alignment="0" pref="314" max="32767" attributes="0"/>
+                  <Component id="btnTimeTable" alignment="0" pref="260" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
