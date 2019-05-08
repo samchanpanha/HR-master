@@ -8,6 +8,8 @@ package Recruitment;
 
 import CMS.DB;
 import CMS.JDateChooserEditor;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Component;
 import java.text.SimpleDateFormat;
@@ -33,12 +35,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import myClass.currentEmployee;
 
 /**
  *
  * @author panha
  */
-public  class Apply extends javax.swing.JFrame {
+public  class Apply extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Apply
@@ -55,6 +58,8 @@ public  class Apply extends javax.swing.JFrame {
         cbgender.setSelectedIndex(0);
         tbIntervieDetails.setRowHeight(20);
         tbInterview.setRowHeight(20);
+        emid.setText(currentEmployee.getId());
+        
     }
     DB c = new DB();
     String Sql_inwee=null;
@@ -70,6 +75,7 @@ public  class Apply extends javax.swing.JFrame {
     JTextField emid = new JTextField();
     JTextField resid = new JTextField();
     JTextField staffid = new JTextField();
+   
     JTextArea txtskill = new JTextArea();
     
     DefaultTableModel mod ;
@@ -238,7 +244,7 @@ public  class Apply extends javax.swing.JFrame {
            
                 Sql_inw = "INSERT INTO interviews\n" +
            "(TotalNumberOfInterview, DateOn, EmID)\n" +
-           "VALUES('"+String.valueOf(number_of_rows) +"', '"+formater.format(txtdateInOn.getDate())+"', 1);";
+           "VALUES('"+String.valueOf(number_of_rows) +"', '"+formater.format(txtdateInOn.getDate())+"', '"+emid.getText()+"');";
            c.Query(Sql_inw);
            LASTIDINTERVIEW();
             

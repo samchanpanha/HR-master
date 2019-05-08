@@ -6,7 +6,10 @@
 package otherForm;
 
 import Recruitment.Apply;
+import Recruitment.Recruit;
+import Recruitment.frm_All_interviewee;
 import Recruitment.frm_Employee;
+import Recruitment.frm_insertAll_single;
 import Training.frmTrainingAdd;
 import TrainningType.frmTrainingTypeAdd;
 import controls.DropDown;
@@ -77,7 +80,6 @@ public class frmMain extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(160, 185, 230));
 
         lbName.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        lbName.setForeground(new java.awt.Color(0, 0, 0));
         lbName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbName.setText("jLabel1");
         lbName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -355,11 +357,11 @@ public class frmMain extends javax.swing.JFrame {
     
     
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
-               
+       clFunction.showInternalFrame(myDesktopPane1, apply);
     }//GEN-LAST:event_btnApplyActionPerformed
-
+    Recruit re = new Recruit();
     private void btnRecruitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecruitActionPerformed
-        // TODO add your handling code here:
+        re.setVisible(true);
     }//GEN-LAST:event_btnRecruitActionPerformed
 
     frm_Employee employee=new frm_Employee();
@@ -408,12 +410,13 @@ public class frmMain extends javax.swing.JFrame {
         clFunction.showInternalFrame(myDesktopPane1, crmList);
     }//GEN-LAST:event_btnCRMActionPerformed
 
+    frm_All_interviewee all = new frm_All_interviewee();
     private void btnIntervieweeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIntervieweeActionPerformed
-        // TODO add your handling code here:
+        all.setVisible(true);
     }//GEN-LAST:event_btnIntervieweeActionPerformed
-
+    frm_insertAll_single single = new frm_insertAll_single();
     private void btnOtherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtherActionPerformed
-        // TODO add your handling code here:
+       clFunction.showInternalFrame(myDesktopPane1, single);
     }//GEN-LAST:event_btnOtherActionPerformed
 
     
@@ -451,7 +454,7 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lbName;
-    private controls.MyDesktopPane myDesktopPane1;
+    public static controls.MyDesktopPane myDesktopPane1;
     private javax.swing.JPanel pCustomer;
     private javax.swing.JPanel pEmployee;
     // End of variables declaration//GEN-END:variables

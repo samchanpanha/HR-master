@@ -6,6 +6,7 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.util.List;
 import javaapplication21.AutoComboBox;
 import javax.swing.JCheckBox;
@@ -21,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author panha
  */
-public class frm_search_Interviewee extends javax.swing.JFrame {
+public class frm_search_Interviewee extends javax.swing.JInternalFrame {
 
      JTextArea txtskill = new JTextArea();
      JTextArea txtcate = new JTextArea();
@@ -39,7 +40,10 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
      
     public frm_search_Interviewee() {
         initComponents();
-      
+         ShowSkill();
+        ShowCategory();
+        ShowMajor();
+        ShowName();
     }
    void ShowSkill(){
        String sql ="SELECT Skill FROM skills";
@@ -112,12 +116,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         btnsearch = new javax.swing.JButton();
         txtname = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -151,7 +150,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
         tbdata.setEnabled(false);
         jScrollPane3.setViewportView(tbdata);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 1420, 560));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 1380, 560));
 
         jScrollPane2.setViewportBorder(javax.swing.BorderFactory.createTitledBorder(null, "Major", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
@@ -186,10 +185,7 @@ public class frm_search_Interviewee extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        ShowSkill();
-        ShowCategory();
-        ShowMajor();
-        ShowName();
+     
     }//GEN-LAST:event_formWindowOpened
 
     private void btnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchActionPerformed

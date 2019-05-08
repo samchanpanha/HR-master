@@ -326,6 +326,13 @@ public void X_Columns(JTable t,int c){
             sum = sum + Double.parseDouble(t.getValueAt(i, c).toString());
         }
    }
+
+public void Move_Columns(JTable tb ,int ... i){
+        for (int j : i) {
+              tb.moveColumn(tb.getColumnCount() - 1, j);
+        }
+    }
+    
    
 public void  clock(Thread ck,JLabel date ,JLabel time){
       ck = new Thread(){
@@ -508,6 +515,26 @@ public void DisplayTextName(String sql ,JTextField txt){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+
+public void DisplayTextNameList(String sql ,JTextField txt){
+         
+            List<String>  keywords = new ArrayList<>();
+    try {
+             st = con.createStatement();
+             rs = st.executeQuery(sql);
+                 while (rs.next()) {                
+                String s =rs.getString(1);
+                keywords.add(s);      
+          }
+         
+           JtextAuto.setupAutoComplete(txt , (ArrayList<String>) keywords);
+           txt.setColumns(30);   
+           
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
     
 public void TextOnlyNumber(JTextField... txtnums){
            for (JTextField txtnum : txtnums) {
