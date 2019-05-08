@@ -57,6 +57,7 @@ public class frm_Display_Staff_Check extends javax.swing.JFrame {
     
     private void DisplayCheckTime(){
         
+        
         if (dstart.getDate()==null || dend.getDate()==null) {
                 JOptionPane.showMessageDialog(this,"You Should Select Date For Search ");
                 return;

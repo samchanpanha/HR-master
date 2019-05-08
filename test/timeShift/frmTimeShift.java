@@ -23,11 +23,7 @@ public class frmTimeShift extends javax.swing.JFrame {
     public frmTimeShift() {
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        
         
         prepareForm();
         

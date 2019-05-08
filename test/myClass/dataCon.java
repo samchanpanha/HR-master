@@ -9,8 +9,9 @@ package myClass;
 
 
 
+import CMS.ConMysql;
+import CMS.DB;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Nemesis
  */
 public class dataCon {
-    private static Connection Con;
+    private static Connection Con=DB.con;
     
     static Statement stmt;
     static ResultSet rs;
@@ -38,10 +39,7 @@ public class dataCon {
 
     
     
-    public static void connectToDB()throws Exception{
-        Class.forName("com.mysql.jdbc.Driver");  
-        Con=DriverManager.getConnection("jdbc:mysql://localhost/db_hrm","root","");     
-    }
+    
 
     /**
      * @return the Con

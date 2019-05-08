@@ -5,6 +5,7 @@
  */
 package dayOff;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import myClass.IdAndName;
 import myClass.clFunction;
 import myClass.dataCon;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +22,26 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Nemesis
  */
-public class frmDayOff extends javax.swing.JFrame {
+public class frmDayOff extends JInternalFrame {
+
+    /**
+     * @return the map
+     */
+    public static Map<String, String> getMap() {
+        return map;
+    }
+
+    /**
+     * @param aMap the map to set
+     */
+    public static void setMap(Map<String, String> aMap) {
+        map = aMap;
+    }
+
+    /**
+     * @return the modelCbEmployee
+     */
+
 
     /**
      * Creates new form frmAction
@@ -31,11 +52,7 @@ public class frmDayOff extends javax.swing.JFrame {
         
         
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+       
         
         clFunction.changeLookTable(jTableDayOff);
         
@@ -44,7 +61,7 @@ public class frmDayOff extends javax.swing.JFrame {
         
         modelCbEmployee=(DefaultComboBoxModel)cbEmployee.getModel();
         
-        clDayOff.getModelCbEmployee(modelCbEmployee,"1=1");
+        clDayOff.getModelCbEmployee(modelCbEmployee);
         
         cbEmployee.setSelectedIndex(-1);
         
@@ -52,10 +69,12 @@ public class frmDayOff extends javax.swing.JFrame {
         
         prepareForm();
         
+        
+        
     }
 
     DefaultTableModel modeldayOff;
-    DefaultComboBoxModel modelCbEmployee;
+    private DefaultComboBoxModel  modelCbEmployee;
     
     
     
@@ -120,11 +139,11 @@ public class frmDayOff extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         panelDay = new controls.panelDay();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Action");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Day Off");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
             }
         });
 
@@ -283,14 +302,7 @@ public class frmDayOff extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        txtId.setText(clFunction.getLastId("sceheduledayoffs"));
-        map.put("1","Monday");
-        map.put("2","TuesDay");
-        map.put("3","Wednesday");
-        map.put("4","Thursday");
-        map.put("5","Friday");
-        map.put("6","Saturday");
-        map.put("7","Sunday");
+        
         
     }//GEN-LAST:event_formWindowOpened
 
@@ -469,6 +481,11 @@ public class frmDayOff extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        txtId.setText(clFunction.getLastId("sceheduledayoffs"));
+        
+    }//GEN-LAST:event_formComponentShown
+
     
     
     
@@ -529,7 +546,7 @@ public class frmDayOff extends javax.swing.JFrame {
 
     int selectedRowIndex=-1;
     
-    Map<String, String> map = new HashMap<String, String>();
+    private static Map<String, String> map = new HashMap<String, String>();
     
     
     void getDataForEdit(){

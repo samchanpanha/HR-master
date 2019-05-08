@@ -39,11 +39,7 @@ public class frmAddService extends javax.swing.JPanel {
         
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        
         
         prepareForm();
         

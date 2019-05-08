@@ -23,11 +23,7 @@ public class frmAction extends javax.swing.JFrame {
     public frmAction() {
         initComponents();
         
-        try {
-            dataCon.connectToDB();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        
         
         prepareForm();
         

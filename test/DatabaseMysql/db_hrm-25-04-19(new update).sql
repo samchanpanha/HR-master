@@ -11,7 +11,7 @@
  Target Server Version : 50723
  File Encoding         : 65001
 
- Date: 24/04/2019 08:50:45
+ Date: 25/04/2019 20:05:37
 */
 
 SET NAMES utf8mb4;
@@ -210,12 +210,14 @@ CREATE TABLE `interviewdetails`  (
   CONSTRAINT `interviewdetails_ibfk_2` FOREIGN KEY (`IntervieweeId`) REFERENCES `interviewees` (`IntervieweeId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `interviewdetails_ibfk_3` FOREIGN KEY (`RecruitID`) REFERENCES `recruits` (`RecruitId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `interviewdetails_ibfk_4` FOREIGN KEY (`InterviewID`) REFERENCES `interviews` (`InterviewID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of interviewdetails
 -- ----------------------------
 INSERT INTO `interviewdetails` VALUES (1, 1, 5, 'none', 'none', 1, 2);
+INSERT INTO `interviewdetails` VALUES (2, 1, 5, 'none', 'none', 1, 2);
+INSERT INTO `interviewdetails` VALUES (3, 1, 5, 'none', 'none', 1, 2);
 
 -- ----------------------------
 -- Table structure for interviewees
@@ -494,16 +496,15 @@ INSERT INTO `recruits` VALUES (2, '2019-04-14', '2019-05-01', 'Our Management Tr
 -- ----------------------------
 DROP TABLE IF EXISTS `reinters`;
 CREATE TABLE `reinters`  (
-  `ReInterId` int(10) NOT NULL,
-  `RecruitDetailId` int(11) NOT NULL AUTO_INCREMENT,
+  `ReInterId` int(11) NOT NULL AUTO_INCREMENT,
+  `RecruitDetailId` int(11) NULL DEFAULT NULL,
   `InterviewOn` date NULL DEFAULT NULL,
-  `Status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `result` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'none',
+  `result` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'none',
   `IntervieweeId` int(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`RecruitDetailId`) USING BTREE,
+  PRIMARY KEY (`ReInterId`) USING BTREE,
   INDEX `ReInterId`(`ReInterId`) USING BTREE,
   INDEX `IntervieweeId`(`IntervieweeId`) USING BTREE,
-  CONSTRAINT `reinters_ibfk_1` FOREIGN KEY (`ReInterId`) REFERENCES `reinterstaffs` (`ReInterID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reinters_ibfk_2` FOREIGN KEY (`IntervieweeId`) REFERENCES `interviewees` (`IntervieweeId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -518,7 +519,8 @@ CREATE TABLE `reinterstaffs`  (
   PRIMARY KEY (`ReInterStaffID`) USING BTREE,
   INDEX `EmpID`(`EmpID`) USING BTREE,
   INDEX `ReInterID`(`ReInterID`) USING BTREE,
-  CONSTRAINT `reinterstaffs_ibfk_1` FOREIGN KEY (`EmpID`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `reinterstaffs_ibfk_1` FOREIGN KEY (`EmpID`) REFERENCES `employees` (`EmpId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reinterstaffs_ibfk_2` FOREIGN KEY (`ReInterID`) REFERENCES `reinters` (`ReInterId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -896,7 +898,7 @@ CREATE ALGORITHM = UNDEFINED DEFINER = `skip-grants user`@`skip-grants host` SQL
 -- View structure for vu_interview_details
 -- ----------------------------
 DROP VIEW IF EXISTS `vu_interview_details`;
-CREATE ALGORITHM = UNDEFINED DEFINER = `skip-grants user`@`skip-grants host` SQL SECURITY DEFINER VIEW `vu_interview_details` AS select `interviewdetails`.`InterviewDetailId` AS `InterviewDetailId`,`interviewdetails`.`InterviewID` AS `InterviewID`,`interviewdetails`.`IntervieweeId` AS `IntervieweeId`,`interviewees`.`Name` AS `Name`,`interviewdetails`.`StatusCome` AS `StatusCome`,`interviewdetails`.`StatusOfReinter` AS `StatusOfReinter`,`interviewdetails`.`RecruitID` AS `RecruitID`,`interviewdetails`.`PositionID` AS `PositionID`,(select `positions`.`Position` from `positions` where (`positions`.`PositionID` = `interviewdetails`.`PositionID`)) AS `Position` from (`interviewdetails` join `interviewees` on((`interviewdetails`.`IntervieweeId` = `interviewees`.`IntervieweeId`)));
+CREATE ALGORITHM = UNDEFINED DEFINER = `skip-grants user`@`skip-grants host` SQL SECURITY DEFINER VIEW `vu_interview_details` AS select `interviewdetails`.`InterviewDetailId` AS `InterviewDetailId`,`interviewees`.`Name` AS `Name`,`interviewees`.`Blocked` AS `Blocked`,`interviewdetails`.`StatusCome` AS `StatusCome`,(select `positions`.`Position` from `positions` where (`positions`.`PositionID` = `interviewdetails`.`PositionID`)) AS `Position`,`interviewdetails`.`RecruitID` AS `RecruitID`,`interviewdetails`.`PositionID` AS `PositionID`,`interviewdetails`.`InterviewID` AS `InterviewID`,`interviewdetails`.`IntervieweeId` AS `IntervieweeId` from (`interviewdetails` join `interviewees` on((`interviewdetails`.`IntervieweeId` = `interviewees`.`IntervieweeId`)));
 
 -- ----------------------------
 -- View structure for vu_position_for_apply
@@ -1055,6 +1057,51 @@ begin
 INSERT INTO interviewdetails
 (InterviewID, IntervieweeId, StatusCome, StatusOfReinter, RecruitID,PositionID)
 VALUES(i, iw, 'none', 'none', r, pid);
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for insert_reinter
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `insert_reinter`;
+delimiter ;;
+CREATE DEFINER=`skip-grants user`@`skip-grants host` PROCEDURE `insert_reinter`(in rdid varchar(20) ,in ondate varchar(30) ,in wid varchar(20)
+
+)
+BEGIN
+	INSERT INTO reinters
+	(RecruitDetailId, InterviewOn, Status, `result`, IntervieweeId)
+	VALUES(rdid, ondate, 'none', 'none', wid);
+	
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for update_interviewee
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `update_interviewee`;
+delimiter ;;
+CREATE DEFINER=`skip-grants user`@`skip-grants host` PROCEDURE `update_interviewee`(in bk varchar(20) , in wid varchar(20))
+BEGIN
+	UPDATE interviewees
+	SET  Blocked='none'  WHERE IntervieweeId=wid;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for update_interview_details
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `update_interview_details`;
+delimiter ;;
+CREATE DEFINER=`skip-grants user`@`skip-grants host` PROCEDURE `update_interview_details`(in sc varchar(20) , in ind varchar(20))
+BEGIN
+	UPDATE interviewdetails
+	SET  StatusCome=sc
+	WHERE InterviewDetailId=ind;
 END
 ;;
 delimiter ;

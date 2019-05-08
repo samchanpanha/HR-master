@@ -6,6 +6,8 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class Study extends javax.swing.JFrame {
+public class Study extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Study
@@ -220,8 +222,7 @@ public class Study extends javax.swing.JFrame {
         cbMajor = new javaapplication21.AutoComboBox();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(989, 908));
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(989, 908));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -487,7 +488,8 @@ public class Study extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        setSize(new java.awt.Dimension(995, 898));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdateendMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateendMouseReleased
@@ -627,4 +629,8 @@ public class Study extends javax.swing.JFrame {
     private javax.swing.JTextArea txtdes;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
+
+    private void setLocationRelativeTo(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

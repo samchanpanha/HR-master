@@ -59,7 +59,7 @@ public class clCustomer {
     }
     
     public static void getCustomerList(DefaultTableModel modelCustomer){
-        
+        modelCustomer.setRowCount(0);
         sql="select customerid,name,gender,tel from customers";
         
         try {

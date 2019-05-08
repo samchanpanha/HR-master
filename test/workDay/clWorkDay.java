@@ -34,7 +34,7 @@ public class clWorkDay {
     static ResultSet rs;
 
     static void getWorkDayList(DefaultTableModel modelWorkDay) {
-        
+        modelWorkDay.setRowCount(0);
        sql="select workdayId,w.Description,d.dayId,d.day,Date_Format(timeStart,'%H:%i') 'timeStart',da.dayId,da.day,Date_Format(timeEnd,'%H:%i') 'timeEnd',Date_Format(breaktimeStart,'%H:%i') 'breakStart',Date_Format(BreakTimeEnd,'%H:%i') 'breakEnd',workHour,workMinute,TimeShiftId,timeshifts.description\n" +
 "from workdays w join timeShifts using (timeshiftId) left join days d on w.DayStart=d.dayId left join days da on w.DayEnd=da.DayId;";
        

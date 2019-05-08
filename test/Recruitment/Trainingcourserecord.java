@@ -6,6 +6,8 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class Trainingcourserecord extends javax.swing.JFrame {
+public class Trainingcourserecord extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Training
@@ -183,7 +185,7 @@ public class Trainingcourserecord extends javax.swing.JFrame {
         btndelte = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -388,7 +390,8 @@ public class Trainingcourserecord extends javax.swing.JFrame {
                 .addGap(0, 31, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(952, 924));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdatestartMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdatestartMouseReleased
@@ -496,4 +499,8 @@ public class Trainingcourserecord extends javax.swing.JFrame {
     private javax.swing.JTextArea txtdes;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
+
+    private void setLocationRelativeTo(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -6,6 +6,8 @@
 package Recruitment;
 
 import CMS.DB;
+import static com.oracle.jrockit.jfr.FlightRecorder.isActive;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +23,7 @@ import javax.swing.table.TableModel;
  *
  * @author panha
  */
-public class WorkExpericence extends javax.swing.JFrame {
+public class WorkExpericence extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form WorkExpericence
@@ -202,7 +204,7 @@ public class WorkExpericence extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         txtsearch = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setMaximumSize(new java.awt.Dimension(989, 908));
         setMinimumSize(new java.awt.Dimension(989, 908));
@@ -460,7 +462,8 @@ public class WorkExpericence extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1005, 873));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtdatestartMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdatestartMouseReleased
@@ -606,4 +609,12 @@ public class WorkExpericence extends javax.swing.JFrame {
     private javax.swing.JTextArea txtdes;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
+
+    private void setLocationByPlatform(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void setLocationRelativeTo(Object object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
