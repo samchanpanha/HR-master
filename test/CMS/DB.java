@@ -517,7 +517,7 @@ public void DisplayTextName(String sql ,JTextField txt){
     }
 
 public void DisplayTextNameList(String sql ,JTextField txt){
-         
+     
             List<String>  keywords = new ArrayList<>();
     try {
              st = con.createStatement();
@@ -529,6 +529,8 @@ public void DisplayTextNameList(String sql ,JTextField txt){
          
            JtextAuto.setupAutoComplete(txt , (ArrayList<String>) keywords);
            txt.setColumns(30);   
+          
+          
            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());

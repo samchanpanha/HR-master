@@ -32,23 +32,31 @@ public class Create_User extends javax.swing.JInternalFrame {
         initComponents();
         VIEW_ID();
         VIEW_DATA();
+        VIEW_ROLE();
+        VIEW_ROLE_ID();
     }
     
     private void INSERT_TO_MYSQL(){
         c.Query("INSERT INTO users\n" +
                 "(Username, Password, active, RoleId)\n" +
                 "VALUES('"+txtName.getText()+"', '"+txtPass.getText()+"', '"+active+"', '"+txtRoleID.getText()+"');");
+        VIEW_DATA();
+        CLEAR();
     }
     
     private void UPDATE_TO_MYSQL(){
          c.Query("UPDATE users\n" +
-                "SET Username='"+txtName.getText()+"', Password='"+txtPass.getText()+"', active='"+active+"', RoleId='"+txtRoleID.getText()+"'\n" +
-                "WHERE UserId='"+txtID.getText()+"';");
+                "SET Username='"+txtName.getText()+"', Password='"+txtPass.getText()+"', active="+active+", RoleId='"+txtRoleID.getText()+"'\n" +
+                "WHERE UserId="+txtID.getText()+";");
+         VIEW_DATA();
+         CLEAR();
     }
      
     private void DELETE_TO_MYSQL(){
          c.Query("DELETE FROM users\n" +
                 "WHERE UserId='"+txtID.getText()+"';");
+         VIEW_DATA();
+         CLEAR();
     }
       
     private void VIEW_ID(){
@@ -85,12 +93,17 @@ public class Create_User extends javax.swing.JInternalFrame {
         }
            
     }
+    private void CLEAR(){
+        c.clearText(txtID,txtName,txtPass);
+        c.ClearCombobox(cbActive,cbRole);
+    }
     
     private void VIEW_ROLE(){
         c.DisplayName(cbRole, "SELECT `Role` FROM roles");
     }
     private void VIEW_ROLE_ID(){
-        c.DisplayId("SELECT RoleId FROM roles WHERE  Role = '"+cbRole.getSelectedItem()+"'", txtID);
+        c.DisplayId("SELECT RoleId FROM roles WHERE  Role = '"+cbRole.getSelectedItem()+"'", txtRoleID);
+        
     }
     private void SELECTEDTABLE(){
         int i = tbUser.getSelectedRow();
@@ -346,7 +359,7 @@ public class Create_User extends javax.swing.JInternalFrame {
 
     private void cbRolePopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cbRolePopupMenuWillBecomeInvisible
         try {
-            VIEW_ROLE_ID();
+           VIEW_ROLE_ID();
         } catch (Exception e) {
         }
         

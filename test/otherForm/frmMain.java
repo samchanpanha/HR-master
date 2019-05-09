@@ -6,6 +6,7 @@
 package otherForm;
 
 import Recruitment.Apply;
+import Recruitment.Create_User;
 import Recruitment.Recruit;
 import Recruitment.frm_All_interviewee;
 import Recruitment.frm_Employee;
@@ -67,6 +68,7 @@ public class frmMain extends javax.swing.JFrame {
         btnDayOff = new javax.swing.JButton();
         btnDisplayCheck = new javax.swing.JButton();
         btnWorkDay = new javax.swing.JButton();
+        btnUser = new javax.swing.JButton();
         pCustomer = new javax.swing.JPanel();
         btnCustomer = new javax.swing.JButton();
         btnCustomerList = new javax.swing.JButton();
@@ -182,6 +184,14 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
 
+        btnUser.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        btnUser.setText("User");
+        btnUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pEmployeeLayout = new javax.swing.GroupLayout(pEmployee);
         pEmployee.setLayout(pEmployeeLayout);
         pEmployeeLayout.setHorizontalGroup(
@@ -196,12 +206,14 @@ public class frmMain extends javax.swing.JFrame {
             .addComponent(btnDisplayCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
             .addComponent(btnWorkDay, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
             .addComponent(btnTrainningType, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(btnUser, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         );
         pEmployeeLayout.setVerticalGroup(
             pEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pEmployeeLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnApply, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -431,6 +443,10 @@ public class frmMain extends javax.swing.JFrame {
     private void btnTimeTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimeTableActionPerformed
         clFunction.showInternalFrame(myDesktopPane1, timeTableList);
     }//GEN-LAST:event_btnTimeTableActionPerformed
+    Create_User user = new Create_User();
+    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+         clFunction.showInternalFrame(myDesktopPane1, user);
+    }//GEN-LAST:event_btnUserActionPerformed
 
     
 
@@ -450,6 +466,7 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JButton btnTimeTable;
     private javax.swing.JButton btnTrainning;
     private javax.swing.JButton btnTrainningType;
+    private javax.swing.JButton btnUser;
     private javax.swing.JButton btnWorkDay;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

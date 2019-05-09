@@ -6,6 +6,7 @@
 package otherForm;
 
 import CMS.ConMysql;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,11 +50,18 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel2.setText("Username:");
 
         txtUsername.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        txtUsername.setText("admin");
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel3.setText("Password:");
 
         txtPassword.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        txtPassword.setText("admin");
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
+            }
+        });
 
         btnLogin.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         btnLogin.setText("Login");
@@ -154,6 +162,17 @@ public class frmLogin extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+       if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            if (txtUsername.getText().equals("") || txtUsername.getText()==null || txtPassword.getText().equals("") || txtPassword.getText()==null) {
+                JOptionPane.showMessageDialog(this, "You Forget Enter Your UserName OR Password!!!");
+                return;
+          }
+            else
+            btnLogin.doClick();
+        }
+    }//GEN-LAST:event_txtPasswordKeyPressed
 
     
     frmMain main;

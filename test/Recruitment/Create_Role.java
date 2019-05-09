@@ -30,17 +30,26 @@ public class Create_Role extends javax.swing.JInternalFrame {
         c.Query("INSERT INTO roles\n" +
                 "(`Role`)\n" +
                 "VALUES('"+txtRole.getText()+"');");
+          CLEAR();
+          VIEW_ID();
+          VIEW_DATA();
     }
     
     private void UPDATE_TO_MYSQL(){
          c.Query("UPDATE roles\n" +
                 "SET `Role`='"+txtRole.getText()+"'\n" +
-                "WHERE RoleId=0;");
+                "WHERE RoleId="+txtID.getText()+";");
+         VIEW_DATA();
+         CLEAR();
+          VIEW_ID();
     }
      
     private void DELETE_TO_MYSQL(){
          c.Query("DELETE FROM roles\n" +
                 "WHERE RoleId="+txtID.getText()+";");
+         VIEW_DATA();
+          CLEAR();
+          VIEW_ID();
     }
       
     private void VIEW_ID(){
@@ -62,6 +71,9 @@ public class Create_Role extends javax.swing.JInternalFrame {
         txtRole.setText(m.getValueAt(i, 1).toString());
     }
     
+    private void CLEAR(){
+        c.clearText(txtID,txtRole);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,8 +94,6 @@ public class Create_Role extends javax.swing.JInternalFrame {
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
         jDesktopPane1.setBackground(new java.awt.Color(255, 240, 220));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -102,13 +112,33 @@ public class Create_Role extends javax.swing.JInternalFrame {
 
             }
         ));
+        tbRole.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbRoleMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbRole);
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -182,6 +212,25 @@ public class Create_Role extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+       INSERT_TO_MYSQL();
+       VIEW_DATA();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        UPDATE_TO_MYSQL();
+        VIEW_DATA();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        DELETE_TO_MYSQL();
+        VIEW_DATA();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tbRoleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRoleMouseClicked
+       SELECTEDTABLE();
+    }//GEN-LAST:event_tbRoleMouseClicked
 
     /**
      * @param args the command line arguments
