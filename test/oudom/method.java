@@ -17,6 +17,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class method {
    private static Attenden_Details ad=null;
+    private static AddAttendant aat=null;
     public static void  rowfilter(List<String> Qur,JTable tb){
         DefaultTableModel tm=(DefaultTableModel) tb.getModel();
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<>(tm);
@@ -24,7 +25,6 @@ public class method {
         for (int i = 0; i < Qur.size(); i++) {
             tr.setRowFilter(RowFilter.regexFilter(Qur.get(i)));
         }
-        
     }
 
     /**
@@ -39,6 +39,20 @@ public class method {
      */
     public static void setAd(Attenden_Details aAd) {
         ad = aAd;
+    }
+
+    /**
+     * @return the aat
+     */
+    public static AddAttendant getAat() {
+        return aat;
+    }
+
+    /**
+     * @param aAat the aat to set
+     */
+    public static void setAat(AddAttendant aAat) {
+        aat = aAat;
     }
 
 

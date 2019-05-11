@@ -6,10 +6,12 @@
 package CA;
 
 
+import controls.SubJComboBox;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javaapplication21.AutoComboBox;
 import javax.swing.JOptionPane;
@@ -46,6 +48,7 @@ public Connection con = ConAccess.getDBConnection();
                    // clear existing rows
                    dm.setRowCount(0);
                    // add rows to table
+
                    while (rs.next()) {
                        String[] a = new String[columnCount];
                        for(int i = 0; i < columnCount; i++) {
@@ -59,24 +62,39 @@ public Connection con = ConAccess.getDBConnection();
                    rs.close();
                    st.close();
                } catch (Exception ex) { 
-                   JOptionPane.showMessageDialog(null,"ERROR");
+                   System.out.println(ex.getMessage());
+                   //JOptionPane.showMessageDialog(null,ex.getMessage());
                }
 }
     
+    public void DisplayName(SubJComboBox cb, String sql){
+        try {
+            cb.removeAllItems();
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+                 while (rs.next()) {                
+                String st =rs.getString(1);
+     
+                cb.addItem(st);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(cb, e.getMessage());
+        }
+    }
     public void DisplayName(AutoComboBox cb, String sql){
         try {
             cb.removeAllItems();
             st = con.createStatement();
             rs = st.executeQuery(sql);
                  while (rs.next()) {                
-                String st =rs.getString(1).toString();
+                String st =rs.getString(1);
      
                 cb.addItem(st);
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(cb, e.getMessage());
         }
     }
-    
      public void DisplayId(String sql,JTextField txtid){
         try {
            
@@ -85,10 +103,23 @@ public Connection con = ConAccess.getDBConnection();
                   while (rs.next()) {  
                    txtid.setText(rs.getString(1)+"");
                   } 
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
     }
-    
+    public String DisplayId(String sql){
+        String txtid="";
+        try {
+           
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();  
+                int i=rs.getRow();
+                  while (rs.next()) {  
+                   txtid=rs.getString(1);
+                  } 
+        } catch (SQLException e) {
+        }
+    return txtid;
+    }
    
     
 }

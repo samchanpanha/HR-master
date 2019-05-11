@@ -20,7 +20,7 @@ public class ConAccess {
                 Connection conn=null;
                 try {
                   Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-                           String part ="F:\\program file(x86)\\ZKTeco\\att2000.mdb";
+                           String part ="C:\\Users\\Chim chanoudom\\Documents\\GitHub\\HR-master\\build\\test\\classes\\DB_Access\\att2000.mdb";
                            // C:\\databaseFileName.accdb" - location of your database 
                            String url = "jdbc:ucanaccess://"+part;
                            // specify url, username, pasword - make sure these are valid 

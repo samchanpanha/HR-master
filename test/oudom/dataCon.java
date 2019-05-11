@@ -17,6 +17,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import javax.swing.JComboBox;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -31,14 +32,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class dataCon {
     private static Connection Con;
-    
+    private static Connection Conacc;
     static Statement stmt;
     static ResultSet rs;
 
 
 
     
-    
+    public static void connectToAccess()throws Exception{
+        Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+                           String part ="C:\\Users\\Chim chanoudom\\Documents\\GitHub\\HR-master\\build\\test\\classes\\DB_Access\\att2000.mdb";
+                           // C:\\databaseFileName.accdb" - location of your database 
+                           String url = "jdbc:ucanaccess://"+part;
+                           // specify url, username, pasword - make sure these are valid 
+                            Conacc = DriverManager.getConnection(url);
+    }
     public static void connectToDB()throws Exception{
         Class.forName("com.mysql.jdbc.Driver");  
         Con=DriverManager.getConnection("jdbc:mysql://localhost/hr","root","");     
@@ -93,8 +101,53 @@ public class dataCon {
     }
     
     
-    
-    
+    public static void executeQry(String sql,JComboBox cm){
+        
+        try {
+            Statement stmt=Con.createStatement();
+            ResultSet rs=stmt.executeQuery(sql);
+           
+            
+            ResultSetMetaData rsmd = rs.getMetaData();
+                        
+            if(rs.first()){
+                do{
+                   cm.addItem(rs.getString("Name"));
+                }while(rs.next());
+                        
+            }
+            
+            rs.close();
+            stmt.close();
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+    public static void executeQry(String sql,String cm){
+        try {
+            Statement stmt=Con.createStatement();
+            ResultSet rs=stmt.executeQuery(sql);
+           
+            
+            ResultSetMetaData rsmd = rs.getMetaData();
+                        
+            if(rs.first()){
+                do {                    
+                    cm=rs.getString("EmpId");
+                } while (rs.next());
+            }
+            
+            stmt.close();
+            rs.close();
+            stmt.close();
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
     public static boolean executeActionQry(List<String> sql){
         boolean error=false;
         try{

@@ -36,6 +36,7 @@ public class Attendent extends javax.swing.JFrame {
     DefaultTableModel tm;
     public Attendent() {
         initComponents();
+        btnDelete.setVisible(false);
        tm=(DefaultTableModel) Tattnden.getModel();  
         addcontrol.changefontHeader(Tattnden, "Century Schoolbook", "plain", 14);
        
@@ -51,6 +52,8 @@ public class Attendent extends javax.swing.JFrame {
     private void initComponents() {
 
         JPAttendent = new javax.swing.JPopupMenu();
+        btnadd = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         btnGotoDetail = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnDelete = new javax.swing.JMenuItem();
@@ -63,10 +66,9 @@ public class Attendent extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         txtSearch = new javax.swing.JTextField();
-        btnCharacter = new javax.swing.JToggleButton();
         jPanel5 = new javax.swing.JPanel();
-        txtdate = new controls.JDateTimePicker();
-        btnDate = new javax.swing.JToggleButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        txtDate = new controls.JDateTimePicker();
         jButton1 = new javax.swing.JButton();
 
         JPAttendent.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -74,6 +76,15 @@ public class Attendent extends javax.swing.JFrame {
                 JPAttendentMouseClicked(evt);
             }
         });
+
+        btnadd.setText("Add Data");
+        btnadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaddActionPerformed(evt);
+            }
+        });
+        JPAttendent.add(btnadd);
+        JPAttendent.add(jSeparator3);
 
         btnGotoDetail.setText("Go to Detail");
         btnGotoDetail.addActionListener(new java.awt.event.ActionListener() {
@@ -182,35 +193,18 @@ public class Attendent extends javax.swing.JFrame {
             }
         });
 
-        btnCharacter.setForeground(new java.awt.Color(0, 204, 0));
-        btnCharacter.setSelected(true);
-        btnCharacter.setText("ON");
-        btnCharacter.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                btnCharacterItemStateChanged(evt);
-            }
-        });
-        btnCharacter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCharacterActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCharacter))
+                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addComponent(btnCharacter)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(30, Short.MAX_VALUE)
                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -218,38 +212,36 @@ public class Attendent extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search by Date", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Century Schoolbook", 0, 14))); // NOI18N
 
-        txtdate.setBackground(new java.awt.Color(255, 255, 255));
-        txtdate.setDoubleBuffered(false);
-        txtdate.setEnabled(false);
-        txtdate.setFont(new java.awt.Font("Century Schoolbook", 0, 14)); // NOI18N
-        txtdate.setFormatPattern("EEEE dd/MM/yyyy");
-        txtdate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                txtdateMouseReleased(evt);
+        jCheckBox1.setText("Enable");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
             }
         });
 
-        btnDate.setForeground(new java.awt.Color(255, 0, 0));
-        btnDate.setText("OFF");
+        txtDate.setBackground(new java.awt.Color(255, 255, 255));
+        txtDate.setEnabled(false);
+        txtDate.setFont(new java.awt.Font("Century Schoolbook", 0, 14)); // NOI18N
+        txtDate.setFormatPattern("dd/MM/yyyy");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(btnDate)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, 259, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jCheckBox1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(btnDate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -279,7 +271,7 @@ public class Attendent extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 1, Short.MAX_VALUE)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
@@ -313,13 +305,25 @@ public class Attendent extends javax.swing.JFrame {
     }//GEN-LAST:event_JPAttendentMouseClicked
 
     private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+                    if(Tattnden.getSelectedRowCount()>=1){
+                           btnDelete.setVisible(true);
+                       }else{
+                           btnDelete.setVisible(false);
+                       }
         if(evt.getButton()==MouseEvent.BUTTON3){
+
             JPAttendent.show(jScrollPane1, evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_jScrollPane1MouseClicked
 
     private void TattndenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TattndenMouseClicked
-                   if(evt.getButton()==MouseEvent.BUTTON3){
+                               if(Tattnden.getSelectedRowCount()>=1){
+                           btnDelete.setVisible(true);
+                       }else{
+                           btnDelete.setVisible(false);
+                       }           
+        if(evt.getButton()==MouseEvent.BUTTON3){
+
             JPAttendent.show(jScrollPane1, evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_TattndenMouseClicked
@@ -333,45 +337,19 @@ public class Attendent extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
-    private void btnCharacterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCharacterActionPerformed
-       
-    }//GEN-LAST:event_btnCharacterActionPerformed
-
-    private void btnCharacterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnCharacterItemStateChanged
-            if(evt.getStateChange()==ItemEvent.SELECTED){
-                btnCharacter.setText("OFF");
-                btnCharacter.setForeground(Color.RED);
-                btnDate.setSelected(false);
-                txtdate.setEnabled(false);
-            } else{
-                 btnCharacter.setText("ON");
-                btnCharacter.setForeground(Color.GREEN);
-                txtSearch.setEnabled(true);
-            }
-
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCharacterItemStateChanged
-
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
 
     }//GEN-LAST:event_txtSearchKeyReleased
     DateFormat df =new SimpleDateFormat("EEEE dd/MM/YYYY");
-    private void txtdateMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtdateMouseReleased
-        
-    }//GEN-LAST:event_txtdateMouseReleased
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         List<String> Qur=new ArrayList<>();
         Qur.add(txtSearch.getText());
-        Date dt=null;
-        try {
-            dt = new SimpleDateFormat("EEEE dd/MM/YYYY").parse(txtdate.getStringValue());
-        } catch (ParseException ex) {
-            Logger.getLogger(Attendent.class.getName()).log(Level.SEVERE, null, ex);
+        String dt=null;
+        if(txtDate.isEnabled()==true){
+            dt =df.format(txtDate.getValue());
+            Qur.add(dt);
         }
-        String Date=df.format(dt);
-        System.out.println(Date);
+        method.rowfilter(Qur, Tattnden);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnGotoDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGotoDetailActionPerformed
@@ -393,29 +371,41 @@ public class Attendent extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGotoDetailActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-//        try {
-//            int delete=JOptionPane.YES_NO_OPTION;
-//            JOptionPane.showConfirmDialog(this,"Your Data will be Delete ?");
-//            if(delete==JOptionPane.YES_OPTION){
-//                while (Tattnden.getSelectedRowCount()>0) {                
-//                int id=Tattnden.getSelectedRow();
-//                int i=(int) tm.getValueAt(id, 0);
-//                 PreparedStatement st=dataCon.getCon().prepareStatement("Delete From attendances Where AttId="+i+";");
-//                 st.executeUpdate();
-//                 tm.removeRow(id);
-//            }
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//        }
-int i =JOptionPane.YES_NO_OPTION;
-    JOptionPane.showConfirmDialog(this,null,"jkhsldjkakjlajfddkljaklfjaklsjflak",1);
-    if(i==JOptionPane.YES_OPTION){
-        System.out.println("Yes");
-    }else{
-        System.out.println("No");
-    }
+        try {
+            int delete;
+            delete=JOptionPane.showConfirmDialog(this,"Your Data will be Delete ?","Delete",JOptionPane.YES_NO_OPTION);
+            if(delete==JOptionPane.YES_OPTION){
+                while (Tattnden.getSelectedRowCount()>0) {                
+                int id=Tattnden.getSelectedRow();
+                int i=(int) tm.getValueAt(id, 0);
+                 PreparedStatement st=dataCon.getCon().prepareStatement("Delete From attendances Where AttId="+i+";");
+                 st.executeUpdate();
+                 tm.removeRow(id);
+            }
+            }else{
+                Tattnden.getSelectionModel().clearSelection();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
+         if(method.getAat()==null){
+             method.setAat(new AddAttendant());
+         }else{
+             method.getAat().toFront();
+         }
+    }//GEN-LAST:event_btnaddActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if(jCheckBox1.isSelected()==true){
+            txtDate.setEnabled(true);
+        }else{
+            txtDate.setEnabled(false);
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -455,11 +445,11 @@ int i =JOptionPane.YES_NO_OPTION;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu JPAttendent;
     private javax.swing.JTable Tattnden;
-    private javax.swing.JToggleButton btnCharacter;
-    private javax.swing.JToggleButton btnDate;
     private javax.swing.JMenuItem btnDelete;
     private javax.swing.JMenuItem btnGotoDetail;
+    private javax.swing.JMenuItem btnadd;
     private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -468,8 +458,9 @@ int i =JOptionPane.YES_NO_OPTION;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JLabel lbltitle;
+    private controls.JDateTimePicker txtDate;
     private javax.swing.JTextField txtSearch;
-    private controls.JDateTimePicker txtdate;
     // End of variables declaration//GEN-END:variables
 }
